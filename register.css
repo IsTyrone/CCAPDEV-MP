@@ -1,0 +1,230 @@
+/* register.css - Complete Styles */
+
+/* 1. Base Reset & Fonts */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  color: #111827;
+  line-height: 1.5;
+}
+
+/* 2. Main Page Layout (The Gradient Background) */
+.auth-page {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  
+  /* Light Blue Gradient Background */
+  background-color: #eff6ff;
+  background: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%);
+}
+
+/* 3. Header & Logo Section */
+.auth-header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+/* If you are using text for the logo */
+.auth-header .logo {
+  font-size: 28px;
+  font-weight: 800;
+  color: #1e3a8a; /* Deep blue */
+  letter-spacing: -0.5px;
+}
+
+/* If you are using the SVG logo container */
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* 4. The White Card Container */
+.auth-card {
+  background-color: white;
+  padding: 32px;
+  border-radius: 12px; /* Slightly rounder for modern look */
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px; /* Standard width for login boxes */
+  border: 1px solid rgba(255, 255, 255, 0.5); /* Subtle border */
+}
+
+.auth-title {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 24px;
+  color: #111827;
+  text-align: center;
+}
+
+/* 5. Form Elements */
+.form-group {
+  margin-bottom: 16px;
+}
+
+.form-label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #374151;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+  background-color: #fff;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.form-input:focus {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+}
+
+/* Style select elements to match form-input */
+select.form-input {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23374151' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 36px;
+}
+
+/* Register-specific Form Groups */
+.names-group {
+  margin-bottom: 16px;
+}
+
+.phone-group {
+  margin-bottom: 16px;
+}
+
+.email-group {
+  margin-bottom: 16px;
+}
+
+.return-group {
+  margin-top: 24px;
+}
+
+/* 6. Buttons */
+.btn-full {
+  width: 100%;
+  padding: 10px 16px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: background-color 0.15s ease;
+}
+
+/* Primary Blue Button Style */
+.btn-primary {
+  background-color: #2563eb;
+  color: white;
+}
+
+.btn-primary:hover {
+  background-color: #1d4ed8;
+}
+
+/* Register-specific Button Container */
+.RegButtons {
+  margin-top: 24px;
+}
+
+/* Register Submit Button */
+.submit-button {
+  background-color: #2563eb;
+  color: white;
+}
+
+.submit-button:hover {
+  background-color: #1d4ed8;
+}
+
+/* Register Reset Button */
+.reset-button {
+  background-color: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+
+.reset-button:hover {
+  background-color: #e5e7eb;
+}
+
+/* 7. Footer Links (Switch between Login/Register) */
+.switch-auth {
+  margin-top: 24px;
+  font-size: 14px;
+  text-align: center;
+  color: #6b7280;
+}
+
+.switch-link {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 4px;
+}
+
+.switch-link:hover {
+  text-decoration: underline;
+  color: #1e40af;
+}
+
+/* 8. "Back to Dashboard" Link */
+.back-link {
+  margin-top: 24px;
+  font-size: 13px;
+  color: #6b7280;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.15s;
+}
+
+.back-link:hover {
+  color: #111827;
+  text-decoration: underline;
+}
+
+/* 9. Utility for JavaScript toggling */
+.hidden {
+  display: none !important;
+}
+
+/* Optional: Keep modal styles if you still use popups elsewhere */
+.modal-overlay {
+  display: none;    
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  justify-content: center;
+  align-items: center;
+}
+.modal-overlay.open { display: flex; }
