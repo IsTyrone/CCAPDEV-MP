@@ -1,69 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Login - PC Tracker</title>
-    <link rel="stylesheet" href="login.css" />
-  </head>
-  <body>
-    
-    <div class="auth-page">
-      <div class="auth-header">
-        <div class="logo">PC Tracker</div>
-      </div>
 
-      <div class="auth-card">
-        
-        <div id="loginForm">
-          <div class="auth-title">Welcome back</div>
-          <form onsubmit="event.preventDefault(); alert('Login Submitted'); window.location.href='dashboard.html'">
-            <div class="form-group">
-              <label class="form-label">Email address</label>
-              <input type="email" class="form-input" placeholder="you@example.com" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Password</label>
-              <input type="password" class="form-input" placeholder="••••••••" required />
-            </div>
-            <button type="submit" class="btn btn-primary btn-full">Sign in</button>
-          </form>
-          
-          <div class="switch-auth">
-            Don't have an account? 
-            <a class="switch-link" href="register.html">Sign up</a>
-          </div>
-        </div>
-      </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Login - PC Tracker</title>
+  <link rel="stylesheet" href="auth.css" />
+</head>
 
-      <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+<body>
+
+  <div class="auth-page">
+    <div class="auth-header">
+      <div class="logo">PC Tracker</div>
     </div>
 
-    <script>
-      // Simple toggle function
-      function toggleAuth(view) {
-        const loginForm = document.getElementById('loginForm');
-        const registerForm = document.getElementById('registerForm');
-        
-        if (view === 'register') {
-          loginForm.style.display = 'none';
-          registerForm.style.display = 'block';
-          document.title = "Register - PC Tracker";
-        } else {
-          loginForm.style.display = 'block';
-          registerForm.style.display = 'none';
-          document.title = "Login - PC Tracker";
-        }
-      }
+    <div class="auth-card">
 
-      // Check URL parameters to see if we should open register first
-      // Example: login.html?view=register
-      window.onload = function() {
-        const urlParams = new URLSearchParams(window.location.search);
-        if(urlParams.get('view') === 'register') {
-          toggleAuth('register');
-        }
-      }
-    </script>
-  </body>
+      <div id="loginForm">
+        <div class="auth-title">Welcome back</div>
+        <form id="loginFormElement">
+          <div class="form-group">
+            <label class="form-label">Email address</label>
+            <input type="email" class="form-input" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-input" placeholder="••••••••" required />
+          </div>
+          <button type="submit" class="btn btn-primary btn-full">Sign in</button>
+        </form>
+
+        <div class="switch-auth">
+          Don't have an account?
+          <a class="switch-link" href="register.html">Sign up</a>
+        </div>
+      </div>
+    </div>
+
+    <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+
 </html>

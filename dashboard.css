@@ -1,8 +1,10 @@
 /* dashboard.css - Wireframe Implementation */
 
 :root {
-  --primary-blue: #003399; /* Deep blue from image */
-  --accent-red: #cc0000;   /* Red from image */
+  --primary-blue: #003399;
+  /* Deep blue from image */
+  --accent-red: #cc0000;
+  /* Red from image */
   --bg-gray: #f3f4f6;
   --text-dark: #111827;
   --border-color: #e5e7eb;
@@ -22,7 +24,10 @@ body {
   overflow-x: hidden;
 }
 
-a { text-decoration: none; color: inherit; }
+a {
+  text-decoration: none;
+  color: inherit;
+}
 
 /* --- 1. Top White Header --- */
 .main-header {
@@ -34,12 +39,26 @@ a { text-decoration: none; color: inherit; }
   border-bottom: 1px solid var(--border-color);
 }
 
+.logo-img-container {
+  display: flex;
+  align-items: center;
+}
+
+.logo-img {
+  width: 100px;
+  height: 100px;
+}
+
 .logo-circle {
-  width: 40px; height: 40px;
+  width: 40px;
+  height: 40px;
   border: 2px solid black;
   border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: bold; font-size: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 20px;
 }
 
 .search-container {
@@ -47,6 +66,13 @@ a { text-decoration: none; color: inherit; }
   max-width: 600px;
   margin: 0 20px;
   display: flex;
+}
+
+.search-select {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-right: none;
+  background-color: #f9f9f9;
 }
 
 .search-bar {
@@ -57,14 +83,33 @@ a { text-decoration: none; color: inherit; }
   background-color: #f9f9f9;
 }
 
+.search-btn {
+  padding: 0 15px;
+  background: none;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
 .header-right {
   display: flex;
   align-items: center;
   gap: 15px;
 }
 
-.menu-icon { font-size: 24px; cursor: pointer; }
-.account-label { font-weight: bold; font-size: 18px; }
+.user-icon-btn {
+  cursor: pointer;
+  background: #f3f4f6;
+}
+
+.menu-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.account-label {
+  font-weight: bold;
+  font-size: 18px;
+}
 
 /* --- 2. Colored Navigation Bar --- */
 .nav-strip {
@@ -78,7 +123,9 @@ a { text-decoration: none; color: inherit; }
   background-color: var(--accent-red);
   padding: 10px 20px;
   font-weight: bold;
-  display: flex; align-items: center; gap: 5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
   cursor: pointer;
 }
 
@@ -93,14 +140,17 @@ a { text-decoration: none; color: inherit; }
 .nav-links a {
   padding: 0 15px;
   color: white;
-  border-right: 1px solid rgba(255,255,255,0.2);
+  border-right: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.nav-links a:hover { text-decoration: underline; }
+.nav-links a:hover {
+  text-decoration: underline;
+}
 
 /* --- 3. Main Layout Grid (Content | Sidebar) --- */
 .layout-container {
-  display: block; /* Sidebar is no longer part of the flow */
+  display: block;
+  /* Sidebar is no longer part of the flow */
   min-height: calc(100vh - 100px);
   position: relative;
 }
@@ -110,28 +160,35 @@ a { text-decoration: none; color: inherit; }
   display: flex;
   flex-direction: column;
   gap: 20px;
-  width: 100%; /* Takes full width now */
+  width: 100%;
+  /* Takes full width now */
 }
 
 /* 4. Sliding Right Sidebar (The Drawer) */
 .right-sidebar {
   position: fixed;
   top: 0;
-  right: -320px; /* Hidden by default */
+  right: -320px;
+  /* Hidden by default */
   width: 300px;
   height: 100vh;
   background-color: white;
-  box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
   padding: 20px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  transition: right 0.3s ease-in-out; /* Smooth slide effect */
-  z-index: 2000; /* On top of everything */
+  transition: right 0.3s ease-in-out;
+  /* Smooth slide effect */
+  z-index: 2000;
+  /* On top of everything */
 }
+
 .right-sidebar.open {
-  right: 0; /* Slide in */
+  right: 0;
+  /* Slide in */
 }
+
 /* Close Button inside Sidebar */
 .close-sidebar-btn {
   align-self: flex-end;
@@ -143,6 +200,97 @@ a { text-decoration: none; color: inherit; }
   margin-bottom: 20px;
 }
 
+.sidebar-logo {
+  width: 80px;
+  height: 80px;
+  font-size: 40px;
+  margin-bottom: 20px;
+}
+
+.sidebar-content {
+  width: 100%;
+  text-align: center;
+}
+
+.sidebar-subtitle {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.sidebar-actions {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn-sidebar {
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.btn-sidebar-primary {
+  background: var(--primary-blue);
+  color: white;
+  border: none;
+}
+
+.btn-sidebar-outline {
+  background: white;
+  border: 1px solid var(--primary-blue);
+  color: var(--primary-blue);
+}
+
+.sidebar-divider {
+  width: 100%;
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid #eee;
+}
+
+.recent-views {
+  align-self: flex-start;
+  font-size: 13px;
+  color: #666;
+  width: 100%;
+}
+
+.recent-list {
+  padding-left: 20px;
+  margin-top: 5px;
+}
+
+/* User Menu in Sidebar */
+.verified-session {
+  font-size: 12px;
+  color: #16a34a;
+  margin-bottom: 20px;
+}
+
+.user-menu {
+  text-align: left;
+  width: 100%;
+  padding: 0 10px;
+}
+
+.menu-item {
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.logout-btn {
+  margin-top: 15px;
+  width: 100%;
+  padding: 8px;
+  background: #fee2e2;
+  color: #dc2626;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
 /* Optional: Dark backdrop when sidebar opens */
 .sidebar-overlay {
   display: none;
@@ -151,13 +299,14 @@ a { text-decoration: none; color: inherit; }
   left: 0;
   width: 100%;
   height: 100%;
-  background: rgba(0,0,0,0.5);
+  background: rgba(0, 0, 0, 0.5);
   z-index: 1500;
 }
 
 .sidebar-overlay.active {
   display: block;
 }
+
 /* --- 4. Hero Section (3 Blocks) --- */
 .hero-section {
   display: grid;
@@ -175,19 +324,41 @@ a { text-decoration: none; color: inherit; }
   position: relative;
 }
 
+.ad-label {
+  color: #aaa;
+}
+
 .hero-main {
   background-color: #fff;
-  display: flex; flex-direction: column;
+  display: flex;
+  flex-direction: column;
   justify-content: flex-end;
   padding-bottom: 10px;
 }
 
+.hero-subtitle {
+  font-size: 12px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
 .carousel-dots {
-  display: flex; gap: 5px; justify-content: center;
+  display: flex;
+  gap: 5px;
+  justify-content: center;
   margin-top: 10px;
 }
-.dot { width: 8px; height: 8px; border-radius: 50%; border: 2px solid black; }
-.dot.active { background-color: black; }
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid black;
+}
+
+.dot.active {
+  background-color: black;
+}
 
 /* --- 5. Component Strip --- */
 .component-strip {
@@ -211,6 +382,11 @@ a { text-decoration: none; color: inherit; }
   padding: 20px;
 }
 
+.promo-large-text {
+  font-size: 40px;
+  margin-top: 10px;
+}
+
 .product-card {
   min-width: 180px;
   background: white;
@@ -227,6 +403,21 @@ a { text-decoration: none; color: inherit; }
   background-color: #eee;
   margin-bottom: 10px;
   object-fit: cover;
+}
+
+.product-title {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.price-drop {
+  font-size: 10px;
+  color: green;
+}
+
+.price-markup {
+  font-size: 10px;
+  color: red;
 }
 
 /* --- 6. Analysis Widget (The Chart) --- */
@@ -258,16 +449,32 @@ a { text-decoration: none; color: inherit; }
   gap: 2px;
 }
 
-.bar { width: 10px; background-color: #ccc; }
-.bar.retail { height: 60px; background-color: #999; }
-.bar.used { height: 40px; background-color: var(--primary-blue); }
+.bar {
+  width: 10px;
+  background-color: #ccc;
+}
+
+.bar.retail {
+  height: 60px;
+  background-color: #999;
+}
+
+.bar.used {
+  height: 40px;
+  background-color: var(--primary-blue);
+}
+
 .price-line {
   position: absolute;
   width: 100%;
   border-top: 2px dashed black;
   left: 0;
 }
-.label-text { font-size: 10px; margin-top: 5px; }
+
+.label-text {
+  font-size: 10px;
+  margin-top: 5px;
+}
 
 /* Footer */
 .footer-strip {
@@ -279,4 +486,9 @@ a { text-decoration: none; color: inherit; }
   text-align: center;
   font-weight: bold;
   font-size: 14px;
+}
+
+/* Utilities */
+.mb-10 {
+  margin-bottom: 10px;
 }

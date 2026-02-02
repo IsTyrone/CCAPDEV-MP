@@ -1,162 +1,130 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PC Tracker Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css" />
-  </head>
-  <body>
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-    <div class="page-wrapper">
-      
-      <header class="main-header">
-        <div><img src="PC-PICKER-LOGO.png" style="width: 100px; height: 100px;"></div>
-        
-        <div class="search-container">
-          <select style="padding: 8px; border: 1px solid #ccc; border-right: none;">
-            <option>All Categories</option>
-            <option>GPU</option>
-            <option>CPU</option>
-          </select>
-          <input type="text" class="search-bar" placeholder="Search products..." />
-          <button style="padding: 0 15px; background: none; border: 1px solid #ccc; cursor: pointer;">🔍</button>
-        </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PC Tracker Dashboard</title>
+  <link rel="stylesheet" href="dashboard.css" />
+</head>
 
-        <div class="header-right">
-          <div class="menu-icon">☰</div>
-          <div class="account-label">account</div>
-          
-          <div id="userIconBtn" class="logo-circle" style="cursor: pointer; background: #f3f4f6;">👤</div>
-        </div>
-      </header>
+<body>
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
-      <nav class="nav-strip">
-        <div class="nav-category-btn">
-          ☰ All Products
-        </div>
-        <div class="nav-links">
-          <a href="#">Market Movers</a>
-          <a href="#">Trending GPUs</a>
-          <a href="#">Powered by ASUS</a>
-          <a href="#">NVIDIA</a>
-          <a href="#">Intel</a>
-          <a href="#">Crowdsourced Deals</a>
-          <a href="#">Crowdsourced Deals</a>
-          <a href="#">Crowdsourced Deals</a>
-          <a href="#">Crowdsourced Deals</a>
-          <a href="#">Crowdsourced Deals</a>
-          <a href="#">Crowdsourced Deals</a>
-        </div>
-      </nav>
+  <div class="page-wrapper">
 
-      <div class="layout-container">
-        
-        <main class="main-content">
-          <section class="hero-section">
-            <div class="hero-box"><span style="color:#aaa;">Ad / Feature</span></div>
-            <div class="hero-box hero-main">
-              <h3>Latest Price Drops</h3>
-              <p style="font-size: 12px; color: #666; margin-bottom: 10px;">Market Analysis for Oct 2025</p>
-              <div class="carousel-dots">
-                <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
-              </div>
-            </div>
-            <div class="hero-box"><span style="color:#aaa;">Ad / Feature</span></div>
-          </section>
+    <header class="main-header">
+      <div class="logo-img-container"><img src="PC-PICKER-LOGO.png" class="logo-img"></div>
 
-          <section class="component-strip">
-            <div class="promo-box"><div>PC Components</div><div style="font-size: 40px; margin-top: 10px;">Op</div></div>
-            <div class="product-card">
-              <img src="https://via.placeholder.com/150x80?text=RAM" class="product-img" alt="RAM">
-              <div style="font-size: 12px; font-weight: bold;">ADATA XPG 16GB</div>
-              <div style="font-size: 10px; color: green;">▼ 10% below retail</div>
-            </div>
-            <div class="product-card">
-              <img src="https://via.placeholder.com/150x80?text=GPU" class="product-img" alt="GPU">
-              <div style="font-size: 12px; font-weight: bold;">RTX 3060 12GB</div>
-              <div style="font-size: 10px; color: red;">▲ 5% Markup</div>
-            </div>
-          </section>
-        </main>
-
-        <aside id="rightSidebar" class="right-sidebar">
-          <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
-          
-          <div class="logo-circle" style="width: 80px; height: 80px; font-size: 40px; margin-bottom: 20px;">👤</div>
-          
-          <div id="sidebarContent" style="width: 100%; text-align: center;">
-            <h3 style="margin-bottom: 10px;">Welcome, Guest</h3>
-            <p style="font-size: 12px; color: #666; margin-bottom: 20px;">Log in to track prices and manage your builds.</p>
-            
-            <div style="width: 100%; display: flex; flex-direction: column; gap: 10px;">
-              <button onclick="window.location.href='login.html'" style="padding: 10px; background: var(--primary-blue); color: white; border: none; cursor: pointer; border-radius: 4px;">Login</button>
-              <button onclick="window.location.href='register.html'" style="padding: 10px; background: white; border: 1px solid var(--primary-blue); color: var(--primary-blue); cursor: pointer; border-radius: 4px;">Register</button>
-            </div>
-          </div>
-
-          <hr style="width: 100%; margin: 20px 0; border: 0; border-top: 1px solid #eee;">
-
-          <div style="align-self: flex-start; font-size: 13px; color: #666; width: 100%;">
-            <p><strong>Recent Views:</strong></p>
-            <ul style="padding-left: 20px; margin-top: 5px;">
-              <li>RTX 3060</li>
-              <li>Ryzen 5 5600</li>
-            </ul>
-          </div>
-        </aside>
-
+      <div class="search-container">
+        <select class="search-select">
+          <option>All Categories</option>
+          <option>GPU</option>
+          <option>CPU</option>
+        </select>
+        <input type="text" class="search-bar" placeholder="Search products..." />
+        <button class="search-btn">🔍</button>
       </div>
 
-      <footer class="footer-strip">
-        <div>footer section</div><div>need help?</div><div>about</div><div>faq</div>
-      </footer>
-    </div>
-    <script>
-      /* Sidebar Toggle Logic PLACEHOLDER */
-      // 1. Select Elements
-      const userIconBtn = document.getElementById('userIconBtn');
-      const sidebar = document.getElementById('rightSidebar');
-      const closeSidebar = document.getElementById('closeSidebar');
-      const overlay = document.getElementById('sidebarOverlay');
-      const sidebarContent = document.getElementById('sidebarContent');
+      <div class="header-right">
+        <div class="menu-icon">☰</div>
+        <div class="account-label">account</div>
 
-      // 2. Mock Session Check (Change 'false' to 'true' to see logged-in state)
-      const isUserLoggedIn = false;     
+        <div id="userIconBtn" class="logo-circle user-icon-btn">👤</div>
+      </div>
+    </header>
 
-      // 3. Update Content based on session
-      function updateSidebarContent() {
-        if (isUserLoggedIn) {
-          sidebarContent.innerHTML = `
-            <h3 style="margin-bottom: 10px;">Mark Abenes</h3>
-            <p style="font-size: 12px; color: #16a34a; margin-bottom: 20px;">✓ Verified Session</p>
-            <div style="text-align: left; width: 100%; padding: 0 10px;">
-               <div style="padding: 8px 0; border-bottom: 1px solid #eee;">My Saved Builds</div>
-               <div style="padding: 8px 0; border-bottom: 1px solid #eee;">Price Alerts</div>
-               <div style="padding: 8px 0; border-bottom: 1px solid #eee;">Account Settings</div>
-               <button style="margin-top: 15px; width: 100%; padding: 8px; background: #fee2e2; color: #dc2626; border: none; border-radius: 4px; cursor: pointer;">Logout</button>
+    <nav class="nav-strip">
+      <div class="nav-category-btn">
+        ☰ All Products
+      </div>
+      <div class="nav-links">
+        <a href="#">Market Movers</a>
+        <a href="#">Trending GPUs</a>
+        <a href="#">Powered by ASUS</a>
+        <a href="#">NVIDIA</a>
+        <a href="#">Intel</a>
+        <a href="#">Crowdsourced Deals</a>
+        <a href="#">Crowdsourced Deals</a>
+        <a href="#">Crowdsourced Deals</a>
+        <a href="#">Crowdsourced Deals</a>
+        <a href="#">Crowdsourced Deals</a>
+        <a href="#">Crowdsourced Deals</a>
+      </div>
+    </nav>
+
+    <div class="layout-container">
+
+      <main class="main-content">
+        <section class="hero-section">
+          <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
+          <div class="hero-box hero-main">
+            <h3>Latest Price Drops</h3>
+            <p class="hero-subtitle">Market Analysis for Oct 2025</p>
+            <div class="carousel-dots">
+              <div class="dot active"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
             </div>
-          `;
-        }
-      }
+          </div>
+          <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
+        </section>
 
-      // 4. Toggle Functions
-      function openSidebar() {
-        updateSidebarContent(); // Refresh content before opening
-        sidebar.classList.add('open');
-        overlay.classList.add('active');
-      }
+        <section class="component-strip">
+          <div class="promo-box">
+            <div>PC Components</div>
+            <div class="promo-large-text">Op</div>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/150x80?text=RAM" class="product-img" alt="RAM">
+            <div class="product-title">ADATA XPG 16GB</div>
+            <div class="price-drop">▼ 10% below retail</div>
+          </div>
+          <div class="product-card">
+            <img src="https://via.placeholder.com/150x80?text=GPU" class="product-img" alt="GPU">
+            <div class="product-title">RTX 3060 12GB</div>
+            <div class="price-markup">▲ 5% Markup</div>
+          </div>
+        </section>
+      </main>
 
-      function closeSidebarFunc() {
-        sidebar.classList.remove('open');
-        overlay.classList.remove('active');
-      }
+      <aside id="rightSidebar" class="right-sidebar">
+        <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
 
-      // 5. Event Listeners
-      userIconBtn.addEventListener('click', openSidebar);
-      closeSidebar.addEventListener('click', closeSidebarFunc);
-      overlay.addEventListener('click', closeSidebarFunc); // Close when clicking outside
-    </script>
-  </body>
+        <div class="logo-circle sidebar-logo">👤</div>
+
+        <div id="sidebarContent" class="sidebar-content">
+          <h3 class="mb-10">Welcome, Guest</h3>
+          <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+
+          <div class="sidebar-actions">
+            <button onclick="window.location.href='login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
+            <button onclick="window.location.href='register.html'"
+              class="btn-sidebar btn-sidebar-outline">Register</button>
+          </div>
+        </div>
+
+        <hr class="sidebar-divider">
+
+        <div class="recent-views">
+          <p><strong>Recent Views:</strong></p>
+          <ul class="recent-list">
+            <!-- Populated by script.js -->
+            <li style="color: #999; font-style: italic;">No recent views</li>
+          </ul>
+        </div>
+      </aside>
+
+    </div>
+
+    <footer class="footer-strip">
+      <div>footer section</div>
+      <div>need help?</div>
+      <div>about</div>
+      <div>faq</div>
+    </footer>
+  </div>
+  <script src="script.js"></script>
+</body>
+
 </html>

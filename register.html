@@ -1,70 +1,76 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Register Page - PC Tracker</title>
-        <link rel="stylesheet" href="register.css" />
-    </head>
-    <body>
-        <div class="auth-page">
-            <div class="auth-header">
-                <div class="logo">PC Tracker</div>
-            </div>
 
-            <div class="auth-card" id="FormCard">
-                <div class="auth-title">Create an Account</div>
-                <form>
-                    <div class="form-group names-group">
-                        <label for="lastName" class="form-label">Last Name</label>
-                        <input type="text" id="lastName" class="form-input" placeholder="Doe" required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="firstName" class="form-label">First Name</label>
-                        <input type="text" id="firstName" class="form-input" placeholder="John" required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="middleName" class="form-label">Middle Name</label>
-                        <input type="text" id="middleName" class="form-input" placeholder="Morgan" required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="username" class="form-label">Username</label>
-                        <input type="text" id="username" class="form-input" placeholder="johndoe123" required/>
-                    </div>
-                    <div class="form-group phone-group">
-                        <label for="countryCode" class="form-label">Phone Number</label>
-                        <select id="countryCode" name="countryCode" class="form-input">
-                            <option value="+1">USA (+1)</option>
-                            <option value="+44">UK (+44)</option>
-                            <option value="+91">IND (+91)</option>
-                            <option value="+63">PHI (+63)</option>
-                        </select>
-                        <input type="text" class="form-input" placeholder="234 567 8901" required style="margin-top: 8px;"/>
-                    </div>
-                    <div class="form-group email-group">
-                        <label for="email" class="form-label">Email Address</label>
-                        <input type="email" id="email" class="form-input" placeholder="john.doe@example.com" required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="password" class="form-label">Password</label>
-                        <input type="password" id="password" class="form-input" placeholder="••••••••" required/>
-                    </div>
-                    <div class="form-group">
-                        <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" required/>
-                    </div>
-                    <div class="RegButtons">
-                        <button type="submit" class="submit-button btn-primary btn-full">Register</button>
-                        <button type="reset" class="reset-button btn-full" style="margin-top: 8px;">Clear all Fields</button>
-                    </div>
-                    <div class="return-group switch-auth">
-                        Already have an account? 
-                        <a href="login.html" class="switch-link">Sign in</a>
-                    </div>
-                </form>
-            </div>
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Register Page - PC Tracker</title>
+    <link rel="stylesheet" href="auth.css" />
+</head>
 
-            <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+<body>
+    <div class="auth-page">
+        <div class="auth-header">
+            <div class="logo">PC Tracker</div>
         </div>
-    </body>
+
+        <div class="auth-card" id="FormCard">
+            <div class="auth-title">Create an Account</div>
+            <form id="registerFormElement">
+                <div class="form-group names-group">
+                    <label for="lastName" class="form-label">Last Name</label>
+                    <input type="text" id="lastName" class="form-input" placeholder="Doe" required />
+                </div>
+                <div class="form-group">
+                    <label for="firstName" class="form-label">First Name</label>
+                    <input type="text" id="firstName" class="form-input" placeholder="John" required />
+                </div>
+                <div class="form-group">
+                    <label for="middleName" class="form-label">Middle Name</label>
+                    <input type="text" id="middleName" class="form-input" placeholder="Morgan" required />
+                </div>
+                <div class="form-group">
+                    <label for="username" class="form-label">Username</label>
+                    <input type="text" id="username" class="form-input" placeholder="johndoe123" required />
+                </div>
+                <div class="form-group phone-group">
+                    <label for="countryCode" class="form-label">Phone Number</label>
+                    <select id="countryCode" name="countryCode" class="form-input">
+                        <option value="+1">USA (+1)</option>
+                        <option value="+44">UK (+44)</option>
+                        <option value="+91">IND (+91)</option>
+                        <option value="+63">PHI (+63)</option>
+                    </select>
+                    <input type="text" class="form-input" placeholder="234 567 8901" required
+                        style="margin-top: 8px;" />
+                </div>
+                <div class="form-group email-group">
+                    <label for="email" class="form-label">Email Address</label>
+                    <input type="email" id="email" class="form-input" placeholder="john.doe@example.com" required />
+                </div>
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" class="form-input" placeholder="••••••••" required />
+                </div>
+                <div class="form-group">
+                    <label for="confirmPassword" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" required />
+                </div>
+                <div class="RegButtons">
+                    <button type="submit" class="submit-button btn-primary btn-full">Register</button>
+                    <button type="reset" class="reset-button btn-full" style="margin-top: 8px;">Clear all
+                        Fields</button>
+                </div>
+                <div class="return-group switch-auth">
+                    Already have an account?
+                    <a href="login.html" class="switch-link">Sign in</a>
+                </div>
+            </form>
+        </div>
+
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    </div>
+    <script src="script.js"></script>
+</body>
+
 </html>
