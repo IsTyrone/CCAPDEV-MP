@@ -1,8 +1,46 @@
 <html>
     <head>
-
+        <link rel="stylesheet" href="login.css" />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Register Page - PC Tracker</title>
     </head>
     <body>
+        <h1>PC Tracker</h1>
+        <div id="FormCard">
+            <h2>Create an Account</h2>
+            <div class="form-group">
+                <label for="Last Name">Last Name</label>
+                    <input type="text" class="form-input" placeholder="Doe" required/>
+                <label for="First Name">First Name</label>
+                    <input type="text" class="form-input" placeholder="John" required/>
+                <label for="Middle name">Middle Name</label>
+                    <input type="text" class="form-input" placeholder="Dorgan" required/>
+                <label for="Username">Username</label>
+                    <input type="text" class="form-input" placeholder="johndoe123" required/>
+                <label for="Phone Number">Phone Number</label>
+                    <select id="countryCode" name="countryCode">
+                        <option value="+1">USA (+1)</option>
+                        <option value="+44">UK (+44)</option>
+                        <option value="+91">IND (+91)</option>
+                        <option value="+63">PHI (+63)</option>
+                    </select>
+                    <input type="text" class="form-input" placeholder="234 567 8901" required/>
+                <label for="Email Address">Email Address</label>
+                    <input type="email" class="form-input" placeholder="john.doe@example.com" required/>
+                <label for="Password">Password</label>
+                    <input type="password" class="form-input" placeholder="" required/>
+                <label for="Confirm Password">Confirm Password</label>
+                    <input type="password" class="form-input" placeholder="" required/>
+                    <div class ="RegButtons">
+                        <button type="submit" class="submit-button">Register</button>
+                        <button type="reset" class="reset-button">Clear all Fields</button>
+                    </div>
+                    <div class="return">
+                        <a href="login.html">Already have an account?</a>
+                    </div>
+                
+        </div>
         
     </body>
 </html>
