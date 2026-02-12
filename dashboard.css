@@ -1,5 +1,30 @@
-/* dashboard.css - Wireframe Implementation */
 
+#add-forum{
+    /*positioning*/
+    position: fixed;
+    bottom: 10px; 
+    right: 20px;
+    /*size*/
+    min-width: 40px;
+    max-width: 110px;
+    min-height: 40px;
+    max-height: 40px;
+    padding: 10px;
+    /*color*/
+    background-color: #003399; 
+    color: white;
+    /*shape and borders*/
+    border-radius: 50%;/*circular button*/
+    border: none;                 
+    cursor: pointer; 
+    font-size: 20px;         
+    z-index: 99; /*always top layer*/  
+}
+#add-forum:hover:after{
+  font-size: 10px; 
+  border-radius: 10%;
+  content:"  add forum";
+}
 :root {
   --primary-blue: #003399;
   /* Deep blue from image */
