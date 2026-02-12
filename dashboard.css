@@ -1,29 +1,41 @@
-
-#add-forum{
-    /*positioning*/
+#add-forum {
+    /* Positioning */
     position: fixed;
     bottom: 10px; 
     right: 20px;
-    /*size*/
-    min-width: 40px;
-    max-width: 110px;
-    min-height: 40px;
-    max-height: 40px;
-    padding: 10px;
-    /*color*/
+    
+    /* Starting Shape (Circle) */
+    width: 30px; 
+    height: 30px;
+    padding: 0; /* Removing padding prevents it from looking like an oval */
+    border-radius: 50%; /* Starts as a circle */
+    
     background-color: #003399; 
     color: white;
-    /*shape and borders*/
-    border-radius: 50%;/*circular button*/
-    border: none;                 
+    border: none;                  
     cursor: pointer; 
-    font-size: 20px;         
-    z-index: 99; /*always top layer*/  
+    font-size: 20px; 
+    z-index: 99;
+    
+    transition: width 0.4s ease, border-radius 0.4s ease;
+    overflow: hidden; 
+    white-space: nowrap;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-#add-forum:hover:after{
-  font-size: 10px; 
-  border-radius: 10%;
-  content:"  add forum";
+
+#add-forum:hover {
+    width: 100px;        /* Forces it to elongate */
+    border-radius: 10px;  /* Straightens the edges */
+    color: transparent;   /* Hides the original '+' or icon */
+}
+
+#add-forum:hover:after {
+    content: "Add Listing";
+    color: white;
+    font-size: 15px;
+    position: absolute; /* Keeps text centered during the expansion */
 }
 :root {
   --primary-blue: #003399;
