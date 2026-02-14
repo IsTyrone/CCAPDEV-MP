@@ -1,42 +1,49 @@
 #add-forum {
-    /* Positioning */
-    position: fixed;
-    bottom: 10px; 
-    right: 20px;
-    
-    /* Starting Shape (Circle) */
-    width: 30px; 
-    height: 30px;
-    padding: 0; /* Removing padding prevents it from looking like an oval */
-    border-radius: 50%; /* Starts as a circle */
-    
-    background-color: #003399; 
-    color: white;
-    border: none;                  
-    cursor: pointer; 
-    font-size: 20px; 
-    z-index: 99;
-    
-    transition: width 0.4s ease, border-radius 0.4s ease;
-    overflow: hidden; 
-    white-space: nowrap;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* Positioning */
+  position: fixed;
+  bottom: 10px;
+  right: 20px;
+
+  /* Starting Shape (Circle) */
+  width: 30px;
+  height: 30px;
+  padding: 0;
+  /* Removing padding prevents it from looking like an oval */
+  border-radius: 50%;
+  /* Starts as a circle */
+
+  background-color: #003399;
+  color: white;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  z-index: 99;
+
+  transition: width 0.4s ease, border-radius 0.4s ease;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 #add-forum:hover {
-    width: 100px;        /* Forces it to elongate */
-    border-radius: 10px;  /* Straightens the edges */
-    color: transparent;   /* Hides the original '+' or icon */
+  width: 100px;
+  /* Forces it to elongate */
+  border-radius: 10px;
+  /* Straightens the edges */
+  color: transparent;
+  /* Hides the original '+' or icon */
 }
 
 #add-forum:hover:after {
-    content: "Add Listing";
-    color: white;
-    font-size: 15px;
-    position: absolute; /* Keeps text centered during the expansion */
+  content: "Add Listing";
+  color: white;
+  font-size: 15px;
+  position: absolute;
+  /* Keeps text centered during the expansion */
 }
+
 :root {
   --primary-blue: #003399;
   /* Deep blue from image */
@@ -54,7 +61,7 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Google Sans', Arial, sans-serif;
   background-color: var(--bg-gray);
   color: var(--text-dark);
   height: 100vh;
@@ -541,7 +548,8 @@ a {
 
 .components-section {
   flex: 65%;
-  min-width: 0; /* Prevent flex overflow */
+  min-width: 0;
+  /* Prevent flex overflow */
 }
 
 .new-listings-section {
@@ -577,7 +585,7 @@ a {
   border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
@@ -585,7 +593,7 @@ a {
 
 .component-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 .card-header {
@@ -598,7 +606,9 @@ a {
 }
 
 .component-icon {
-  font-size: 24px;
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
 }
 
 .card-header h3 {
@@ -694,7 +704,8 @@ a {
   margin-bottom: 15px;
 }
 
-.filter-select, .sort-select {
+.filter-select,
+.sort-select {
   padding: 5px;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -746,9 +757,20 @@ a {
   margin-bottom: 2px;
 }
 
-.listing-tag.gpu { background: #e9d5ff; color: #6b21a8; }
-.listing-tag.cpu { background: #dbeafe; color: #1e40af; }
-.listing-tag.ram { background: #dcfce7; color: #166534; }
+.listing-tag.gpu {
+  background: #e9d5ff;
+  color: #6b21a8;
+}
+
+.listing-tag.cpu {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.listing-tag.ram {
+  background: #dcfce7;
+  color: #166534;
+}
 
 .listing-title {
   font-size: 14px;
@@ -797,9 +819,17 @@ a {
 }
 
 @keyframes pulse {
-  0% { opacity: 0.6; }
-  50% { opacity: 1; }
-  100% { opacity: 0.6; }
+  0% {
+    opacity: 0.6;
+  }
+
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0.6;
+  }
 }
 
 /* Responsive */
@@ -807,11 +837,12 @@ a {
   .new-dashboard-layout {
     flex-direction: column;
   }
-  
-  .components-section, .new-listings-section {
+
+  .components-section,
+  .new-listings-section {
     flex: 100%;
   }
-  
+
   .new-listings-section {
     max-height: 500px;
   }

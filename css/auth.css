@@ -8,7 +8,7 @@
 }
 
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Google Sans', Arial, Helvetica, sans-serif;
   color: #111827;
   line-height: 1.5;
 }
@@ -22,7 +22,7 @@ body {
   align-items: center;
   justify-content: center;
   padding: 16px;
-  
+
   /* Light Blue Gradient Background */
   background-color: #eff6ff;
   background: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%);
@@ -37,7 +37,8 @@ body {
 .auth-header .logo {
   font-size: 28px;
   font-weight: 800;
-  color: #1e3a8a; /* Deep blue */
+  color: #1e3a8a;
+  /* Deep blue */
   letter-spacing: -0.5px;
 }
 
@@ -106,7 +107,9 @@ select.form-input {
 }
 
 /* Register-specific Form Groups */
-.names-group, .phone-group, .email-group {
+.names-group,
+.phone-group,
+.email-group {
   margin-bottom: 16px;
 }
 
@@ -203,7 +206,7 @@ select.form-input {
 }
 
 .modal-overlay {
-  display: none;    
+  display: none;
   position: fixed;
   top: 0;
   left: 0;
@@ -214,4 +217,7 @@ select.form-input {
   justify-content: center;
   align-items: center;
 }
-.modal-overlay.open { display: flex; }
+
+.modal-overlay.open {
+  display: flex;
+}
