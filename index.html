@@ -76,20 +76,201 @@
                     <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
                 </section>
 
-                <section class="component-strip">
-                    <div class="promo-box">
-                        <div>PC Components</div>
-                        <div class="promo-large-text">Op</div>
+                <!-- Market Ticker Strip -->
+                <section class="market-ticker" id="market-ticker">
+                    <div class="ticker-label">
+                        <img src="assets/images/live.png" alt="Live" class="ticker-label-icon">
+                        <span>LIVE</span>
                     </div>
-                    <div class="product-card">
-                        <img src="https://via.placeholder.com/150x80?text=RAM" class="product-img" alt="RAM">
-                        <div class="product-title">ADATA XPG 16GB</div>
-                        <div class="price-drop">▼ 10% below retail</div>
-                    </div>
-                    <div class="product-card">
-                        <img src="https://via.placeholder.com/150x80?text=GPU" class="product-img" alt="GPU">
-                        <div class="product-title">RTX 3060 12GB</div>
-                        <div class="price-markup">▲ 5% Markup</div>
+                    <div class="ticker-viewport">
+                        <div class="ticker-track">
+                            <!-- NOTE: All component names, prices, and percentage values below are
+                                 dummy/placeholder data for layout purposes. Replace with real
+                                 market data from your backend or API when available. -->
+                            <!-- Set 1 -->
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">GPU</div>
+                                <div class="ticker-card-name">RTX 4070 Ti Super</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱38,450</span>
+                                    <span class="ticker-retail-price">₱42,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 10.6%</div>
+                            </div>
+                            <div class="ticker-card ticker-up">
+                                <div class="ticker-card-category">CPU</div>
+                                <div class="ticker-card-name">Ryzen 7 7800X3D</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱23,100</span>
+                                    <span class="ticker-retail-price">₱21,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 5.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">RAM</div>
+                                <div class="ticker-card-name">G.Skill Trident Z5 32GB DDR5</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,850</span>
+                                    <span class="ticker-retail-price">₱6,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 9.9%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral">
+                                <div class="ticker-card-category">SSD</div>
+                                <div class="ticker-card-name">Samsung 990 Pro 2TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱9,990</span>
+                                    <span class="ticker-retail-price">₱9,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up">
+                                <div class="ticker-card-category">MOBO</div>
+                                <div class="ticker-card-name">ASUS ROG Strix B650E-E</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱16,200</span>
+                                    <span class="ticker-retail-price">₱14,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 8.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">PSU</div>
+                                <div class="ticker-card-name">Corsair RM850x 850W</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,950</span>
+                                    <span class="ticker-retail-price">₱7,190</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 17.2%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral">
+                                <div class="ticker-card-category">CASE</div>
+                                <div class="ticker-card-name">NZXT H7 Flow</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱7,490</span>
+                                    <span class="ticker-retail-price">₱7,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">AIO</div>
+                                <div class="ticker-card-name">Arctic Liquid Freezer II 360</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱4,800</span>
+                                    <span class="ticker-retail-price">₱5,590</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 14.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up">
+                                <div class="ticker-card-category">NVMe</div>
+                                <div class="ticker-card-name">WD Black SN850X 1TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,200</span>
+                                    <span class="ticker-retail-price">₱4,890</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 6.3%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">COOLER</div>
+                                <div class="ticker-card-name">Noctua NH-D15 chromax</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,100</span>
+                                    <span class="ticker-retail-price">₱5,790</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 11.9%</div>
+                            </div>
+
+                            <!-- Set 2 (duplicate for seamless loop) -->
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">GPU</div>
+                                <div class="ticker-card-name">RTX 4070 Ti Super</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱38,450</span>
+                                    <span class="ticker-retail-price">₱42,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 10.6%</div>
+                            </div>
+                            <div class="ticker-card ticker-up">
+                                <div class="ticker-card-category">CPU</div>
+                                <div class="ticker-card-name">Ryzen 7 7800X3D</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱23,100</span>
+                                    <span class="ticker-retail-price">₱21,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 5.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">RAM</div>
+                                <div class="ticker-card-name">G.Skill Trident Z5 32GB DDR5</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,850</span>
+                                    <span class="ticker-retail-price">₱6,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 9.9%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral">
+                                <div class="ticker-card-category">SSD</div>
+                                <div class="ticker-card-name">Samsung 990 Pro 2TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱9,990</span>
+                                    <span class="ticker-retail-price">₱9,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up">
+                                <div class="ticker-card-category">MOBO</div>
+                                <div class="ticker-card-name">ASUS ROG Strix B650E-E</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱16,200</span>
+                                    <span class="ticker-retail-price">₱14,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 8.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">PSU</div>
+                                <div class="ticker-card-name">Corsair RM850x 850W</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,950</span>
+                                    <span class="ticker-retail-price">₱7,190</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 17.2%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral">
+                                <div class="ticker-card-category">CASE</div>
+                                <div class="ticker-card-name">NZXT H7 Flow</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱7,490</span>
+                                    <span class="ticker-retail-price">₱7,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">AIO</div>
+                                <div class="ticker-card-name">Arctic Liquid Freezer II 360</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱4,800</span>
+                                    <span class="ticker-retail-price">₱5,590</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 14.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up">
+                                <div class="ticker-card-category">NVMe</div>
+                                <div class="ticker-card-name">WD Black SN850X 1TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,200</span>
+                                    <span class="ticker-retail-price">₱4,890</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 6.3%</div>
+                            </div>
+                            <div class="ticker-card ticker-down">
+                                <div class="ticker-card-category">COOLER</div>
+                                <div class="ticker-card-name">Noctua NH-D15 chromax</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,100</span>
+                                    <span class="ticker-retail-price">₱5,790</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 11.9%</div>
+                            </div>
+                        </div>
                     </div>
                 </section>
             </main>
@@ -341,7 +522,8 @@
                 <section class="new-listings-section">
                     <div class="listings-header">
                         <h2>Latest Listings</h2>
-                        <button class="refresh-btn" onclick="refreshListings()">🔄 Refresh</button>
+                        <button class="refresh-btn" onclick="refreshListings()"><img src="assets/images/sync.png"
+                                alt="Refresh" class="refresh-icon"> Refresh</button>
                     </div>
                     <div class="listings-controls">
                         <select class="filter-select" id="listing-filter" onchange="filterListings()">
@@ -362,14 +544,16 @@
                         </select>
                     </div>
 
-                    <div class="listings-feed" id="listings-feed">
-                        <!-- Feed items will be populated by JS -->
-                        <div class="listing-card-skeleton"></div>
-                        <div class="listing-card-skeleton"></div>
-                        <div class="listing-card-skeleton"></div>
-                    </div>
+                    <div class="listings-scroll-pane">
+                        <div class="listings-feed" id="listings-feed">
+                            <!-- Feed items will be populated by JS -->
+                            <div class="listing-card-skeleton"></div>
+                            <div class="listing-card-skeleton"></div>
+                            <div class="listing-card-skeleton"></div>
+                        </div>
 
-                    <button class="load-more-btn" onclick="loadMoreListings()">Load More Listings</button>
+                        <button class="load-more-btn" onclick="loadMoreListings()">Load More Listings</button>
+                    </div>
                 </section>
             </div>
 
