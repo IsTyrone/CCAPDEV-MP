@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PC Tracker Dashboard</title>
+    <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+
+<body>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="page-wrapper">
+
+        <header class="main-header">
+            <div class="logo-img-container"><img src="assets/images/PC-PICKER-LOGO.png" class="logo-img"></div>
+
+            <div class="search-container">
+                <select class="search-select">
+                    <option>All Categories</option>
+                    <option>GPU</option>
+                    <option>CPU</option>
+                </select>
+                <input type="text" class="search-bar" placeholder="Search products..." />
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <div class="header-right">
+                <div class="menu-icon">☰</div>
+                <div class="account-label">account</div>
+
+                <div id="userIconBtn" class="logo-circle user-icon-btn">👤</div>
+            </div>
+        </header>
+
+        <nav class="nav-strip">
+            <div class="nav-category-btn">
+                ☰ All Products
+            </div>
+            <div class="nav-links">
+                <a href="#">Market Movers</a>
+                <a href="#">Trending GPUs</a>
+                <a href="#">Powered by ASUS</a>
+                <a href="#">NVIDIA</a>
+                <a href="#">Intel</a>
+                <a href="#">Crowdsourced Deals</a>
+                <a href="#">Crowdsourced Deals</a>
+                <a href="#">Crowdsourced Deals</a>
+                <a href="#">Crowdsourced Deals</a>
+                <a href="#">Crowdsourced Deals</a>
+                <a href="#">Crowdsourced Deals</a>
+            </div>
+        </nav>
+
+        <div class="layout-container">
+            <button id="add-forum">
+                <div class="add-plus">+</div>
+            </button>
+            <main class="main-content">
+                <section class="hero-section">
+                    <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
+                    <div class="hero-box hero-main">
+                        <h3>Latest Price Drops</h3>
+                        <p class="hero-subtitle">Market Analysis for Oct 2025</p>
+                        <div class="carousel-dots">
+                            <div class="dot active"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                        </div>
+                    </div>
+                    <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
+                </section>
+
+                <section class="component-strip">
+                    <div class="promo-box">
+                        <div>PC Components</div>
+                        <div class="promo-large-text">Op</div>
+                    </div>
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/150x80?text=RAM" class="product-img" alt="RAM">
+                        <div class="product-title">ADATA XPG 16GB</div>
+                        <div class="price-drop">▼ 10% below retail</div>
+                    </div>
+                    <div class="product-card">
+                        <img src="https://via.placeholder.com/150x80?text=GPU" class="product-img" alt="GPU">
+                        <div class="product-title">RTX 3060 12GB</div>
+                        <div class="price-markup">▲ 5% Markup</div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- New Dashboard Layout (Below existing content) -->
+            <div class="new-dashboard-layout">
+                <!-- Main Content Area (Left/Primary - 65% width) -->
+                <section class="components-section">
+                    <h2 class="section-title">Find Component Prices</h2>
+                    <div class="component-cards-grid">
+
+                        <!-- 1. RAM Card -->
+                        <div class="component-card" data-component="ram">
+                            <div class="card-header">
+                                <span class="component-icon">💾</span>
+                                <h3>RAM / Memory</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="ram-generation">Generation</label>
+                                    <select class="form-control" id="ram-generation" data-component="ram">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ram-speed">Speed</label>
+                                    <select class="form-control" id="ram-speed" data-component="ram" disabled>
+                                        <option value="" disabled selected>Select Generation First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ram-capacity">Capacity</label>
+                                    <select class="form-control" id="ram-capacity" data-component="ram">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="ram">Find RAM Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 2. GPU Card -->
+                        <div class="component-card" data-component="gpu">
+                            <div class="card-header">
+                                <span class="component-icon">🎮</span>
+                                <h3>Graphics Card (GPU)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="gpu-brand">Brand</label>
+                                    <select class="form-control" id="gpu-brand" data-component="gpu">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gpu-series">Series</label>
+                                    <select class="form-control" id="gpu-series" data-component="gpu" disabled>
+                                        <option value="" disabled selected>Select Brand First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="gpu-model">Model</label>
+                                    <select class="form-control" id="gpu-model" data-component="gpu" disabled>
+                                        <option value="" disabled selected>Select Series First...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="gpu">Find GPU Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 3. CPU Card -->
+                        <div class="component-card" data-component="cpu">
+                            <div class="card-header">
+                                <span class="component-icon">🧠</span>
+                                <h3>Processor (CPU)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="cpu-brand">Brand</label>
+                                    <select class="form-control" id="cpu-brand" data-component="cpu">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpu-tier">Performance Tier</label>
+                                    <select class="form-control" id="cpu-tier" data-component="cpu" disabled>
+                                        <option value="" disabled selected>Select Brand First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpu-generation">Generation</label>
+                                    <select class="form-control" id="cpu-generation" data-component="cpu" disabled>
+                                        <option value="" disabled selected>Select Tier First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cpu-model">Specific Model</label>
+                                    <select class="form-control" id="cpu-model" data-component="cpu" disabled>
+                                        <option value="" disabled selected>Select Generation First...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="cpu">Find CPU Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 4. Motherboard Card -->
+                        <div class="component-card" data-component="motherboard">
+                            <div class="card-header">
+                                <span class="component-icon">🔌</span>
+                                <h3>Motherboard</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="mobo-socket">Socket Type</label>
+                                    <select class="form-control" id="mobo-socket" data-component="motherboard">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mobo-chipset">Chipset</label>
+                                    <select class="form-control" id="mobo-chipset" data-component="motherboard"
+                                        disabled>
+                                        <option value="" disabled selected>Select Socket First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="mobo-formfactor">Form Factor</label>
+                                    <select class="form-control" id="mobo-formfactor" data-component="motherboard">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="motherboard">Find Motherboard Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 5. Storage Card -->
+                        <div class="component-card" data-component="storage">
+                            <div class="card-header">
+                                <span class="component-icon">💾</span>
+                                <h3>Storage (SSD/HDD)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="storage-type">Type</label>
+                                    <select class="form-control" id="storage-type" data-component="storage">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="storage-interface">Interface</label>
+                                    <select class="form-control" id="storage-interface" data-component="storage"
+                                        disabled>
+                                        <option value="" disabled selected>Select Type First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="storage-capacity">Capacity</label>
+                                    <select class="form-control" id="storage-capacity" data-component="storage">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="storage">Find Storage Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 6. PSU Card -->
+                        <div class="component-card" data-component="psu">
+                            <div class="card-header">
+                                <span class="component-icon">🔋</span>
+                                <h3>Power Supply (PSU)</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="psu-wattage">Wattage</label>
+                                    <select class="form-control" id="psu-wattage" data-component="psu">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="psu-efficiency">Efficiency Rating</label>
+                                    <select class="form-control" id="psu-efficiency" data-component="psu">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="psu-modularity">Modularity</label>
+                                    <select class="form-control" id="psu-modularity" data-component="psu">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="psu">Find PSU Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 7. Case Card -->
+                        <div class="component-card" data-component="case">
+                            <div class="card-header">
+                                <span class="component-icon">🖥️</span>
+                                <h3>PC Case</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="case-formfactor">Form Factor</label>
+                                    <select class="form-control" id="case-formfactor" data-component="case">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="case-panel">Side Panel</label>
+                                    <select class="form-control" id="case-panel" data-component="case">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="case">Find Case Prices</button>
+                            </div>
+                        </div>
+
+                        <!-- 8. Cooling Card -->
+                        <div class="component-card" data-component="cooling">
+                            <div class="card-header">
+                                <span class="component-icon">❄️</span>
+                                <h3>Cooling System</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="cooling-type">Type</label>
+                                    <select class="form-control" id="cooling-type" data-component="cooling">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="cooling-compatibility">Socket Compatibility</label>
+                                    <select class="form-control" id="cooling-compatibility" data-component="cooling">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="cooling">Find Cooling Prices</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </section>
+
+                <!-- Secondary Area (Right/Sidebar - 35% width) -->
+                <section class="new-listings-section">
+                    <div class="listings-header">
+                        <h2>Latest Listings</h2>
+                        <button class="refresh-btn" onclick="refreshListings()">🔄 Refresh</button>
+                    </div>
+                    <div class="listings-controls">
+                        <select class="filter-select" id="listing-filter" onchange="filterListings()">
+                            <option value="all">All Components</option>
+                            <option value="gpu">GPU</option>
+                            <option value="cpu">CPU</option>
+                            <option value="ram">RAM</option>
+                            <option value="mobo">Motherboard</option>
+                            <option value="storage">Storage</option>
+                            <option value="psu">PSU</option>
+                            <option value="case">Case</option>
+                            <option value="cooling">Cooling</option>
+                        </select>
+                        <select class="sort-select" id="listing-sort" onchange="sortListings()">
+                            <option value="recent">Most Recent</option>
+                            <option value="low-price">Lowest Price</option>
+                            <option value="high-price">Highest Price</option>
+                        </select>
+                    </div>
+
+                    <div class="listings-feed" id="listings-feed">
+                        <!-- Feed items will be populated by JS -->
+                        <div class="listing-card-skeleton"></div>
+                        <div class="listing-card-skeleton"></div>
+                        <div class="listing-card-skeleton"></div>
+                    </div>
+
+                    <button class="load-more-btn" onclick="loadMoreListings()">Load More Listings</button>
+                </section>
+            </div>
+
+            <aside id="rightSidebar" class="right-sidebar">
+                <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+
+                <div class="logo-circle sidebar-logo">👤</div>
+
+                <div id="sidebarContent" class="sidebar-content">
+                    <h3 class="mb-10">Welcome, Guest</h3>
+                    <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+
+                    <div class="sidebar-actions">
+                        <button onclick="window.location.href='pages/login.html'"
+                            class="btn-sidebar btn-sidebar-primary">Login</button>
+                        <button onclick="window.location.href='pages/register.html'"
+                            class="btn-sidebar btn-sidebar-outline">Register</button>
+                    </div>
+                </div>
+
+                <hr class="sidebar-divider">
+
+                <div class="recent-views">
+                    <p><strong>Recent Views:</strong></p>
+                    <ul class="recent-list">
+                        <!-- Populated by script.js -->
+                        <li style="color: #999; font-style: italic;">No recent views</li>
+                    </ul>
+                </div>
+            </aside>
+
+        </div>
+
+        <footer class="footer-strip">
+            <div>footer section</div>
+            <div>need help?</div>
+            <div>about</div>
+            <div>FAQ</div>
+        </footer>
+    </div>
+    <script src="js/dropdown-manager.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,782 @@
+{
+    "ram": {
+        "dropdowns": {
+            "generation": [
+                "DDR3",
+                "DDR4",
+                "DDR5"
+            ],
+            "speed": {
+                "DDR3": [
+                    "1066MHz",
+                    "1333MHz",
+                    "1600MHz",
+                    "1866MHz"
+                ],
+                "DDR4": [
+                    "2133MHz",
+                    "2400MHz",
+                    "2666MHz",
+                    "2933MHz",
+                    "3000MHz",
+                    "3200MHz",
+                    "3600MHz",
+                    "4000MHz"
+                ],
+                "DDR5": [
+                    "4800MHz",
+                    "5200MHz",
+                    "5600MHz",
+                    "6000MHz",
+                    "6400MHz",
+                    "6800MHz"
+                ]
+            },
+            "capacity": [
+                "2GB",
+                "4GB",
+                "8GB",
+                "16GB",
+                "32GB",
+                "64GB",
+                "128GB"
+            ]
+        }
+    },
+    "gpu": {
+        "dropdowns": {
+            "brand": [
+                "NVIDIA",
+                "AMD",
+                "Intel"
+            ],
+            "series": {
+                "NVIDIA": [
+                    "GTX 900",
+                    "GTX 1000",
+                    "GTX 1600",
+                    "RTX 2000",
+                    "RTX 3000",
+                    "RTX 4000",
+                    "RTX 5000"
+                ],
+                "AMD": [
+                    "RX 400",
+                    "RX 500",
+                    "RX 5000",
+                    "RX 6000",
+                    "RX 7000",
+                    "RX 9000"
+                ],
+                "Intel": [
+                    "Arc A-Series",
+                    "Arc B-Series"
+                ]
+            },
+            "models": {
+                "GTX 900": [
+                    "GTX 950",
+                    "GTX 960",
+                    "GTX 970",
+                    "GTX 980",
+                    "GTX 980 Ti"
+                ],
+                "GTX 1000": [
+                    "GTX 1050",
+                    "GTX 1050 Ti",
+                    "GTX 1060",
+                    "GTX 1070",
+                    "GTX 1070 Ti",
+                    "GTX 1080",
+                    "GTX 1080 Ti"
+                ],
+                "GTX 1600": [
+                    "GTX 1630",
+                    "GTX 1650",
+                    "GTX 1650 Super",
+                    "GTX 1660",
+                    "GTX 1660 Super",
+                    "GTX 1660 Ti"
+                ],
+                "RTX 2000": [
+                    "RTX 2060",
+                    "RTX 2060 Super",
+                    "RTX 2070",
+                    "RTX 2070 Super",
+                    "RTX 2080",
+                    "RTX 2080 Super",
+                    "RTX 2080 Ti"
+                ],
+                "RTX 3000": [
+                    "RTX 3050",
+                    "RTX 3060",
+                    "RTX 3060 Ti",
+                    "RTX 3070",
+                    "RTX 3070 Ti",
+                    "RTX 3080",
+                    "RTX 3080 Ti",
+                    "RTX 3090",
+                    "RTX 3090 Ti"
+                ],
+                "RTX 4000": [
+                    "RTX 4060",
+                    "RTX 4060 Ti",
+                    "RTX 4070",
+                    "RTX 4070 Super",
+                    "RTX 4070 Ti",
+                    "RTX 4070 Ti Super",
+                    "RTX 4080",
+                    "RTX 4080 Super",
+                    "RTX 4090"
+                ],
+                "RTX 5000": [
+                    "RTX 5050",
+                    "RTX 5060",
+                    "RTX 5060 Ti",
+                    "RTX 5070",
+                    "RTX 5070 Ti",
+                    "RTX 5080",
+                    "RTX 5090"
+                ],
+                "RX 400": [
+                    "RX 460",
+                    "RX 470",
+                    "RX 480"
+                ],
+                "RX 500": [
+                    "RX 550",
+                    "RX 560",
+                    "RX 570",
+                    "RX 580",
+                    "RX 590"
+                ],
+                "RX 5000": [
+                    "RX 5500 XT",
+                    "RX 5600 XT",
+                    "RX 5700",
+                    "RX 5700 XT"
+                ],
+                "RX 6000": [
+                    "RX 6400",
+                    "RX 6500 XT",
+                    "RX 6600",
+                    "RX 6600 XT",
+                    "RX 6650 XT",
+                    "RX 6700 XT",
+                    "RX 6750 XT",
+                    "RX 6800",
+                    "RX 6800 XT",
+                    "RX 6900 XT",
+                    "RX 6950 XT"
+                ],
+                "RX 7000": [
+                    "RX 7600",
+                    "RX 7600 XT",
+                    "RX 7700 XT",
+                    "RX 7800 XT",
+                    "RX 7900 XT",
+                    "RX 7900 XTX"
+                ],
+                "RX 9000": [
+                    "RX 9060",
+                    "RX 9060 XT",
+                    "RX 9070",
+                    "RX 9070 XT"
+                ],
+                "Arc A-Series": [
+                    "Arc A380",
+                    "Arc A580",
+                    "Arc A750",
+                    "Arc A770"
+                ],
+                "Arc B-Series": [
+                    "Arc B570",
+                    "Arc B580"
+                ]
+            }
+        }
+    },
+    "cpu": {
+        "dropdowns": {
+            "brand": [
+                "Intel",
+                "AMD"
+            ],
+            "tier": {
+                "Intel": [
+                    "Core i3 (Entry Level)",
+                    "Core i5 (Mainstream)",
+                    "Core i7 (High Performance)",
+                    "Core i9 (Enthusiast)"
+                ],
+                "AMD": [
+                    "Ryzen 3 (Entry Level)",
+                    "Ryzen 5 (Mainstream)",
+                    "Ryzen 7 (High Performance)",
+                    "Ryzen 9 (Enthusiast)"
+                ]
+            },
+            "generation": {
+                "Core i3": [
+                    "8th Gen",
+                    "9th Gen",
+                    "10th Gen",
+                    "11th Gen",
+                    "12th Gen",
+                    "13th Gen",
+                    "14th Gen"
+                ],
+                "Core i5": [
+                    "8th Gen",
+                    "9th Gen",
+                    "10th Gen",
+                    "11th Gen",
+                    "12th Gen",
+                    "13th Gen",
+                    "14th Gen"
+                ],
+                "Core i7": [
+                    "8th Gen",
+                    "9th Gen",
+                    "10th Gen",
+                    "11th Gen",
+                    "12th Gen",
+                    "13th Gen",
+                    "14th Gen"
+                ],
+                "Core i9": [
+                    "8th Gen",
+                    "9th Gen",
+                    "10th Gen",
+                    "11th Gen",
+                    "12th Gen",
+                    "13th Gen",
+                    "14th Gen"
+                ],
+                "Ryzen 3": [
+                    "1000 Series",
+                    "2000 Series",
+                    "3000 Series",
+                    "4000 Series",
+                    "5000 Series",
+                    "7000 Series"
+                ],
+                "Ryzen 5": [
+                    "1000 Series",
+                    "2000 Series",
+                    "3000 Series",
+                    "4000 Series",
+                    "5000 Series",
+                    "7000 Series",
+                    "9000 Series"
+                ],
+                "Ryzen 7": [
+                    "1000 Series",
+                    "2000 Series",
+                    "3000 Series",
+                    "4000 Series",
+                    "5000 Series",
+                    "7000 Series",
+                    "9000 Series"
+                ],
+                "Ryzen 9": [
+                    "3000 Series",
+                    "5000 Series",
+                    "7000 Series",
+                    "9000 Series"
+                ]
+            },
+            "models": {
+                "Core i3-8th Gen": [
+                    "i3-8100",
+                    "i3-8300",
+                    "i3-8350K"
+                ],
+                "Core i3-9th Gen": [
+                    "i3-9100",
+                    "i3-9100F",
+                    "i3-9300",
+                    "i3-9350KF"
+                ],
+                "Core i3-10th Gen": [
+                    "i3-10100",
+                    "i3-10100F",
+                    "i3-10300",
+                    "i3-10320"
+                ],
+                "Core i3-11th Gen": [
+                    "i3-11100",
+                    "i3-11100F",
+                    "i3-11300",
+                    "i3-11320"
+                ],
+                "Core i3-12th Gen": [
+                    "i3-12100",
+                    "i3-12100F",
+                    "i3-12300",
+                    "i3-12300T"
+                ],
+                "Core i3-13th Gen": [
+                    "i3-13100",
+                    "i3-13100F"
+                ],
+                "Core i3-14th Gen": [
+                    "i3-14100",
+                    "i3-14100F"
+                ],
+                "Core i5-8th Gen": [
+                    "i5-8400",
+                    "i5-8500",
+                    "i5-8600",
+                    "i5-8600K"
+                ],
+                "Core i5-9th Gen": [
+                    "i5-9400",
+                    "i5-9400F",
+                    "i5-9500",
+                    "i5-9600",
+                    "i5-9600K",
+                    "i5-9600KF"
+                ],
+                "Core i5-10th Gen": [
+                    "i5-10400",
+                    "i5-10400F",
+                    "i5-10500",
+                    "i5-10600",
+                    "i5-10600K",
+                    "i5-10600KF"
+                ],
+                "Core i5-11th Gen": [
+                    "i5-11400",
+                    "i5-11400F",
+                    "i5-11500",
+                    "i5-11600",
+                    "i5-11600K",
+                    "i5-11600KF"
+                ],
+                "Core i5-12th Gen": [
+                    "i5-12400",
+                    "i5-12400F",
+                    "i5-12500",
+                    "i5-12600",
+                    "i5-12600K",
+                    "i5-12600KF"
+                ],
+                "Core i5-13th Gen": [
+                    "i5-13400",
+                    "i5-13400F",
+                    "i5-13500",
+                    "i5-13600",
+                    "i5-13600K",
+                    "i5-13600KF"
+                ],
+                "Core i5-14th Gen": [
+                    "i5-14400",
+                    "i5-14400F",
+                    "i5-14500",
+                    "i5-14600",
+                    "i5-14600K",
+                    "i5-14600KF"
+                ],
+                "Core i7-8th Gen": [
+                    "i7-8700",
+                    "i7-8700K"
+                ],
+                "Core i7-9th Gen": [
+                    "i7-9700",
+                    "i7-9700F",
+                    "i7-9700K",
+                    "i7-9700KF"
+                ],
+                "Core i7-10th Gen": [
+                    "i7-10700",
+                    "i7-10700F",
+                    "i7-10700K",
+                    "i7-10700KF"
+                ],
+                "Core i7-11th Gen": [
+                    "i7-11700",
+                    "i7-11700F",
+                    "i7-11700K",
+                    "i7-11700KF"
+                ],
+                "Core i7-12th Gen": [
+                    "i7-12700",
+                    "i7-12700F",
+                    "i7-12700K",
+                    "i7-12700KF"
+                ],
+                "Core i7-13th Gen": [
+                    "i7-13700",
+                    "i7-13700F",
+                    "i7-13700K",
+                    "i7-13700KF"
+                ],
+                "Core i7-14th Gen": [
+                    "i7-14700",
+                    "i7-14700F",
+                    "i7-14700K",
+                    "i7-14700KF"
+                ],
+                "Core i9-8th Gen": [
+                    "i9-9900K"
+                ],
+                "Core i9-9th Gen": [
+                    "i9-9900",
+                    "i9-9900K",
+                    "i9-9900KF",
+                    "i9-9900KS"
+                ],
+                "Core i9-10th Gen": [
+                    "i9-10900",
+                    "i9-10900F",
+                    "i9-10900K",
+                    "i9-10900KF"
+                ],
+                "Core i9-11th Gen": [
+                    "i9-11900",
+                    "i9-11900F",
+                    "i9-11900K",
+                    "i9-11900KF"
+                ],
+                "Core i9-12th Gen": [
+                    "i9-12900",
+                    "i9-12900F",
+                    "i9-12900K",
+                    "i9-12900KF",
+                    "i9-12900KS"
+                ],
+                "Core i9-13th Gen": [
+                    "i9-13900",
+                    "i9-13900F",
+                    "i9-13900K",
+                    "i9-13900KF",
+                    "i9-13900KS"
+                ],
+                "Core i9-14th Gen": [
+                    "i9-14900",
+                    "i9-14900F",
+                    "i9-14900K",
+                    "i9-14900KF",
+                    "i9-14900KS"
+                ],
+                "Ryzen 3-1000 Series": [
+                    "Ryzen 3 1200",
+                    "Ryzen 3 1300X"
+                ],
+                "Ryzen 3-2000 Series": [
+                    "Ryzen 3 2200G",
+                    "Ryzen 3 2300X"
+                ],
+                "Ryzen 3-3000 Series": [
+                    "Ryzen 3 3100",
+                    "Ryzen 3 3300X"
+                ],
+                "Ryzen 3-4000 Series": [
+                    "Ryzen 3 4100",
+                    "Ryzen 3 4300G"
+                ],
+                "Ryzen 3-5000 Series": [
+                    "Ryzen 3 5300G",
+                    "Ryzen 3 5500"
+                ],
+                "Ryzen 3-7000 Series": [
+                    "Ryzen 3 7300X"
+                ],
+                "Ryzen 5-1000 Series": [
+                    "Ryzen 5 1400",
+                    "Ryzen 5 1500X",
+                    "Ryzen 5 1600",
+                    "Ryzen 5 1600X"
+                ],
+                "Ryzen 5-2000 Series": [
+                    "Ryzen 5 2400G",
+                    "Ryzen 5 2600",
+                    "Ryzen 5 2600X"
+                ],
+                "Ryzen 5-3000 Series": [
+                    "Ryzen 5 3400G",
+                    "Ryzen 5 3500",
+                    "Ryzen 5 3600",
+                    "Ryzen 5 3600X"
+                ],
+                "Ryzen 5-4000 Series": [
+                    "Ryzen 5 4500",
+                    "Ryzen 5 4600G"
+                ],
+                "Ryzen 5-5000 Series": [
+                    "Ryzen 5 5500",
+                    "Ryzen 5 5600",
+                    "Ryzen 5 5600G",
+                    "Ryzen 5 5600X",
+                    "Ryzen 5 5600X3D"
+                ],
+                "Ryzen 5-7000 Series": [
+                    "Ryzen 5 7500F",
+                    "Ryzen 5 7600",
+                    "Ryzen 5 7600X"
+                ],
+                "Ryzen 5-9000 Series": [
+                    "Ryzen 5 9600",
+                    "Ryzen 5 9600X"
+                ],
+                "Ryzen 7-1000 Series": [
+                    "Ryzen 7 1700",
+                    "Ryzen 7 1700X",
+                    "Ryzen 7 1800X"
+                ],
+                "Ryzen 7-2000 Series": [
+                    "Ryzen 7 2700",
+                    "Ryzen 7 2700X"
+                ],
+                "Ryzen 7-3000 Series": [
+                    "Ryzen 7 3700X",
+                    "Ryzen 7 3800X",
+                    "Ryzen 7 3800XT"
+                ],
+                "Ryzen 7-4000 Series": [
+                    "Ryzen 7 4700G"
+                ],
+                "Ryzen 7-5000 Series": [
+                    "Ryzen 7 5700G",
+                    "Ryzen 7 5700X",
+                    "Ryzen 7 5800",
+                    "Ryzen 7 5800X",
+                    "Ryzen 7 5800X3D"
+                ],
+                "Ryzen 7-7000 Series": [
+                    "Ryzen 7 7700",
+                    "Ryzen 7 7700X",
+                    "Ryzen 7 7800X3D"
+                ],
+                "Ryzen 7-9000 Series": [
+                    "Ryzen 7 9700X",
+                    "Ryzen 7 9800X3D"
+                ],
+                "Ryzen 9-3000 Series": [
+                    "Ryzen 9 3900X",
+                    "Ryzen 9 3900XT",
+                    "Ryzen 9 3950X"
+                ],
+                "Ryzen 9-5000 Series": [
+                    "Ryzen 9 5900X",
+                    "Ryzen 9 5950X"
+                ],
+                "Ryzen 9-7000 Series": [
+                    "Ryzen 9 7900",
+                    "Ryzen 9 7900X",
+                    "Ryzen 9 7950X",
+                    "Ryzen 9 7950X3D"
+                ],
+                "Ryzen 9-9000 Series": [
+                    "Ryzen 9 9900X",
+                    "Ryzen 9 9950X",
+                    "Ryzen 9 9950X3D"
+                ]
+            }
+        }
+    },
+    "motherboard": {
+        "dropdowns": {
+            "brand": [
+                "ASUS",
+                "MSI",
+                "Gigabyte",
+                "ASRock",
+                "Biostar"
+            ],
+            "socket_type": [
+                "Intel LGA 1151",
+                "Intel LGA 1200",
+                "Intel LGA 1700",
+                "AMD AM4",
+                "AMD AM5"
+            ],
+            "chipset": {
+                "Intel LGA 1151": [
+                    "H310",
+                    "B360",
+                    "H370",
+                    "Z370",
+                    "Z390"
+                ],
+                "Intel LGA 1200": [
+                    "H410",
+                    "B460",
+                    "H470",
+                    "H510",
+                    "B560",
+                    "H570",
+                    "Z490",
+                    "Z590"
+                ],
+                "Intel LGA 1700": [
+                    "H610",
+                    "B660",
+                    "H670",
+                    "Z690",
+                    "B760",
+                    "H770",
+                    "Z790"
+                ],
+                "AMD AM4": [
+                    "A320",
+                    "B350",
+                    "B450",
+                    "B550",
+                    "X370",
+                    "X470",
+                    "X570",
+                    "A520"
+                ],
+                "AMD AM5": [
+                    "A620",
+                    "B650",
+                    "B650E",
+                    "X670",
+                    "X670E"
+                ]
+            },
+            "form_factor": [
+                "Mini-ITX",
+                "Micro-ATX",
+                "ATX",
+                "E-ATX"
+            ]
+        }
+    },
+    "storage": {
+        "dropdowns": {
+            "type": [
+                "SSD (SATA)",
+                "SSD (NVMe)",
+                "HDD"
+            ],
+            "interface": {
+                "SSD (NVMe)": [
+                    "M.2 PCIe Gen 3",
+                    "M.2 PCIe Gen 4",
+                    "M.2 PCIe Gen 5"
+                ],
+                "SSD (SATA)": [
+                    "2.5\"",
+                    "3.5\""
+                ],
+                "HDD": [
+                    "2.5\"",
+                    "3.5\""
+                ]
+            },
+            "capacity": [
+                "120GB",
+                "240GB",
+                "256GB",
+                "500GB",
+                "512GB",
+                "1TB",
+                "2TB",
+                "4TB",
+                "8TB",
+                "10TB+"
+            ],
+            "rpm": {
+                "HDD": [
+                    "5400 RPM",
+                    "7200 RPM"
+                ]
+            }
+        }
+    },
+    "psu": {
+        "dropdowns": {
+            "brand": [
+                "Corsair",
+                "Seasonic",
+                "EVGA",
+                "Cooler Master",
+                "Thermaltake",
+                "be quiet!",
+                "MSI",
+                "ASUS"
+            ],
+            "wattage": [
+                "450W",
+                "550W",
+                "650W",
+                "750W",
+                "850W",
+                "1000W",
+                "1200W",
+                "1500W+"
+            ],
+            "efficiency_rating": [
+                "80+ White",
+                "80+ Bronze",
+                "80+ Silver",
+                "80+ Gold",
+                "80+ Platinum",
+                "80+ Titanium"
+            ],
+            "modularity": [
+                "Non-Modular",
+                "Semi-Modular",
+                "Fully Modular"
+            ]
+        }
+    },
+    "case": {
+        "dropdowns": {
+            "brand": [
+                "NZXT",
+                "Corsair",
+                "Lian Li",
+                "Cooler Master",
+                "Fractal Design",
+                "Phanteks",
+                "Thermaltake"
+            ],
+            "form_factor": [
+                "Full Tower",
+                "Mid Tower",
+                "Mini Tower",
+                "SFF (Small Form Factor)",
+                "ITX"
+            ],
+            "side_panel": [
+                "Tempered Glass",
+                "Acrylic",
+                "Steel",
+                "Mesh",
+                "No Window"
+            ]
+        }
+    },
+    "cooling": {
+        "dropdowns": {
+            "type": [
+                "Air Cooler (Tower)",
+                "Air Cooler (Low Profile)",
+                "AIO Liquid (120mm)",
+                "AIO Liquid (240mm)",
+                "AIO Liquid (280mm)",
+                "AIO Liquid (360mm)"
+            ],
+            "brand": [
+                "Noctua",
+                "Cooler Master",
+                "Corsair",
+                "NZXT",
+                "be quiet!",
+                "DeepCool",
+                "Arctic",
+                "Thermaltake"
+            ],
+            "socket_compatibility": [
+                "Intel LGA 115x/1200/1700",
+                "AMD AM4",
+                "AMD AM5",
+                "Universal (Intel + AMD)"
+            ]
+        }
+    }
+}

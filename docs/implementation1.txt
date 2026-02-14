@@ -1,0 +1,686 @@
+# Prompt: Integrate JSON-Driven Dropdown System into Dashboard.html
+
+## Objective
+Refactor the existing `dashboard.html` file to use the new `components-dropdown.json` file for all component dropdowns. Remove all hardcoded dropdown options and replace them with a dynamic, JSON-driven system that properly handles cascading relationships.
+
+---
+
+## Files Involved
+- **Input**: `components-dropdown.json` (uploaded JSON data file)
+- **Target**: `dashboard.html` (existing file in current directory)
+- **Create**: `js/dropdown-manager.js` (new JavaScript module)
+
+---
+
+## Step 1: Analyze and Clean Existing HTML
+
+### Tasks:
+1. **Locate all existing dropdown `<select>` elements** in dashboard.html
+2. **Remove all hardcoded `<option>` elements** from these dropdowns
+3. **Keep only the select element structure** with proper IDs and data attributes
+4. **Preserve**: Header, navigation, search container, sidebar (as previously specified)
+
+### Expected HTML Structure After Cleanup:
+```html
+<!-- RAM Component Card -->
+<div class="component-card" data-component="ram">
+  <h3><i class="icon-ram"></i> RAM / Memory</h3>
+  
+  <div class="dropdown-group">
+    <label for="ram-generation">Generation & Speed</label>
+    <select id="ram-generation" data-dropdown="generation" data-component="ram">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="ram-capacity">Capacity</label>
+    <select id="ram-capacity" data-dropdown="capacity" data-component="ram">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="ram">Find RAM Prices</button>
+</div>
+
+<!-- GPU Component Card -->
+<div class="component-card" data-component="gpu">
+  <h3><i class="icon-gpu"></i> Graphics Card (GPU)</h3>
+  
+  <div class="dropdown-group">
+    <label for="gpu-brand">Brand</label>
+    <select id="gpu-brand" data-dropdown="brand" data-component="gpu">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="gpu-series">Series</label>
+    <select id="gpu-series" data-dropdown="series" data-component="gpu" data-parent="brand" disabled>
+      <option value="">Select Brand First...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="gpu-model">Model</label>
+    <select id="gpu-model" data-dropdown="model" data-component="gpu" data-parent="series" disabled>
+      <option value="">Select Series First...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="gpu">Find GPU Prices</button>
+</div>
+
+<!-- CPU Component Card -->
+<div class="component-card" data-component="cpu">
+  <h3><i class="icon-cpu"></i> Processor (CPU)</h3>
+  
+  <div class="dropdown-group">
+    <label for="cpu-brand">Brand</label>
+    <select id="cpu-brand" data-dropdown="brand" data-component="cpu">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="cpu-tier">Performance Tier</label>
+    <select id="cpu-tier" data-dropdown="tier" data-component="cpu" data-parent="brand" disabled>
+      <option value="">Select Brand First...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="cpu-generation">Generation</label>
+    <select id="cpu-generation" data-dropdown="generation" data-component="cpu" data-parent="tier" disabled>
+      <option value="">Select Tier First...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="cpu-model">Specific Model</label>
+    <select id="cpu-model" data-dropdown="model" data-component="cpu" data-parent="generation" disabled>
+      <option value="">Select Generation First...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="cpu">Find CPU Prices</button>
+</div>
+
+<!-- Motherboard Component Card -->
+<div class="component-card" data-component="motherboard">
+  <h3><i class="icon-motherboard"></i> Motherboard</h3>
+  
+  <div class="dropdown-group">
+    <label for="mobo-socket">Socket Type</label>
+    <select id="mobo-socket" data-dropdown="socket" data-component="motherboard">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="mobo-chipset">Chipset</label>
+    <select id="mobo-chipset" data-dropdown="chipset" data-component="motherboard" data-parent="socket" disabled>
+      <option value="">Select Socket First...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="mobo-formfactor">Form Factor</label>
+    <select id="mobo-formfactor" data-dropdown="formfactor" data-component="motherboard">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="motherboard">Find Motherboard Prices</button>
+</div>
+
+<!-- Storage Component Card -->
+<div class="component-card" data-component="storage">
+  <h3><i class="icon-storage"></i> Storage (SSD/HDD)</h3>
+  
+  <div class="dropdown-group">
+    <label for="storage-type">Type</label>
+    <select id="storage-type" data-dropdown="type" data-component="storage">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="storage-interface">Interface</label>
+    <select id="storage-interface" data-dropdown="interface" data-component="storage" data-parent="type" disabled>
+      <option value="">Select Type First...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="storage-capacity">Capacity</label>
+    <select id="storage-capacity" data-dropdown="capacity" data-component="storage">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="storage">Find Storage Prices</button>
+</div>
+
+<!-- PSU Component Card -->
+<div class="component-card" data-component="psu">
+  <h3><i class="icon-psu"></i> Power Supply (PSU)</h3>
+  
+  <div class="dropdown-group">
+    <label for="psu-wattage">Wattage</label>
+    <select id="psu-wattage" data-dropdown="wattage" data-component="psu">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="psu-efficiency">Efficiency Rating</label>
+    <select id="psu-efficiency" data-dropdown="efficiency" data-component="psu">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="psu-modularity">Modularity</label>
+    <select id="psu-modularity" data-dropdown="modularity" data-component="psu">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="psu">Find PSU Prices</button>
+</div>
+
+<!-- Case Component Card -->
+<div class="component-card" data-component="case">
+  <h3><i class="icon-case"></i> PC Case</h3>
+  
+  <div class="dropdown-group">
+    <label for="case-formfactor">Form Factor</label>
+    <select id="case-formfactor" data-dropdown="formfactor" data-component="case">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="case-panel">Side Panel</label>
+    <select id="case-panel" data-dropdown="panel" data-component="case">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="case">Find Case Prices</button>
+</div>
+
+<!-- Cooling Component Card -->
+<div class="component-card" data-component="cooling">
+  <h3><i class="icon-cooling"></i> Cooling System</h3>
+  
+  <div class="dropdown-group">
+    <label for="cooling-type">Type</label>
+    <select id="cooling-type" data-dropdown="type" data-component="cooling">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <div class="dropdown-group">
+    <label for="cooling-compatibility">Socket Compatibility</label>
+    <select id="cooling-compatibility" data-dropdown="compatibility" data-component="cooling">
+      <option value="">Loading...</option>
+    </select>
+  </div>
+  
+  <button class="search-btn" data-component="cooling">Find Cooling Prices</button>
+</div>
+```
+
+---
+
+## Step 2: Create dropdown-manager.js
+
+### File Location: `js/dropdown-manager.js`
+
+### Core Functionality Required:
+
+```javascript
+class DropdownManager {
+  constructor(componentsData) {
+    this.data = componentsData;
+    this.cache = new Map(); // Cache for performance
+  }
+
+  /**
+   * Initialize all dropdowns on page load
+   */
+  async initialize() {
+    try {
+      // Load JSON data
+      const response = await fetch('components-dropdown.json');
+      if (!response.ok) throw new Error('Failed to load component data');
+      
+      this.data = await response.json();
+      
+      // Initialize each component
+      this.initializeRAM();
+      this.initializeGPU();
+      this.initializeCPU();
+      this.initializeMotherboard();
+      this.initializeStorage();
+      this.initializePSU();
+      this.initializeCase();
+      this.initializeCooling();
+      
+      console.log('All dropdowns initialized successfully');
+    } catch (error) {
+      console.error('Dropdown initialization failed:', error);
+      this.showError();
+    }
+  }
+
+  /**
+   * Populate a dropdown with options
+   * @param {string} selectId - ID of the select element
+   * @param {Array} options - Array of option values
+   * @param {string} placeholder - Placeholder text
+   */
+  populate(selectId, options, placeholder = 'Select...') {
+    const select = document.getElementById(selectId);
+    if (!select) {
+      console.error(`Select element #${selectId} not found`);
+      return;
+    }
+
+    // Clear existing options
+    select.innerHTML = '';
+
+    // Add placeholder
+    const placeholderOption = document.createElement('option');
+    placeholderOption.value = '';
+    placeholderOption.textContent = placeholder;
+    select.appendChild(placeholderOption);
+
+    // Add options
+    options.forEach(optionValue => {
+      const option = document.createElement('option');
+      option.value = optionValue;
+      option.textContent = optionValue;
+      select.appendChild(option);
+    });
+
+    // Enable the dropdown
+    select.disabled = false;
+  }
+
+  /**
+   * Setup cascading dropdown relationship
+   * @param {string} parentId - Parent select ID
+   * @param {string} childId - Child select ID
+   * @param {Function} getOptionsCallback - Function to get child options based on parent value
+   */
+  setupCascading(parentId, childId, getOptionsCallback) {
+    const parent = document.getElementById(parentId);
+    const child = document.getElementById(childId);
+
+    if (!parent || !child) {
+      console.error(`Cannot setup cascading: ${parentId} or ${childId} not found`);
+      return;
+    }
+
+    parent.addEventListener('change', (e) => {
+      const parentValue = e.target.value;
+
+      if (!parentValue) {
+        // Reset child if parent is cleared
+        this.resetDropdown(childId);
+        return;
+      }
+
+      // Get options for child based on parent selection
+      const childOptions = getOptionsCallback(parentValue);
+      
+      if (childOptions && childOptions.length > 0) {
+        this.populate(childId, childOptions, 'Select...');
+      } else {
+        this.resetDropdown(childId);
+      }
+    });
+  }
+
+  /**
+   * Reset a dropdown to disabled state
+   * @param {string} selectId - ID of select element to reset
+   */
+  resetDropdown(selectId) {
+    const select = document.getElementById(selectId);
+    if (!select) return;
+
+    select.innerHTML = '<option value="">Select previous option first...</option>';
+    select.disabled = true;
+    select.value = '';
+
+    // Trigger change event to cascade reset
+    select.dispatchEvent(new Event('change'));
+  }
+
+  /**
+   * Get all selected values for a component
+   * @param {string} componentType - Type of component (e.g., 'gpu', 'cpu')
+   * @returns {Object} Object with all selected values
+   */
+  getSelectedValues(componentType) {
+    const selects = document.querySelectorAll(`select[data-component="${componentType}"]`);
+    const values = {};
+
+    selects.forEach(select => {
+      const dropdown = select.dataset.dropdown;
+      values[dropdown] = select.value;
+    });
+
+    return values;
+  }
+
+  /**
+   * Validate that all required dropdowns for a component are filled
+   * @param {string} componentType - Type of component
+   * @returns {boolean} True if valid, false otherwise
+   */
+  validateComponent(componentType) {
+    const selects = document.querySelectorAll(`select[data-component="${componentType}"]:not([disabled])`);
+    
+    for (const select of selects) {
+      if (!select.value) {
+        return false;
+      }
+    }
+    
+    return true;
+  }
+
+  // ============================================
+  // Component-Specific Initialization Methods
+  // ============================================
+
+  initializeRAM() {
+    const ramData = this.data.ram;
+    
+    // Populate both dropdowns (no dependencies)
+    this.populate('ram-generation', ramData.generation);
+    this.populate('ram-capacity', ramData.capacity);
+  }
+
+  initializeGPU() {
+    const gpuData = this.data.gpu;
+    
+    // Populate initial dropdown
+    this.populate('gpu-brand', gpuData.brand);
+
+    // Setup cascading: Brand -> Series
+    this.setupCascading('gpu-brand', 'gpu-series', (brand) => {
+      return gpuData.series[brand] || [];
+    });
+
+    // Setup cascading: Series -> Model
+    this.setupCascading('gpu-series', 'gpu-model', (series) => {
+      return gpuData.model[series] || [];
+    });
+  }
+
+  initializeCPU() {
+    const cpuData = this.data.cpu;
+    
+    // Populate initial dropdown
+    this.populate('cpu-brand', cpuData.brand);
+
+    // Setup cascading: Brand -> Tier
+    this.setupCascading('cpu-brand', 'cpu-tier', (brand) => {
+      return cpuData.tier[brand] || [];
+    });
+
+    // Setup cascading: Tier -> Generation
+    this.setupCascading('cpu-tier', 'cpu-generation', (tier) => {
+      return cpuData.generation[tier] || [];
+    });
+
+    // Setup cascading: Generation -> Model
+    this.setupCascading('cpu-generation', 'cpu-model', (generation) => {
+      return cpuData.model[generation] || [];
+    });
+  }
+
+  initializeMotherboard() {
+    const moboData = this.data.motherboard;
+    
+    // Populate independent dropdowns
+    this.populate('mobo-socket', moboData.socket);
+    this.populate('mobo-formfactor', moboData.formfactor);
+
+    // Setup cascading: Socket -> Chipset
+    this.setupCascading('mobo-socket', 'mobo-chipset', (socket) => {
+      return moboData.chipset[socket] || [];
+    });
+  }
+
+  initializeStorage() {
+    const storageData = this.data.storage;
+    
+    // Populate independent dropdowns
+    this.populate('storage-type', storageData.type);
+    this.populate('storage-capacity', storageData.capacity);
+
+    // Setup cascading: Type -> Interface
+    this.setupCascading('storage-type', 'storage-interface', (type) => {
+      return storageData.interface[type] || [];
+    });
+  }
+
+  initializePSU() {
+    const psuData = this.data.psu;
+    
+    // Populate all dropdowns (no dependencies)
+    this.populate('psu-wattage', psuData.wattage);
+    this.populate('psu-efficiency', psuData.efficiency);
+    this.populate('psu-modularity', psuData.modularity);
+  }
+
+  initializeCase() {
+    const caseData = this.data.case;
+    
+    // Populate all dropdowns (no dependencies)
+    this.populate('case-formfactor', caseData.formfactor);
+    this.populate('case-panel', caseData.panel);
+  }
+
+  initializeCooling() {
+    const coolingData = this.data.cooling;
+    
+    // Populate all dropdowns (no dependencies)
+    this.populate('cooling-type', coolingData.type);
+    this.populate('cooling-compatibility', coolingData.compatibility);
+  }
+
+  /**
+   * Show error message to user
+   */
+  showError() {
+    const errorHTML = `
+      <div class="alert alert-danger" role="alert">
+        <strong>Error:</strong> Failed to load component data. Please refresh the page.
+      </div>
+    `;
+    
+    // Insert error message at top of components section
+    const componentsSection = document.querySelector('.components-section');
+    if (componentsSection) {
+      componentsSection.insertAdjacentHTML('afterbegin', errorHTML);
+    }
+  }
+}
+
+// Initialize on DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+  const manager = new DropdownManager();
+  manager.initialize();
+
+  // Setup search button handlers
+  document.querySelectorAll('.search-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      const component = e.target.dataset.component;
+      
+      if (manager.validateComponent(component)) {
+        const values = manager.getSelectedValues(component);
+        console.log(`Searching for ${component}:`, values);
+        
+        // TODO: Implement actual search functionality
+        // Example: window.location.href = `/search?component=${component}&...`;
+      } else {
+        alert('Please fill in all required fields');
+      }
+    });
+  });
+});
+```
+
+---
+
+## Step 3: Update dashboard.html
+
+### Add Script Reference:
+Insert before closing `</body>` tag:
+
+```html
+<!-- Dropdown Manager -->
+<script src="js/dropdown-manager.js"></script>
+```
+
+### Ensure JSON File Accessibility:
+Place `components-dropdown.json` in the root directory alongside `dashboard.html`, OR update the fetch path in `dropdown-manager.js`:
+
+```javascript
+const response = await fetch('data/components-dropdown.json'); // if in data folder
+// OR
+const response = await fetch('/components-dropdown.json'); // if in root
+```
+
+---
+
+## Step 4: Add Loading and Error States (Optional Enhancement)
+
+### CSS for Loading State:
+```css
+select:disabled {
+  background-color: #e9ecef;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+select option[value=""] {
+  color: #6c757d;
+  font-style: italic;
+}
+
+.component-card.loading {
+  opacity: 0.6;
+  pointer-events: none;
+}
+
+.alert {
+  padding: 12px 20px;
+  margin-bottom: 20px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+```
+
+---
+
+## Step 5: Testing Checklist
+
+### Verify the following works correctly:
+
+1. **Page Load**:
+   - [ ] JSON file loads successfully
+   - [ ] All independent dropdowns populate on page load
+   - [ ] Dependent dropdowns are disabled initially
+   - [ ] No console errors
+
+2. **RAM Component**:
+   - [ ] Both dropdowns populate immediately
+   - [ ] All options are selectable
+
+3. **GPU Component**:
+   - [ ] Brand dropdown populates
+   - [ ] Series dropdown enables after brand selection
+   - [ ] Series dropdown shows correct options for selected brand
+   - [ ] Model dropdown enables after series selection
+   - [ ] Model dropdown shows correct options for selected series
+   - [ ] Changing brand resets series and model
+
+4. **CPU Component**:
+   - [ ] Brand dropdown populates
+   - [ ] Tier dropdown enables and populates based on brand
+   - [ ] Generation dropdown enables and populates based on tier
+   - [ ] Model dropdown enables and populates based on generation
+   - [ ] Changing any parent resets all children
+
+5. **Motherboard Component**:
+   - [ ] Socket and Form Factor dropdowns populate
+   - [ ] Chipset dropdown enables after socket selection
+   - [ ] Chipset shows correct options for selected socket
+
+6. **Storage Component**:
+   - [ ] Type and Capacity dropdowns populate
+   - [ ] Interface dropdown enables after type selection
+   - [ ] Interface shows correct options for selected type
+
+7. **PSU Component**:
+   - [ ] All three dropdowns populate immediately
+   - [ ] All options are selectable
+
+8. **Case Component**:
+   - [ ] Both dropdowns populate immediately
+   - [ ] All options are selectable
+
+9. **Cooling Component**:
+   - [ ] Both dropdowns populate immediately
+   - [ ] All options are selectable
+
+10. **Search Buttons**:
+    - [ ] Button validates selections before searching
+    - [ ] Alert shows if required fields are empty
+    - [ ] Console logs correct values when valid
+
+11. **Error Handling**:
+    - [ ] Error message appears if JSON fails to load
+    - [ ] Page doesn't break if JSON is malformed
+
+---
+
+## Key Requirements Summary
+
+✅ **Remove ALL hardcoded `<option>` elements from HTML**
+✅ **Use `components-dropdown.json` as single source of truth**
+✅ **Implement proper cascading dropdown logic**
+✅ **Handle all 8 component types correctly**
+✅ **Preserve existing page structure (header, nav, sidebar)**
+✅ **Add proper error handling**
+✅ **Validate selections before search**
+✅ **Maintain disabled states for dependent dropdowns**
+✅ **Reset child dropdowns when parent changes**
+
+---
+
+## Expected Outcome
+
+After implementation:
+- No dropdown options are hardcoded in HTML
+- All dropdowns dynamically populate from JSON
+- Cascading dropdowns work correctly with proper parent-child relationships
+- Page loads quickly with proper loading states
+- Error handling provides user feedback if JSON fails
+- Search buttons validate selections before proceeding
+- Code is maintainable and scalable for future updates

@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('currentUser', JSON.stringify(newUser));
 
             alert('Registration Successful!');
-            window.location.href = 'dashboard.html';
+            window.location.href = '../index.html';
         });
     }
 
