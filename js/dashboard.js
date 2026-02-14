@@ -351,3 +351,528 @@ function loadMoreListings() {
   }, 800);
 }
 
+
+// =========================================
+// 4. Add Listing Modal Logic
+// =========================================
+
+let modalCurrentStep = 1;
+let modalSelectedType = null;
+let modalUploadedFiles = [];
+
+// Dropdown data loaded from components-dropdown.json
+let listingDropdownData = null;
+
+// --- Load the JSON (same approach as dropdown-manager.js) ---
+(function loadListingDropdownData() {
+  document.addEventListener('DOMContentLoaded', () => {
+    // Resolve path relative to this script
+    const scripts = document.querySelectorAll('script[src*="dashboard"]');
+    let basePath = 'data/components-dropdown.json';
+    if (scripts.length) {
+      const src = scripts[0].getAttribute('src');
+      const base = src.substring(0, src.lastIndexOf('/'));
+      basePath = base.replace(/\/?js\/?$/, '') + (base.includes('/') ? '/' : '') + 'data/components-dropdown.json';
+    }
+
+    const xhr = new XMLHttpRequest();
+    xhr.open('GET', basePath, true);
+    xhr.responseType = 'json';
+    xhr.onload = () => {
+      if (xhr.status === 200 || xhr.status === 0) {
+        listingDropdownData = xhr.response ?? JSON.parse(xhr.responseText);
+        console.log('Listing modal: dropdown data loaded');
+      }
+    };
+    xhr.onerror = () => console.error('Listing modal: failed to load dropdown data');
+    xhr.send();
+  });
+})();
+
+// --- Listing-modal-scoped dropdown helpers ---
+function lPopulate(selectEl, options, placeholder = 'Select...') {
+  selectEl.innerHTML = '';
+  const ph = document.createElement('option');
+  ph.value = ''; ph.textContent = placeholder;
+  ph.disabled = true; ph.selected = true;
+  selectEl.appendChild(ph);
+
+  options.forEach(v => {
+    const o = document.createElement('option');
+    o.value = v; o.textContent = v;
+    selectEl.appendChild(o);
+  });
+  selectEl.disabled = false;
+}
+
+function lResetDropdown(selectEl, msg = 'Select previous option first...') {
+  selectEl.innerHTML = `<option value="" disabled selected>${msg}</option>`;
+  selectEl.disabled = true;
+  selectEl.value = '';
+}
+
+function lCreateGroup(label, id, disabled = false, placeholder = 'Select...') {
+  const group = document.createElement('div');
+  group.className = 'listing-form-group';
+
+  const lbl = document.createElement('label');
+  lbl.textContent = label;
+  lbl.setAttribute('for', id);
+
+  const sel = document.createElement('select');
+  sel.className = 'form-control';
+  sel.id = id;
+
+  if (disabled) {
+    lResetDropdown(sel, `Select previous option first...`);
+  } else {
+    const ph = document.createElement('option');
+    ph.value = ''; ph.textContent = placeholder;
+    ph.disabled = true; ph.selected = true;
+    sel.appendChild(ph);
+  }
+
+  group.appendChild(lbl);
+  group.appendChild(sel);
+  return { group, select: sel };
+}
+
+// --- Open / Close ---
+function openListingModal() {
+  const overlay = document.getElementById('listingModalOverlay');
+  if (overlay) {
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    goToStep(1);
+  }
+}
+
+function closeListingModal() {
+  const overlay = document.getElementById('listingModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    resetListingModal();
+  }
+}
+
+// Close on backdrop click
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'listingModalOverlay') {
+    closeListingModal();
+  }
+});
+
+// --- Step Navigation ---
+function goToStep(step) {
+  modalCurrentStep = step;
+
+  // Update step containers
+  document.querySelectorAll('.modal-step').forEach(el => el.classList.remove('active'));
+  const stepEl = document.getElementById(`modal-step-${step}`);
+  if (stepEl) stepEl.classList.add('active');
+
+  // Update step dots
+  document.querySelectorAll('.step-dot').forEach(dot => {
+    const dotStep = parseInt(dot.dataset.step);
+    dot.classList.remove('active', 'completed');
+    if (dotStep === step) dot.classList.add('active');
+    else if (dotStep < step) dot.classList.add('completed');
+  });
+
+  // Update footer buttons
+  const backBtn = document.getElementById('modal-back-btn');
+  const nextBtn = document.getElementById('modal-next-btn');
+  const submitBtn = document.getElementById('modal-submit-btn');
+
+  backBtn.style.display = step > 1 ? 'inline-block' : 'none';
+  nextBtn.style.display = step === 2 ? 'inline-block' : 'none';
+  submitBtn.style.display = step === 3 ? 'inline-block' : 'none';
+}
+
+function modalGoNext() {
+  if (modalCurrentStep < 3) goToStep(modalCurrentStep + 1);
+}
+
+function modalGoBack() {
+  if (modalCurrentStep > 1) goToStep(modalCurrentStep - 1);
+}
+
+// --- Step 1: Component Type Selection ---
+function selectComponentType(type) {
+  modalSelectedType = type;
+
+  // Highlight selected tile
+  document.querySelectorAll('.type-tile').forEach(tile => tile.classList.remove('selected'));
+  const selected = document.querySelector(`.type-tile[data-type="${type}"]`);
+  if (selected) selected.classList.add('selected');
+
+  // Populate Step 2 dropdowns from JSON data
+  populateListingDropdowns(type);
+
+  // Advance to Step 2
+  goToStep(2);
+}
+
+// --- Step 2: Dynamic Dropdown Population from JSON ---
+function populateListingDropdowns(type) {
+  const container = document.getElementById('listing-dropdowns');
+  if (!container) return;
+  container.innerHTML = '';
+
+  if (!listingDropdownData || !listingDropdownData[type]) {
+    container.innerHTML = '<p style="color:#999">Dropdown data not available.</p>';
+    return;
+  }
+
+  const d = listingDropdownData[type].dropdowns;
+
+  switch (type) {
+    case 'ram': initListingRAM(container, d); break;
+    case 'gpu': initListingGPU(container, d); break;
+    case 'cpu': initListingCPU(container, d); break;
+    case 'motherboard': initListingMotherboard(container, d); break;
+    case 'storage': initListingStorage(container, d); break;
+    case 'psu': initListingPSU(container, d); break;
+    case 'case': initListingCase(container, d); break;
+    case 'cooling': initListingCooling(container, d); break;
+  }
+}
+
+// --- Per-component init functions (mirrors dropdown-manager.js) ---
+
+function initListingRAM(container, d) {
+  // Generation (independent)
+  const gen = lCreateGroup('Generation', 'listing-ram-gen');
+  lPopulate(gen.select, d.generation, 'Select Generation...');
+  container.appendChild(gen.group);
+
+  // Speed (cascading: depends on Generation)
+  const speed = lCreateGroup('Speed', 'listing-ram-speed', true);
+  container.appendChild(speed.group);
+
+  // Capacity (independent)
+  const cap = lCreateGroup('Capacity', 'listing-ram-cap');
+  lPopulate(cap.select, d.capacity, 'Select Capacity...');
+  container.appendChild(cap.group);
+
+  // Cascade: Generation → Speed
+  gen.select.addEventListener('change', () => {
+    const val = gen.select.value;
+    if (val && d.speed[val]) {
+      lPopulate(speed.select, d.speed[val], 'Select Speed...');
+    } else {
+      lResetDropdown(speed.select);
+    }
+  });
+}
+
+function initListingGPU(container, d) {
+  const brand = lCreateGroup('Brand', 'listing-gpu-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
+  const series = lCreateGroup('Series', 'listing-gpu-series', true);
+  container.appendChild(series.group);
+
+  const model = lCreateGroup('Model', 'listing-gpu-model', true);
+  container.appendChild(model.group);
+
+  // Brand → Series
+  brand.select.addEventListener('change', () => {
+    lResetDropdown(model.select);
+    const val = brand.select.value;
+    if (val && d.series[val]) {
+      lPopulate(series.select, d.series[val], 'Select Series...');
+    } else {
+      lResetDropdown(series.select);
+    }
+  });
+
+  // Series → Model
+  series.select.addEventListener('change', () => {
+    const val = series.select.value;
+    if (val && d.models[val]) {
+      lPopulate(model.select, d.models[val], 'Select Model...');
+    } else {
+      lResetDropdown(model.select);
+    }
+  });
+}
+
+function initListingCPU(container, d) {
+  const brand = lCreateGroup('Brand', 'listing-cpu-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
+  const tier = lCreateGroup('Performance Tier', 'listing-cpu-tier', true);
+  container.appendChild(tier.group);
+
+  const gen = lCreateGroup('Generation', 'listing-cpu-gen', true);
+  container.appendChild(gen.group);
+
+  const model = lCreateGroup('Specific Model', 'listing-cpu-model', true);
+  container.appendChild(model.group);
+
+  // Brand → Tier
+  brand.select.addEventListener('change', () => {
+    lResetDropdown(gen.select);
+    lResetDropdown(model.select);
+    const val = brand.select.value;
+    if (val && d.tier[val]) {
+      lPopulate(tier.select, d.tier[val], 'Select Tier...');
+    } else {
+      lResetDropdown(tier.select);
+    }
+  });
+
+  // Tier → Generation  (key = base name before parenthetical, e.g. "Core i5")
+  tier.select.addEventListener('change', () => {
+    lResetDropdown(model.select);
+    const tierVal = tier.select.value;
+    const base = tierVal.replace(/\s*\(.*\)/, '');  // "Core i5 (Mainstream)" → "Core i5"
+    if (base && d.generation[base]) {
+      lPopulate(gen.select, d.generation[base], 'Select Generation...');
+    } else {
+      lResetDropdown(gen.select);
+    }
+  });
+
+  // Generation → Model  (key = "baseTier-generation", e.g. "Core i5-12th Gen")
+  gen.select.addEventListener('change', () => {
+    const tierVal = tier.select.value;
+    const base = tierVal.replace(/\s*\(.*\)/, '');
+    const genVal = gen.select.value;
+    const key = `${base}-${genVal}`;
+    if (key && d.models[key]) {
+      lPopulate(model.select, d.models[key], 'Select Model...');
+    } else {
+      lResetDropdown(model.select);
+    }
+  });
+}
+
+function initListingMotherboard(container, d) {
+  const socket = lCreateGroup('Socket Type', 'listing-mobo-socket');
+  lPopulate(socket.select, d.socket_type, 'Select Socket...');
+  container.appendChild(socket.group);
+
+  const chipset = lCreateGroup('Chipset', 'listing-mobo-chipset', true);
+  container.appendChild(chipset.group);
+
+  const ff = lCreateGroup('Form Factor', 'listing-mobo-ff');
+  lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
+  container.appendChild(ff.group);
+
+  // Socket → Chipset
+  socket.select.addEventListener('change', () => {
+    const val = socket.select.value;
+    if (val && d.chipset[val]) {
+      lPopulate(chipset.select, d.chipset[val], 'Select Chipset...');
+    } else {
+      lResetDropdown(chipset.select);
+    }
+  });
+}
+
+function initListingStorage(container, d) {
+  const type = lCreateGroup('Type', 'listing-stor-type');
+  lPopulate(type.select, d.type, 'Select Type...');
+  container.appendChild(type.group);
+
+  const iface = lCreateGroup('Interface', 'listing-stor-iface', true);
+  container.appendChild(iface.group);
+
+  const cap = lCreateGroup('Capacity', 'listing-stor-cap');
+  lPopulate(cap.select, d.capacity, 'Select Capacity...');
+  container.appendChild(cap.group);
+
+  // Type → Interface
+  type.select.addEventListener('change', () => {
+    const val = type.select.value;
+    if (val && d.interface[val]) {
+      lPopulate(iface.select, d.interface[val], 'Select Interface...');
+    } else {
+      lResetDropdown(iface.select);
+    }
+  });
+}
+
+function initListingPSU(container, d) {
+  const watt = lCreateGroup('Wattage', 'listing-psu-watt');
+  lPopulate(watt.select, d.wattage, 'Select Wattage...');
+  container.appendChild(watt.group);
+
+  const eff = lCreateGroup('Efficiency Rating', 'listing-psu-eff');
+  lPopulate(eff.select, d.efficiency_rating, 'Select Efficiency...');
+  container.appendChild(eff.group);
+
+  const mod = lCreateGroup('Modularity', 'listing-psu-mod');
+  lPopulate(mod.select, d.modularity, 'Select Modularity...');
+  container.appendChild(mod.group);
+}
+
+function initListingCase(container, d) {
+  const ff = lCreateGroup('Form Factor', 'listing-case-ff');
+  lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
+  container.appendChild(ff.group);
+
+  const panel = lCreateGroup('Side Panel', 'listing-case-panel');
+  lPopulate(panel.select, d.side_panel, 'Select Side Panel...');
+  container.appendChild(panel.group);
+}
+
+function initListingCooling(container, d) {
+  const type = lCreateGroup('Type', 'listing-cool-type');
+  lPopulate(type.select, d.type, 'Select Type...');
+  container.appendChild(type.group);
+
+  const compat = lCreateGroup('Socket Compatibility', 'listing-cool-socket');
+  lPopulate(compat.select, d.socket_compatibility, 'Select Compatibility...');
+  container.appendChild(compat.group);
+}
+
+// --- Step 3: Image Upload ---
+(function initImageUpload() {
+  document.addEventListener('DOMContentLoaded', () => {
+    const zone = document.getElementById('imageUploadZone');
+    const input = document.getElementById('listing-images');
+    if (!zone || !input) return;
+
+    // Drag events
+    zone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      zone.classList.add('drag-over');
+    });
+    zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+    zone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      zone.classList.remove('drag-over');
+      handleImageFiles(e.dataTransfer.files);
+    });
+
+    // File input change
+    input.addEventListener('change', () => {
+      handleImageFiles(input.files);
+      input.value = ''; // Reset so same file can be re-selected
+    });
+  });
+})();
+
+function handleImageFiles(fileList) {
+  const maxImages = 5;
+  const files = Array.from(fileList).filter(f => f.type.startsWith('image/'));
+
+  files.forEach(file => {
+    if (modalUploadedFiles.length >= maxImages) return;
+    modalUploadedFiles.push(file);
+  });
+
+  renderImagePreviews();
+}
+
+function renderImagePreviews() {
+  const row = document.getElementById('imagePreviewRow');
+  if (!row) return;
+  row.innerHTML = '';
+
+  modalUploadedFiles.forEach((file, index) => {
+    const thumb = document.createElement('div');
+    thumb.className = 'image-preview-thumb';
+
+    const img = document.createElement('img');
+    const reader = new FileReader();
+    reader.onload = (e) => { img.src = e.target.result; };
+    reader.readAsDataURL(file);
+
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-img';
+    removeBtn.textContent = '×';
+    removeBtn.onclick = () => {
+      modalUploadedFiles.splice(index, 1);
+      renderImagePreviews();
+    };
+
+    thumb.appendChild(img);
+    thumb.appendChild(removeBtn);
+    row.appendChild(thumb);
+  });
+}
+
+// --- Submit Listing ---
+function submitListing() {
+  // Gather all form data
+  const formData = {
+    componentType: modalSelectedType,
+    details: {},
+    transactionType: document.getElementById('listing-txn-type')?.value || '',
+    price: document.getElementById('listing-price')?.value || '',
+    images: modalUploadedFiles.map(f => f.name),
+    comments: document.getElementById('listing-comments')?.value || ''
+  };
+
+  // Gather all dropdown values from the listing-dropdowns container
+  const dropdownContainer = document.getElementById('listing-dropdowns');
+  if (dropdownContainer) {
+    dropdownContainer.querySelectorAll('select').forEach(sel => {
+      const label = sel.closest('.listing-form-group')?.querySelector('label')?.textContent;
+      if (label && sel.value) formData.details[label] = sel.value;
+    });
+  }
+
+  console.log('📋 New Listing Submitted:', formData);
+
+  // Close modal & show toast
+  closeListingModal();
+  showListingToast('✅ Listing submitted successfully!');
+}
+
+// --- Toast ---
+function showListingToast(message) {
+  // Create toast if it doesn't exist
+  let toast = document.querySelector('.listing-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'listing-toast';
+    document.body.appendChild(toast);
+  }
+
+  toast.textContent = message;
+  // Trigger reflow for animation restart
+  toast.classList.remove('show');
+  void toast.offsetWidth;
+  toast.classList.add('show');
+
+  setTimeout(() => toast.classList.remove('show'), 3000);
+}
+
+// --- Reset Modal ---
+function resetListingModal() {
+  modalCurrentStep = 1;
+  modalSelectedType = null;
+  modalUploadedFiles = [];
+
+  // Reset tile selection
+  document.querySelectorAll('.type-tile').forEach(tile => tile.classList.remove('selected'));
+
+  // Clear dynamic dropdowns
+  const ddContainer = document.getElementById('listing-dropdowns');
+  if (ddContainer) ddContainer.innerHTML = '';
+
+  // Reset fixed form fields
+  const txnType = document.getElementById('listing-txn-type');
+  if (txnType) txnType.selectedIndex = 0;
+
+  const price = document.getElementById('listing-price');
+  if (price) price.value = '';
+
+  const comments = document.getElementById('listing-comments');
+  if (comments) comments.value = '';
+
+  // Clear image previews
+  const previewRow = document.getElementById('imagePreviewRow');
+  if (previewRow) previewRow.innerHTML = '';
+
+  // Reset step UI
+  goToStep(1);
+}

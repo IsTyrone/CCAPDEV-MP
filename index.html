@@ -58,22 +58,22 @@
         </nav>
 
         <div class="layout-container">
-            <button id="add-forum">
+            <button id="add-forum" onclick="openListingModal()">
                 <div class="add-plus">+</div>
             </button>
             <main class="main-content">
                 <section class="hero-section">
-                    <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
+                    <div class="hero-box"><span class="ad-label">Placeholder</span></div>
                     <div class="hero-box hero-main">
                         <h3>Latest Price Drops</h3>
-                        <p class="hero-subtitle">Market Analysis for Oct 2025</p>
+                        <p class="hero-subtitle">Market Analysis for February 2026</p>
                         <div class="carousel-dots">
                             <div class="dot active"></div>
                             <div class="dot"></div>
                             <div class="dot"></div>
                         </div>
                     </div>
-                    <div class="hero-box"><span class="ad-label">Ad / Feature</span></div>
+                    <div class="hero-box"><span class="ad-label">Placeholder</span></div>
                 </section>
 
                 <!-- Market Ticker Strip -->
@@ -555,6 +555,121 @@
                         <button class="load-more-btn" onclick="loadMoreListings()">Load More Listings</button>
                     </div>
                 </section>
+            </div>
+
+            <!-- Add Listing Modal -->
+            <div class="listing-modal-overlay" id="listingModalOverlay">
+                <div class="listing-modal">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Add New Listing</h2>
+                        <div class="modal-step-dots">
+                            <span class="step-dot active" data-step="1">1</span>
+                            <span class="step-dot" data-step="2">2</span>
+                            <span class="step-dot" data-step="3">3</span>
+                        </div>
+                        <button class="modal-close-btn" onclick="closeListingModal()">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- Step 1: Choose Component Type -->
+                        <div class="modal-step active" id="modal-step-1">
+                            <p class="step-label">What component are you listing?</p>
+                            <div class="component-type-grid">
+                                <div class="type-tile" data-type="ram" onclick="selectComponentType('ram')">
+                                    <img src="assets/images/component-images/ram.png" alt="RAM">
+                                    <span>RAM / Memory</span>
+                                </div>
+                                <div class="type-tile" data-type="gpu" onclick="selectComponentType('gpu')">
+                                    <img src="assets/images/component-images/graphic-card.png" alt="GPU">
+                                    <span>Graphics Card</span>
+                                </div>
+                                <div class="type-tile" data-type="cpu" onclick="selectComponentType('cpu')">
+                                    <img src="assets/images/component-images/cpu.png" alt="CPU">
+                                    <span>Processor</span>
+                                </div>
+                                <div class="type-tile" data-type="motherboard"
+                                    onclick="selectComponentType('motherboard')">
+                                    <img src="assets/images/component-images/motherboard.png" alt="Motherboard">
+                                    <span>Motherboard</span>
+                                </div>
+                                <div class="type-tile" data-type="storage" onclick="selectComponentType('storage')">
+                                    <img src="assets/images/component-images/hard-drive.png" alt="Storage">
+                                    <span>Storage</span>
+                                </div>
+                                <div class="type-tile" data-type="psu" onclick="selectComponentType('psu')">
+                                    <img src="assets/images/component-images/power-supply.png" alt="PSU">
+                                    <span>Power Supply</span>
+                                </div>
+                                <div class="type-tile" data-type="case" onclick="selectComponentType('case')">
+                                    <img src="assets/images/component-images/case.png" alt="Case">
+                                    <span>PC Case</span>
+                                </div>
+                                <div class="type-tile" data-type="cooling" onclick="selectComponentType('cooling')">
+                                    <img src="assets/images/component-images/computer.png" alt="Cooling">
+                                    <span>Cooling</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Component Details & Price -->
+                        <div class="modal-step" id="modal-step-2">
+                            <p class="step-label">Component Details</p>
+                            <div class="listing-form" id="listing-dropdowns">
+                                <!-- Dropdowns populated dynamically by JS -->
+                            </div>
+                            <hr class="modal-divider">
+                            <p class="step-label">Transaction Info</p>
+                            <div class="listing-form">
+                                <div class="listing-form-group">
+                                    <label>Transaction Type</label>
+                                    <select class="form-control" id="listing-txn-type">
+                                        <option value="" disabled selected>Select...</option>
+                                        <option value="sold">Sold</option>
+                                        <option value="bought">Bought</option>
+                                    </select>
+                                </div>
+                                <div class="listing-form-group">
+                                    <label>Price (₱)</label>
+                                    <input type="number" class="form-control" id="listing-price"
+                                        placeholder="e.g. 15000" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Images & Comments -->
+                        <div class="modal-step" id="modal-step-3">
+                            <p class="step-label">Upload Images</p>
+                            <div class="image-upload-zone" id="imageUploadZone">
+                                <input type="file" id="listing-images" accept="image/*" multiple hidden>
+                                <div class="upload-placeholder"
+                                    onclick="document.getElementById('listing-images').click()">
+                                    <span class="upload-icon">📷</span>
+                                    <span>Click or drag images here</span>
+                                    <span class="upload-hint">Max 5 images (JPG, PNG)</span>
+                                </div>
+                            </div>
+                            <div class="image-preview-row" id="imagePreviewRow"></div>
+
+                            <div class="listing-form" style="margin-top: 16px;">
+                                <div class="listing-form-group">
+                                    <label>Additional Details / Comments</label>
+                                    <textarea class="form-control" id="listing-comments" rows="4"
+                                        placeholder="Condition, warranty info, reason for selling, etc."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn-modal-back" id="modal-back-btn" onclick="modalGoBack()"
+                            style="display: none;">← Back</button>
+                        <div class="modal-footer-spacer"></div>
+                        <button class="btn-modal-next" id="modal-next-btn" onclick="modalGoNext()"
+                            style="display: none;">Next →</button>
+                        <button class="btn-modal-submit" id="modal-submit-btn" onclick="submitListing()"
+                            style="display: none;">Submit Listing</button>
+                    </div>
+                </div>
             </div>
 
             <aside id="rightSidebar" class="right-sidebar">

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Component Prices - PC Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/forum.css" />
+</head>
+
+<body>
+    <div class="page-wrapper">
+
+        <!-- Header -->
+        <header class="main-header">
+            <a href="../index.html" class="logo-img-container">
+                <img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Tracker">
+            </a>
+
+            <div class="search-container">
+                <input type="text" class="search-bar" placeholder="Search this forum..." />
+                <button class="search-btn">🔍</button>
+            </div>
+
+            <div class="header-right">
+                <a href="../index.html" class="back-to-dash">← Dashboard</a>
+            </div>
+        </header>
+
+        <!-- Breadcrumb -->
+        <nav class="breadcrumb-bar" id="breadcrumb-bar">
+            <a href="../index.html">Home</a>
+            <!-- JS will populate segments -->
+        </nav>
+
+        <!-- Main Layout -->
+        <div class="forum-layout">
+
+            <!-- Main Feed -->
+            <main class="forum-main">
+
+                <!-- Forum Title Area -->
+                <div class="forum-title-area" id="forum-title-area">
+                    <div class="forum-icon" id="forum-icon"></div>
+                    <div class="forum-title-text">
+                        <h1 id="forum-title">Loading...</h1>
+                        <p class="forum-subtitle" id="forum-subtitle"></p>
+                    </div>
+                </div>
+
+                <!-- Sort/Filter Bar -->
+                <div class="forum-controls">
+                    <button class="sort-btn active" data-sort="recent" onclick="sortSubmissions('recent')">🕐
+                        Recent</button>
+                    <button class="sort-btn" data-sort="low-price" onclick="sortSubmissions('low-price')">↓ Lowest
+                        Price</button>
+                    <button class="sort-btn" data-sort="high-price" onclick="sortSubmissions('high-price')">↑ Highest
+                        Price</button>
+                </div>
+
+                <!-- Submissions Feed -->
+                <div class="submissions-feed" id="submissions-feed">
+                    <!-- Skeleton loaders -->
+                    <div class="submission-skeleton"></div>
+                    <div class="submission-skeleton"></div>
+                    <div class="submission-skeleton"></div>
+                </div>
+            </main>
+
+            <!-- Sidebar -->
+            <aside class="forum-sidebar">
+
+                <!-- Quick Stats -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card-title">Price Summary</h3>
+                    <div class="stat-row">
+                        <span class="stat-label">Average Price</span>
+                        <span class="stat-value" id="stat-avg-price">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Lowest</span>
+                        <span class="stat-value stat-low" id="stat-low-price">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Highest</span>
+                        <span class="stat-value stat-high" id="stat-high-price">—</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="stat-label">Total Listings</span>
+                        <span class="stat-value" id="stat-total">—</span>
+                    </div>
+                </div>
+
+                <!-- Related Models -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-card-title">Related Models</h3>
+                    <div class="related-list" id="related-list">
+                        <!-- JS will populate -->
+                    </div>
+                </div>
+
+            </aside>
+        </div>
+
+    </div>
+
+    <script src="../js/forum.js"></script>
+</body>
+
+</html>

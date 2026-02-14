@@ -225,18 +225,27 @@ document.addEventListener('DOMContentLoaded', () => {
     const manager = new DropdownManager();
     manager.initialize();
 
-    // Attach search button handlers (delegate via class)
+    // Attach search button handlers — navigate to forum page
+    // Define the ordered select IDs for each component to build the URL path
+    const selectOrder = {
+        ram: ['ram-generation', 'ram-speed', 'ram-capacity'],
+        gpu: ['gpu-brand', 'gpu-series', 'gpu-model'],
+        cpu: ['cpu-brand', 'cpu-tier', 'cpu-generation', 'cpu-model'],
+        motherboard: ['mobo-socket', 'mobo-chipset', 'mobo-formfactor'],
+        storage: ['storage-type', 'storage-interface', 'storage-capacity'],
+        psu: ['psu-wattage', 'psu-efficiency', 'psu-modularity'],
+        case: ['case-formfactor', 'case-panel'],
+        cooling: ['cooling-type', 'cooling-compatibility']
+    };
+
     document.querySelectorAll('.btn-find[data-component]').forEach(btn => {
         btn.addEventListener('click', () => {
             const comp = btn.dataset.component;
-            // Gather every enabled select inside the same card
             const card = btn.closest('.component-card');
             const selects = card.querySelectorAll('select:not([disabled])');
             let allFilled = true;
-            const values = {};
             selects.forEach(s => {
                 if (!s.value) allFilled = false;
-                values[s.id] = s.value;
             });
 
             if (!allFilled) {
@@ -244,8 +253,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            console.log(`Search ${comp}:`, values);
-            alert(`Searching for ${comp.toUpperCase()} prices…\n(Demo — see console for selected values)`);
+            // Build the hash path from select values in the defined order
+            const ids = selectOrder[comp] || [];
+            const segments = ids.map(id => {
+                const el = document.getElementById(id);
+                return el && el.value ? el.value.replace(/\s+/g, '-') : '';
+            }).filter(Boolean);
+
+            const hash = `#${comp}/${segments.join('/')}`;
+            window.location.href = `pages/forum.html${hash}`;
         });
     });
 });
