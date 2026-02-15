@@ -338,7 +338,7 @@ function generateDummyListings() {
       title: `${l.details['Brand'] || ''} ${l.details['Model'] || l.details['Specific Model'] || l.componentType}`,
       price: `₱${l.price}`, // Assuming stored price is raw number
       time: 'Just now', // Simplified for now, could calculate diff
-      image: 'assets/images/component-images/graphic-card.png',
+      image: getBrandLogoUrl(l.details['Brand'] || l.details['Type'] || 'Generic'),
       fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png'
     });
   });
