@@ -343,269 +343,275 @@
                                 <img src="assets/images/component-images/computer.png" alt="Cooling">
                             </div>
                         </div>
-                    </div>
 
-                    <!-- 1. GPU Card (Default Active) -->
-                    <div class="component-card active" id="card-gpu" data-component="gpu">
-                        <div class="card-header">
-                            <img src="assets/images/component-images/graphic-card.png" alt="GPU" class="component-icon">
-                            <h3>Graphics Card (GPU)</h3>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="gpu-brand">Brand</label>
-                                <select class="form-control" id="gpu-brand" data-component="gpu">
-                                    <option value="" disabled selected>Loading...</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="gpu-series">Series</label>
-                                <select class="form-control" id="gpu-series" data-component="gpu" disabled>
-                                    <option value="" disabled selected>Select Brand First...</option>
-                                </select>
-                            </div>
-                            <div class="form-group">
-                                <label for="gpu-model">Model</label>
-                                <select class="form-control" id="gpu-model" data-component="gpu" disabled>
-                                    <option value="" disabled selected>Select Series First...</option>
-                                </select>
-                            </div>
-                            <button class="btn-find" data-component="gpu">Find GPU Prices</button>
-                        </div>
-
-                        <!-- 2. CPU Card -->
-                        <div class="component-card" id="card-cpu" data-component="cpu">
+                        <!-- Component Cards Container -->
+                        <div class="component-cards-container">
+                            <!-- 1. GPU Card (Default Active) -->
+                            <div class="component-card active" id="card-gpu" data-component="gpu">
                             <div class="card-header">
-                                <img src="assets/images/component-images/cpu.png" alt="CPU" class="component-icon">
-                                <h3>Processor (CPU)</h3>
+                                <img src="assets/images/component-images/graphic-card.png" alt="GPU"
+                                    class="component-icon">
+                                <h3>Graphics Card (GPU)</h3>
                             </div>
                             <div class="card-body">
                                 <div class="form-group">
-                                    <label for="cpu-brand">Brand</label>
-                                    <select class="form-control" id="cpu-brand" data-component="cpu">
+                                    <label for="gpu-brand">Brand</label>
+                                    <select class="form-control" id="gpu-brand" data-component="gpu">
                                         <option value="" disabled selected>Loading...</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cpu-tier">Performance Tier</label>
-                                    <select class="form-control" id="cpu-tier" data-component="cpu" disabled>
+                                    <label for="gpu-series">Series</label>
+                                    <select class="form-control" id="gpu-series" data-component="gpu" disabled>
                                         <option value="" disabled selected>Select Brand First...</option>
                                     </select>
                                 </div>
                                 <div class="form-group">
-                                    <label for="cpu-generation">Generation</label>
-                                    <select class="form-control" id="cpu-generation" data-component="cpu" disabled>
-                                        <option value="" disabled selected>Select Tier First...</option>
+                                    <label for="gpu-model">Model</label>
+                                    <select class="form-control" id="gpu-model" data-component="gpu" disabled>
+                                        <option value="" disabled selected>Select Series First...</option>
                                     </select>
                                 </div>
-                                <div class="form-group">
-                                    <label for="cpu-model">Specific Model</label>
-                                    <select class="form-control" id="cpu-model" data-component="cpu" disabled>
-                                        <option value="" disabled selected>Select Generation First...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="cpu">Find CPU Prices</button>
+                                <button class="btn-find" data-component="gpu">Find GPU Prices</button>
                             </div>
+                        </div>
+
+                        <!-- 2. CPU Card -->
+                        <div class="component-card" id="card-cpu" data-component="cpu">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/cpu.png" alt="CPU" class="component-icon">
+                                    <h3>Processor (CPU)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="cpu-brand">Brand</label>
+                                        <select class="form-control" id="cpu-brand" data-component="cpu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cpu-tier">Performance Tier</label>
+                                        <select class="form-control" id="cpu-tier" data-component="cpu" disabled>
+                                            <option value="" disabled selected>Select Brand First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cpu-generation">Generation</label>
+                                        <select class="form-control" id="cpu-generation" data-component="cpu" disabled>
+                                            <option value="" disabled selected>Select Tier First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cpu-model">Specific Model</label>
+                                        <select class="form-control" id="cpu-model" data-component="cpu" disabled>
+                                            <option value="" disabled selected>Select Generation First...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="cpu">Find CPU Prices</button>
+                                </div>
                         </div>
 
                         <!-- 3. RAM Card -->
                         <div class="component-card" id="card-ram" data-component="ram">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/ram.png" alt="RAM" class="component-icon">
-                                <h3>RAM / Memory</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="ram-brand">Brand</label>
-                                    <select class="form-control" id="ram-brand" data-component="ram">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/ram.png" alt="RAM" class="component-icon">
+                                    <h3>RAM / Memory</h3>
                                 </div>
-                                <div class="form-group">
-                                    <label for="ram-generation">Generation</label>
-                                    <select class="form-control" id="ram-generation" data-component="ram">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="ram-brand">Brand</label>
+                                        <select class="form-control" id="ram-brand" data-component="ram">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ram-generation">Generation</label>
+                                        <select class="form-control" id="ram-generation" data-component="ram">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ram-speed">Speed</label>
+                                        <select class="form-control" id="ram-speed" data-component="ram" disabled>
+                                            <option value="" disabled selected>Select Generation First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ram-capacity">Capacity</label>
+                                        <select class="form-control" id="ram-capacity" data-component="ram">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="ram">Find RAM Prices</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="ram-speed">Speed</label>
-                                    <select class="form-control" id="ram-speed" data-component="ram" disabled>
-                                        <option value="" disabled selected>Select Generation First...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ram-capacity">Capacity</label>
-                                    <select class="form-control" id="ram-capacity" data-component="ram">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="ram">Find RAM Prices</button>
-                            </div>
                         </div>
 
                         <!-- 4. Motherboard Card -->
                         <div class="component-card" id="card-motherboard" data-component="motherboard">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/motherboard.png" alt="Motherboard"
-                                    class="component-icon">
-                                <h3>Motherboard</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="mobo-brand">Brand</label>
-                                    <select class="form-control" id="mobo-brand" data-component="motherboard">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/motherboard.png" alt="Motherboard"
+                                        class="component-icon">
+                                    <h3>Motherboard</h3>
                                 </div>
-                                <div class="form-group">
-                                    <label for="mobo-socket">Socket Type</label>
-                                    <select class="form-control" id="mobo-socket" data-component="motherboard">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="mobo-brand">Brand</label>
+                                        <select class="form-control" id="mobo-brand" data-component="motherboard">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobo-socket">Socket Type</label>
+                                        <select class="form-control" id="mobo-socket" data-component="motherboard">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobo-chipset">Chipset</label>
+                                        <select class="form-control" id="mobo-chipset" data-component="motherboard"
+                                            disabled>
+                                            <option value="" disabled selected>Select Socket First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobo-formfactor">Form Factor</label>
+                                        <select class="form-control" id="mobo-formfactor" data-component="motherboard">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="motherboard">Find Motherboard
+                                        Prices</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="mobo-chipset">Chipset</label>
-                                    <select class="form-control" id="mobo-chipset" data-component="motherboard"
-                                        disabled>
-                                        <option value="" disabled selected>Select Socket First...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="mobo-formfactor">Form Factor</label>
-                                    <select class="form-control" id="mobo-formfactor" data-component="motherboard">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="motherboard">Find Motherboard Prices</button>
-                            </div>
                         </div>
 
                         <!-- 5. Storage Card -->
                         <div class="component-card" id="card-storage" data-component="storage">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/hard-drive.png" alt="Storage"
-                                    class="component-icon">
-                                <h3>Storage (SSD/HDD)</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="storage-brand">Brand</label>
-                                    <select class="form-control" id="storage-brand" data-component="storage">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/hard-drive.png" alt="Storage"
+                                        class="component-icon">
+                                    <h3>Storage (SSD/HDD)</h3>
                                 </div>
-                                <div class="form-group">
-                                    <label for="storage-type">Type</label>
-                                    <select class="form-control" id="storage-type" data-component="storage">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="storage-brand">Brand</label>
+                                        <select class="form-control" id="storage-brand" data-component="storage">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="storage-type">Type</label>
+                                        <select class="form-control" id="storage-type" data-component="storage">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="storage-interface">Interface</label>
+                                        <select class="form-control" id="storage-interface" data-component="storage"
+                                            disabled>
+                                            <option value="" disabled selected>Select Type First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="storage-capacity">Capacity</label>
+                                        <select class="form-control" id="storage-capacity" data-component="storage">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="storage">Find Storage Prices</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="storage-interface">Interface</label>
-                                    <select class="form-control" id="storage-interface" data-component="storage"
-                                        disabled>
-                                        <option value="" disabled selected>Select Type First...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="storage-capacity">Capacity</label>
-                                    <select class="form-control" id="storage-capacity" data-component="storage">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="storage">Find Storage Prices</button>
-                            </div>
                         </div>
 
                         <!-- 6. PSU Card -->
                         <div class="component-card" id="card-psu" data-component="psu">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/power-supply.png" alt="PSU"
-                                    class="component-icon">
-                                <h3>Power Supply (PSU)</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="psu-brand">Brand</label>
-                                    <select class="form-control" id="psu-brand" data-component="psu">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/power-supply.png" alt="PSU"
+                                        class="component-icon">
+                                    <h3>Power Supply (PSU)</h3>
                                 </div>
-                                <div class="form-group">
-                                    <label for="psu-wattage">Wattage</label>
-                                    <select class="form-control" id="psu-wattage" data-component="psu">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="psu-brand">Brand</label>
+                                        <select class="form-control" id="psu-brand" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="psu-wattage">Wattage</label>
+                                        <select class="form-control" id="psu-wattage" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="psu-efficiency">Efficiency Rating</label>
+                                        <select class="form-control" id="psu-efficiency" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="psu-modularity">Modularity</label>
+                                        <select class="form-control" id="psu-modularity" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="psu">Find PSU Prices</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="psu-efficiency">Efficiency Rating</label>
-                                    <select class="form-control" id="psu-efficiency" data-component="psu">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="psu-modularity">Modularity</label>
-                                    <select class="form-control" id="psu-modularity" data-component="psu">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="psu">Find PSU Prices</button>
-                            </div>
                         </div>
 
                         <!-- 7. Case Card -->
                         <div class="component-card" id="card-case" data-component="case">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/case.png" alt="PC Case" class="component-icon">
-                                <h3>PC Case</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="case-formfactor">Form Factor</label>
-                                    <select class="form-control" id="case-formfactor" data-component="case">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/case.png" alt="PC Case"
+                                        class="component-icon">
+                                    <h3>PC Case</h3>
                                 </div>
-                                <div class="form-group">
-                                    <label for="case-panel">Side Panel</label>
-                                    <select class="form-control" id="case-panel" data-component="case">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="case-formfactor">Form Factor</label>
+                                        <select class="form-control" id="case-formfactor" data-component="case">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="case-panel">Side Panel</label>
+                                        <select class="form-control" id="case-panel" data-component="case">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="case">Find Case Prices</button>
                                 </div>
-                                <button class="btn-find" data-component="case">Find Case Prices</button>
-                            </div>
                         </div>
 
                         <!-- 8. Cooling Card -->
                         <div class="component-card" id="card-cooling" data-component="cooling">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/computer.png" alt="Cooling"
-                                    class="component-icon">
-                                <h3>Cooling System</h3>
-                            </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="cooling-brand">Brand</label>
-                                    <select class="form-control" id="cooling-brand" data-component="cooling">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/computer.png" alt="Cooling"
+                                        class="component-icon">
+                                    <h3>Cooling System</h3>
                                 </div>
-                                <div class="form-group">
-                                    <label for="cooling-type">Type</label>
-                                    <select class="form-control" id="cooling-type" data-component="cooling">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="cooling-brand">Brand</label>
+                                        <select class="form-control" id="cooling-brand" data-component="cooling">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cooling-type">Type</label>
+                                        <select class="form-control" id="cooling-type" data-component="cooling">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cooling-compatibility">Socket Compatibility</label>
+                                        <select class="form-control" id="cooling-compatibility"
+                                            data-component="cooling">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="cooling">Find Cooling Prices</button>
                                 </div>
-                                <div class="form-group">
-                                    <label for="cooling-compatibility">Socket Compatibility</label>
-                                    <select class="form-control" id="cooling-compatibility" data-component="cooling">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="cooling">Find Cooling Prices</button>
                             </div>
                         </div>
-
                     </div>
                 </section>
 

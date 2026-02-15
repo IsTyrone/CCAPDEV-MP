@@ -805,6 +805,14 @@ a {
   align-items: start;
 }
 
+.components-section {
+  display: flex;
+  flex-direction: column;
+  /* Remove gap for seamless tabs */
+  gap: 0;
+  min-width: 0;
+}
+
 /* Responsive Grid */
 @media (max-width: 1300px) {
   .new-dashboard-layout {
@@ -945,7 +953,7 @@ a {
   background: #f1f1f1;
   border: 1px solid var(--border-color);
   padding: 15px;
-  max-height: 500px;
+  max-height: 550px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -1096,20 +1104,20 @@ a {
 
 /* Component Navigation Bar */
 .component-nav {
-  background: white;
-  padding: 20px 20px;
+  background: #f3f4f6;
+  padding: 0;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
+  position: relative;
+  z-index: 10;
 }
 
 .component-nav-header {
   display: flex;
   align-items: center;
   padding: 15px 20px;
-  margin: -15px -20px 15px -20px;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  border-radius: 12px 12px 0 0;
+  background: transparent;
+  ;
 }
 
 .component-nav-header h2 {
@@ -1121,10 +1129,21 @@ a {
 
 .nav-icons-row {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   overflow-x: auto;
-  gap: 10px;
-  padding: 5px;
+  gap: 5px;
+  padding: 0 25px;
+  align-items: flex-end;
+  /* Hide Scrollbar */
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+}
+
+.nav-icons-row::-webkit-scrollbar {
+  display: none;
+  /* Chrome/Safari */
 }
 
 .nav-item {
@@ -1132,50 +1151,94 @@ a {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 50px;
+  width: 60px;
   height: 50px;
-  border-radius: 10px;
   cursor: pointer;
   transition: all 0.2s ease;
   opacity: 0.6;
-  border: 2px solid transparent;
-  flex-shrink: 0;
+  position: relative;
+
+  /* Tab Shape */
+  border-radius: 12px 12px 0 0;
+  background: transparent;
+  margin-bottom: -1px;
+  /* Overlap border */
+  border: 1px solid transparent;
 }
 
 .nav-item img {
-  width: 28px;
-  height: 28px;
+  width: 24px;
+  height: 24px;
   object-fit: contain;
+  z-index: 2;
 }
 
 .nav-item:hover {
-  background: #f3f4f6;
+  background: rgba(255, 255, 255, 0.5);
   opacity: 1;
 }
 
+/* Active Tab - Seamless & Scooped */
 .nav-item.active {
-  background: #eff6ff;
-  border-color: var(--primary-blue);
+  background: #ebeaea;
   opacity: 1;
-  transform: translateY(-2px);
+  transform: none;
+  /* Disable lift specifically for this design */
+
+  /* Borders */
+  border: 1px solid #e5e7eb;
+  border-bottom: 2px solid #ebeaea;
+  /* Hide container border */
+  z-index: 20;
+}
+
+/* Inverse Curve (The Scoop) */
+.nav-item.active::before {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  /* Overlap container border */
+  left: -20px;
+  width: 20px;
+  height: 20px;
+  background-image: radial-gradient(circle at 0 0, transparent 19px, #e5e7eb 19px, #e5e7eb 20px, #ebeaea 20px);
+  z-index: 1;
+}
+
+.nav-item.active::after {
+  content: "";
+  position: absolute;
+  bottom: -1px;
+  /* Overlap container border */
+  right: -20px;
+  width: 20px;
+  height: 20px;
+  background-image: radial-gradient(circle at 100% 0, transparent 19px, #e5e7eb 19px, #e5e7eb 20px, #ebeaea 20px);
+  z-index: 1;
 }
 
 /* Component Cards Container */
 .component-cards-container {
-  background: white;
-  border-radius: 12px;
+  background: #ebeaea;
+  border-radius: 0 0 12px 12px;
+  /* Top corners flat, bottom corners rounded */
   padding: 25px;
-  min-height: 400px;
+  min-height: 450px;
   position: relative;
   border: 1px solid #e5e7eb;
+  border-top: 1px solid #e5e7eb;
+  /* Main border */
+  margin-top: -1px;
+  /* Pull up to meet tabs */
+  z-index: 5;
+  height: 4px;
 }
 
 .component-card {
   background: #f1f1f1;
   border: 1px solid var(--border-color);
-  border-radius: 8px;
+  border-top: none;
   overflow: hidden;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   transition: transform 0.2s, box-shadow 0.2s;
 
   /* Hidden by default for tab switching */
@@ -1188,22 +1251,7 @@ a {
   flex-direction: column;
 }
 
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
 
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.component-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
 
 .card-header {
   background: #ebeaea;
