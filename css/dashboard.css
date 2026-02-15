@@ -397,7 +397,8 @@ a {
   max-width: 1560px;
   margin: 0 auto;
   overflow: hidden;
-  /* border: 1px solid var(--border-color); */
+  border-radius: 12px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .carousel-track-container {
@@ -851,6 +852,7 @@ a {
   background: white;
   border-radius: 12px;
   padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   /* border: 1px solid #e5e7eb; */
 }
 
@@ -953,7 +955,7 @@ a {
   background: #f1f1f1;
   border: 1px solid var(--border-color);
   padding: 15px;
-  max-height: 550px;
+  max-height: 540px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -1108,6 +1110,7 @@ a {
   padding: 0;
   border-radius: 12px;
   border: 1px solid #e5e7eb;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
   position: relative;
   z-index: 10;
 }
@@ -1115,7 +1118,7 @@ a {
 .component-nav-header {
   display: flex;
   align-items: center;
-  padding: 15px 20px;
+  padding: 10px 20px;
   background: transparent;
   ;
 }
@@ -1154,7 +1157,6 @@ a {
   width: 60px;
   height: 50px;
   cursor: pointer;
-  transition: all 0.2s ease;
   opacity: 0.6;
   position: relative;
 
