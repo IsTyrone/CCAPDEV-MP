@@ -64,17 +64,36 @@
             </button>
             <main class="main-content">
                 <section class="hero-section">
-                    <div class="hero-box"><span class="ad-label">Placeholder</span></div>
-                    <div class="hero-box hero-main">
-                        <h3>Latest Price Drops</h3>
-                        <p class="hero-subtitle">Market Analysis for February 2026</p>
-                        <div class="carousel-dots">
-                            <div class="dot active"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                        </div>
+                    <button class="carousel-btn prev-btn" id="prevBtn">&#10094;</button>
+                    <div class="carousel-track-container">
+                        <ul class="carousel-track">
+                            <li class="carousel-slide current-slide">
+                                <div class="hero-content">
+                                    <h3>Latest Price Drops</h3>
+                                    <p class="hero-subtitle">Market Analysis for February 2026</p>
+                                </div>
+                            </li>
+                            <li class="carousel-slide">
+                                <div class="hero-content">
+                                    <h3>Placeholder Text 2</h3>
+                                    <p class="hero-subtitle">Description for slide 2</p>
+                                </div>
+                            </li>
+                            <li class="carousel-slide">
+                                <div class="hero-content">
+                                    <h3>Placeholder Text 3</h3>
+                                    <p class="hero-subtitle">Description for slide 3</p>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="hero-box"><span class="ad-label">Placeholder</span></div>
+                    <button class="carousel-btn next-btn" id="nextBtn">&#10095;</button>
+
+                    <div class="carousel-nav">
+                        <button class="carousel-indicator current-slide"></button>
+                        <button class="carousel-indicator"></button>
+                        <button class="carousel-indicator"></button>
+                    </div>
                 </section>
 
                 <!-- Market Ticker Strip -->

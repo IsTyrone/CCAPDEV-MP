@@ -1029,3 +1029,97 @@ function resetListingModal() {
   // Reset step UI
   goToStep(1);
 }
+
+// =========================================
+// 5. Hero Carousel Logic (Seamless Loop)
+// =========================================
+document.addEventListener('DOMContentLoaded', () => {
+  const track = document.querySelector('.carousel-track');
+  if (!track) return;
+
+  // Get original slides and dots
+  const originalSlides = Array.from(track.children);
+  const nextButton = document.querySelector('.next-btn');
+  const prevButton = document.querySelector('.prev-btn');
+  const dotsNav = document.querySelector('.carousel-nav');
+  const dots = Array.from(dotsNav.children);
+
+  // Clone first and last slides
+  const firstClone = originalSlides[0].cloneNode(true);
+  const lastClone = originalSlides[originalSlides.length - 1].cloneNode(true);
+
+  // Add clones to track
+  track.appendChild(firstClone);
+  track.insertBefore(lastClone, originalSlides[0]);
+
+  // Re-query slides to include clones
+  const allSlides = Array.from(track.children);
+
+  // Start at index 1 (the first real slide)
+  let currentIndex = 1;
+  let isTransitioning = false;
+
+  // Initial positioning
+  track.style.transform = `translateX(${-100 * currentIndex}%)`;
+
+  const updateDots = (index) => {
+    // Normalise index to 0-based original slide index
+    // index 1 -> 0, index 2 -> 1, index 3 -> 2
+    let dotIndex = index - 1;
+    if (dotIndex < 0) dotIndex = dots.length - 1;
+    if (dotIndex >= dots.length) dotIndex = 0;
+
+    dots.forEach(dot => dot.classList.remove('current-slide'));
+    dots[dotIndex].classList.add('current-slide');
+  };
+
+  const moveToSlide = (index) => {
+    if (isTransitioning) return;
+    isTransitioning = true;
+    currentIndex = index;
+    track.style.transition = 'transform 0.4s ease-in-out';
+    track.style.transform = `translateX(${-100 * currentIndex}%)`;
+    updateDots(currentIndex);
+  };
+
+  track.addEventListener('transitionend', () => {
+    isTransitioning = false;
+    // Check for clones
+    if (allSlides[currentIndex] === firstClone) {
+      track.style.transition = 'none';
+      currentIndex = 1; // Jump to real first slide
+      track.style.transform = `translateX(${-100 * currentIndex}%)`;
+    }
+    if (allSlides[currentIndex] === lastClone) {
+      track.style.transition = 'none';
+      currentIndex = allSlides.length - 2; // Jump to real last slide
+      track.style.transform = `translateX(${-100 * currentIndex}%)`;
+    }
+  });
+
+  if (nextButton) {
+    nextButton.addEventListener('click', () => {
+      if (currentIndex >= allSlides.length - 1) return;
+      moveToSlide(currentIndex + 1);
+    });
+  }
+
+  if (prevButton) {
+    prevButton.addEventListener('click', () => {
+      if (currentIndex <= 0) return;
+      moveToSlide(currentIndex - 1);
+    });
+  }
+
+  if (dotsNav) {
+    dotsNav.addEventListener('click', (e) => {
+      const targetDot = e.target.closest('button');
+      if (!targetDot) return;
+      const targetDotIndex = dots.findIndex(dot => dot === targetDot);
+      if (targetDotIndex !== -1) {
+        // Map dot index to slide index (offset by 1 due to clone)
+        moveToSlide(targetDotIndex + 1);
+      }
+    });
+  }
+});
