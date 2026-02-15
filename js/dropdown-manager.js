@@ -142,6 +142,7 @@ class DropdownManager {
 
     initRAM() {
         const d = this.data.ram.dropdowns;
+        this.populate('ram-brand', d.brand, 'All Brands (Optional)');
         this.populate('ram-generation', d.generation, 'Select Generation...');
         this.populate('ram-capacity', d.capacity, 'Select Capacity...');
 
@@ -184,6 +185,7 @@ class DropdownManager {
 
     initMotherboard() {
         const d = this.data.motherboard.dropdowns;
+        this.populate('mobo-brand', d.brand, 'All Brands (Optional)');
         this.populate('mobo-socket', d.socket_type, 'Select Socket...');
         this.populate('mobo-formfactor', d.form_factor, 'Select Form Factor...');
 
@@ -193,6 +195,7 @@ class DropdownManager {
 
     initStorage() {
         const d = this.data.storage.dropdowns;
+        this.populate('storage-brand', d.brand, 'All Brands (Optional)');
         this.populate('storage-type', d.type, 'Select Type...');
         this.populate('storage-capacity', d.capacity, 'Select Capacity...');
 
@@ -202,6 +205,7 @@ class DropdownManager {
 
     initPSU() {
         const d = this.data.psu.dropdowns;
+        this.populate('psu-brand', d.brand, 'All Brands (Optional)');
         this.populate('psu-wattage', d.wattage, 'Select Wattage...');
         this.populate('psu-efficiency', d.efficiency_rating, 'Select Efficiency...');
         this.populate('psu-modularity', d.modularity, 'Select Modularity...');
@@ -215,6 +219,7 @@ class DropdownManager {
 
     initCooling() {
         const d = this.data.cooling.dropdowns;
+        this.populate('cooling-brand', d.brand, 'All Brands (Optional)');
         this.populate('cooling-type', d.type, 'Select Type...');
         this.populate('cooling-compatibility', d.socket_compatibility, 'Select Compatibility...');
     }
@@ -228,15 +233,20 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach search button handlers — navigate to forum page
     // Define the ordered select IDs for each component to build the URL path
     const selectOrder = {
-        ram: ['ram-generation', 'ram-speed', 'ram-capacity'],
+        ram: ['ram-brand', 'ram-generation', 'ram-speed', 'ram-capacity'],
         gpu: ['gpu-brand', 'gpu-series', 'gpu-model'],
         cpu: ['cpu-brand', 'cpu-tier', 'cpu-generation', 'cpu-model'],
-        motherboard: ['mobo-socket', 'mobo-chipset', 'mobo-formfactor'],
-        storage: ['storage-type', 'storage-interface', 'storage-capacity'],
-        psu: ['psu-wattage', 'psu-efficiency', 'psu-modularity'],
+        motherboard: ['mobo-brand', 'mobo-socket', 'mobo-chipset', 'mobo-formfactor'],
+        storage: ['storage-brand', 'storage-type', 'storage-interface', 'storage-capacity'],
+        psu: ['psu-brand', 'psu-wattage', 'psu-efficiency', 'psu-modularity'],
         case: ['case-formfactor', 'case-panel'],
-        cooling: ['cooling-type', 'cooling-compatibility']
+        cooling: ['cooling-brand', 'cooling-type', 'cooling-compatibility']
     };
+
+    // Brand selects that are optional (CPU & GPU brands are required for cascading)
+    const optionalBrandIds = new Set([
+        'ram-brand', 'mobo-brand', 'storage-brand', 'psu-brand', 'cooling-brand'
+    ]);
 
     document.querySelectorAll('.btn-find[data-component]').forEach(btn => {
         btn.addEventListener('click', () => {
@@ -245,6 +255,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const selects = card.querySelectorAll('select:not([disabled])');
             let allFilled = true;
             selects.forEach(s => {
+                // Skip optional brand selects in validation
+                if (optionalBrandIds.has(s.id)) return;
                 if (!s.value) allFilled = false;
             });
 
@@ -257,7 +269,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const ids = selectOrder[comp] || [];
             const segments = ids.map(id => {
                 const el = document.getElementById(id);
-                return el && el.value ? el.value.replace(/\s+/g, '-') : '';
+                if (el && el.value) return el.value.replace(/\s+/g, '-');
+                // Insert 'all-brands' for optional brand selects with no value
+                if (optionalBrandIds.has(id)) return 'all-brands';
+                return '';
             }).filter(Boolean);
 
             const hash = `#${comp}/${segments.join('/')}`;

@@ -664,6 +664,11 @@ function populateListingDropdowns(type) {
 // --- Per-component init functions (mirrors dropdown-manager.js) ---
 
 function initListingRAM(container, d) {
+  // Brand (independent)
+  const brand = lCreateGroup('Brand', 'listing-ram-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
   // Generation (independent)
   const gen = lCreateGroup('Generation', 'listing-ram-gen');
   lPopulate(gen.select, d.generation, 'Select Generation...');
@@ -775,6 +780,10 @@ function initListingCPU(container, d) {
 }
 
 function initListingMotherboard(container, d) {
+  const brand = lCreateGroup('Brand', 'listing-mobo-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
   const socket = lCreateGroup('Socket Type', 'listing-mobo-socket');
   lPopulate(socket.select, d.socket_type, 'Select Socket...');
   container.appendChild(socket.group);
@@ -798,6 +807,11 @@ function initListingMotherboard(container, d) {
 }
 
 function initListingStorage(container, d) {
+  // Brand (independent)
+  const brand = lCreateGroup('Brand', 'listing-stor-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
   const type = lCreateGroup('Type', 'listing-stor-type');
   lPopulate(type.select, d.type, 'Select Type...');
   container.appendChild(type.group);
@@ -821,6 +835,10 @@ function initListingStorage(container, d) {
 }
 
 function initListingPSU(container, d) {
+  const brand = lCreateGroup('Brand', 'listing-psu-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
   const watt = lCreateGroup('Wattage', 'listing-psu-watt');
   lPopulate(watt.select, d.wattage, 'Select Wattage...');
   container.appendChild(watt.group);
@@ -845,6 +863,10 @@ function initListingCase(container, d) {
 }
 
 function initListingCooling(container, d) {
+  const brand = lCreateGroup('Brand', 'listing-cool-brand');
+  lPopulate(brand.select, d.brand, 'Select Brand...');
+  container.appendChild(brand.group);
+
   const type = lCreateGroup('Type', 'listing-cool-type');
   lPopulate(type.select, d.type, 'Select Type...');
   container.appendChild(type.group);

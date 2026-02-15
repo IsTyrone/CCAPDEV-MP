@@ -737,7 +737,6 @@ a {
 /* --- 7. New Dashboard Layout (Components & Listings) --- */
 .new-dashboard-layout {
   display: flex;
-  gap: 20px;
   padding: 20px;
   max-width: 1400px;
   margin: 0 auto;
@@ -748,16 +747,16 @@ a {
   min-width: 0;
   /* Prevent flex overflow */
   padding-right: 20px;
-  border-right: 2px solid rgba(31, 32, 34, 0.95);
 }
 
 .new-listings-section {
   flex: 35%;
+  margin-top: 62px;
   min-width: 0;
   background: #f1f1f1;
   border: 1px solid var(--border-color);
   padding: 15px;
-  max-height: 800px;
+  max-height: 1568px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
@@ -1005,9 +1004,11 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid #101010;
+  padding: 16px;
+  margin: -15px -15px 15px -15px;
+  background: #ebeaea;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 8px 8px 0 0;
 }
 
 .listings-header h2 {
@@ -1066,13 +1067,17 @@ a {
   display: flex;
   gap: 10px;
   padding: 10px;
-  border: 1px solid #101010;
+  background: #f1f1f1;
+  border: 1px solid var(--border-color);
   border-radius: 6px;
-  transition: background 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
 }
 
 .listing-card:hover {
-  background: #f9f9f9;
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  background: #ebeaea;
 }
 
 .listing-img {

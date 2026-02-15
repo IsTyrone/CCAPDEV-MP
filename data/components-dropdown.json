@@ -1,6 +1,16 @@
 {
     "ram": {
         "dropdowns": {
+            "brand": [
+                "Corsair",
+                "G.Skill",
+                "Kingston",
+                "TeamGroup",
+                "ADATA",
+                "Crucial",
+                "Patriot",
+                "PNY"
+            ],
             "generation": [
                 "DDR3",
                 "DDR4",
@@ -647,6 +657,16 @@
     },
     "storage": {
         "dropdowns": {
+            "brand": [
+                "Samsung",
+                "Western Digital",
+                "Seagate",
+                "Crucial",
+                "Kingston",
+                "Sabrent",
+                "SK Hynix",
+                "Toshiba"
+            ],
             "type": [
                 "SSD (SATA)",
                 "SSD (NVMe)",

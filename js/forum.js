@@ -244,26 +244,56 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'ram': {
-            // segments: [generation, speed, capacity] — show other speeds
-            const gen = segments[0];
-            relatedItems = d.speed?.[gen] || [];
-            currentModel = segments[1];
+            // segments: [brand, generation, speed, capacity] — show other speeds
+            if (segments[0] === 'all brands') {
+                // Show brand list when no specific brand selected
+                relatedItems = d.brand || [];
+                currentModel = '';
+            } else {
+                const gen = segments[1];
+                relatedItems = d.speed?.[gen] || [];
+                currentModel = segments[2];
+            }
             break;
         }
         case 'motherboard': {
-            const socket = segments[0];
-            relatedItems = d.chipset?.[socket] || [];
-            currentModel = segments[1];
+            // segments: [brand, socket, chipset, formfactor] — show other chipsets
+            if (segments[0] === 'all brands') {
+                relatedItems = d.brand || [];
+                currentModel = '';
+            } else {
+                const socket = segments[1];
+                relatedItems = d.chipset?.[socket] || [];
+                currentModel = segments[2];
+            }
             break;
         }
         case 'storage': {
-            const type = segments[0];
-            relatedItems = d.interface?.[type] || [];
-            currentModel = segments[1];
+            // segments: [brand, type, interface, capacity] — show other interfaces
+            if (segments[0] === 'all brands') {
+                relatedItems = d.brand || [];
+                currentModel = '';
+            } else {
+                const type = segments[1];
+                relatedItems = d.interface?.[type] || [];
+                currentModel = segments[2];
+            }
+            break;
+        }
+        case 'psu': {
+            // segments: [brand, wattage, efficiency, modularity] — show other brands
+            relatedItems = d.brand || [];
+            currentModel = segments[0] === 'all brands' ? '' : segments[0];
+            break;
+        }
+        case 'cooling': {
+            // segments: [brand, type, compatibility] — show other brands
+            relatedItems = d.brand || [];
+            currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
         }
         default:
-            // For psu, case, cooling — no deep nesting, just show top-level options
+            // For case — no brand yet, just show top-level options
             const firstKey = Object.keys(d)[0];
             if (Array.isArray(d[firstKey])) {
                 relatedItems = d[firstKey];
@@ -279,11 +309,22 @@ function renderRelatedModels(componentType, segments) {
 
         // Build the hash link for the related model
         const newSegments = [...segments];
+        const isAllBrands = segments[0] === 'all brands';
         // Replace the segment that corresponds to this level
         if (componentType === 'gpu' && segments.length >= 3) {
             newSegments[2] = item;
         } else if (componentType === 'cpu' && segments.length >= 4) {
             newSegments[3] = item;
+        } else if ((componentType === 'ram' || componentType === 'motherboard' || componentType === 'storage') && isAllBrands) {
+            newSegments[0] = item; // replace 'all brands' with specific brand
+        } else if (componentType === 'ram' && segments.length >= 3) {
+            newSegments[2] = item; // replace speed segment
+        } else if (componentType === 'motherboard' && segments.length >= 3) {
+            newSegments[2] = item; // replace chipset segment
+        } else if (componentType === 'storage' && segments.length >= 3) {
+            newSegments[2] = item; // replace interface segment
+        } else if (componentType === 'psu' || componentType === 'cooling') {
+            newSegments[0] = item; // replace brand segment
         } else if (segments.length >= 2) {
             newSegments[newSegments.length - 1] = item;
         } else {
@@ -322,18 +363,20 @@ function renderBreadcrumb(componentType, segments) {
         sep.textContent = '›';
         bar.appendChild(sep);
 
+        const displaySeg = seg === 'all brands' ? 'All Brands' : seg;
+
         if (i === segments.length - 1) {
             // Last segment — not a link
             const span = document.createElement('span');
             span.className = 'breadcrumb-current';
-            span.textContent = seg;
+            span.textContent = displaySeg;
             bar.appendChild(span);
         } else {
             // Intermediate segments — links to partial hash
             const partialHash = `#${componentType}/${segments.slice(0, i + 1).map(slugify).join('/')}`;
             const a = document.createElement('a');
             a.href = partialHash;
-            a.textContent = seg;
+            a.textContent = displaySeg;
             bar.appendChild(a);
         }
     });
@@ -349,6 +392,7 @@ function loadForumPage() {
 
     const { componentType, segments } = parsed;
     const modelName = segments[segments.length - 1]; // last segment is the model
+    const isAllBrands = segments[0] === 'all brands';
 
     // Set page title
     document.title = `${modelName} - PC Tracker`;
@@ -365,9 +409,10 @@ function loadForumPage() {
     // Set forum title
     document.getElementById('forum-title').textContent = modelName;
 
-    // Build subtitle from the path
+    // Build subtitle from the path — replace 'all brands' with 'All Brands' for display
     const subtitleParts = [componentLabels[componentType] || componentType, ...segments.slice(0, -1)];
-    document.getElementById('forum-subtitle').textContent = subtitleParts.join(' › ');
+    const displayParts = subtitleParts.map(p => p === 'all brands' ? 'All Brands' : p);
+    document.getElementById('forum-subtitle').textContent = displayParts.join(' › ');
 
     // Generate and render submissions
     submissions = generateDummySubmissions(componentType, modelName);
