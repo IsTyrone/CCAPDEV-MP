@@ -810,12 +810,12 @@ a {
 
 .new-listings-section {
   flex: 35%;
-  margin-top: 63px;
+  margin-top: 61px;
   min-width: 0;
   background: #f1f1f1;
   border: 1px solid var(--border-color);
   padding: 15px;
-  max-height: 1560px;
+  max-height: 1570px;
   border-radius: 8px;
   display: flex;
   flex-direction: column;
