@@ -49,8 +49,8 @@
   /* Deep blue from image */
   --accent-red: #cc0000;
   /* Red from image */
-  --bg-gray: #dfdfdf;
-  --text-dark: #111827;
+  --bg-gray: #dbdbdb;
+  --text-dark: #101010;
   --border-color: #e5e7eb;
 }
 
@@ -146,6 +146,14 @@ a {
 
 .search-btn:active {
   transform: scale(0.95);
+}
+
+.search-btn-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  filter: brightness(0) invert(1);
+  vertical-align: middle;
 }
 
 .search-select {
@@ -743,7 +751,7 @@ a {
 .new-listings-section {
   flex: 35%;
   min-width: 0;
-  background: white;
+  background: #f1f1f1;
   border: 1px solid var(--border-color);
   padding: 15px;
   max-height: 800px;
@@ -774,7 +782,7 @@ a {
 
 .admin-header h2 {
   font-size: 24px;
-  color: #111827;
+  color: #101010;
 }
 
 .pending-list {
@@ -804,7 +812,7 @@ a {
 .listing-title {
   margin: 0 0 5px 0;
   font-size: 18px;
-  color: #111827;
+  color: #101010;
 }
 
 .listing-meta {
@@ -889,8 +897,8 @@ a {
 .section-title {
   font-size: 24px;
   margin-bottom: 20px;
-  color: rgba(31, 32, 34, 0.95);
-  border-bottom: 2px solid rgba(31, 32, 34, 0.95);
+  color: #101010;
+  border-bottom: 2px solid #101010;
   padding-bottom: 10px;
   display: inline-block;
 }
@@ -903,7 +911,7 @@ a {
 }
 
 .component-card {
-  background: white;
+  background: #f1f1f1;
   border: 1px solid var(--border-color);
   border-radius: 8px;
   overflow: hidden;
@@ -919,7 +927,7 @@ a {
 }
 
 .card-header {
-  background: #f8f9fa;
+  background: #ebeaea;
   padding: 15px;
   display: flex;
   align-items: center;
@@ -996,7 +1004,7 @@ a {
   align-items: center;
   margin-bottom: 15px;
   padding-bottom: 10px;
-  border-bottom: 1px solid #eee;
+  border-bottom: 1px solid #101010;
 }
 
 .listings-header h2 {
@@ -1055,7 +1063,7 @@ a {
   display: flex;
   gap: 10px;
   padding: 10px;
-  border: 1px solid #eee;
+  border: 1px solid #101010;
   border-radius: 6px;
   transition: background 0.2s;
 }
@@ -1067,9 +1075,17 @@ a {
 .listing-img {
   width: 80px;
   height: 80px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 4px;
-  background: #eee;
+  background: #fff;
+  padding: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.listing-img-fallback {
+  object-fit: contain;
+  padding: 12px;
+  background: #f3f4f6;
 }
 
 .listing-details {
@@ -1617,6 +1633,12 @@ a {
 .auth-modal-icon {
   font-size: 48px;
   margin-bottom: 16px;
+}
+
+.auth-modal-lock-img {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
 }
 
 .auth-modal-title {

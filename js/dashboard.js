@@ -233,6 +233,77 @@ const componentDefs = {
 
 const componentTypes = Object.keys(componentDefs);
 
+// Map component types to their local fallback icon images
+const componentIconMap = {
+  gpu: 'assets/images/component-images/graphic-card.png',
+  cpu: 'assets/images/component-images/cpu.png',
+  ram: 'assets/images/component-images/ram.png',
+  motherboard: 'assets/images/component-images/motherboard.png',
+  storage: 'assets/images/component-images/hard-drive.png',
+  psu: 'assets/images/component-images/power-supply.png',
+  case: 'assets/images/component-images/case.png',
+  cooling: 'assets/images/component-images/computer.png'
+};
+
+// Map brand names to their actual website domains for logo fetching
+const brandDomainMap = {
+  // GPU brands
+  'asus': 'asus.com',
+  'msi': 'msi.com',
+  'gigabyte': 'gigabyte.com',
+  'evga': 'evga.com',
+  'zotac': 'zotac.com',
+  'sapphire': 'sapphiretech.com',
+  'powercolor': 'powercolor.com',
+  // CPU brands
+  'intel': 'intel.com',
+  'amd': 'amd.com',
+  // RAM brands
+  'corsair': 'corsair.com',
+  'g.skill': 'gskill.com',
+  'kingston': 'kingston.com',
+  'teamgroup': 'teamgroupinc.com',
+  'adata': 'adata.com',
+  // Motherboard brands
+  'asrock': 'asrock.com',
+  'biostar': 'biostar.com.tw',
+  // Storage brands
+  'samsung': 'samsung.com',
+  'western digital': 'westerndigital.com',
+  'crucial': 'crucial.com',
+  'seagate': 'seagate.com',
+  'sabrent': 'sabrent.com',
+  // PSU brands
+  'seasonic': 'seasonic.com',
+  'thermaltake': 'thermaltake.com',
+  'be quiet!': 'bequiet.com',
+  // Case brands
+  'nzxt': 'nzxt.com',
+  'lian li': 'lian-li.com',
+  'fractal design': 'fractal-design.com',
+  'phanteks': 'phanteks.com',
+  // Cooling brands
+  'noctua': 'noctua.at',
+  'deepcool': 'deepcool.com',
+  'arctic': 'arctic.de',
+  'cooler master': 'coolermaster.com'
+};
+
+/**
+ * Gets a brand logo URL using Google's favicon service.
+ * Reliable, free, no API key needed, no CORS issues.
+ */
+function getBrandLogoUrl(brand) {
+  const key = brand.toLowerCase();
+  const domain = brandDomainMap[key];
+  if (domain) {
+    return `https://www.google.com/s2/favicons?domain=${domain}&sz=128`;
+  }
+  // Fallback: try guessing the domain
+  const guess = key.replace(/[^a-z0-9]/g, '') + '.com';
+  return `https://www.google.com/s2/favicons?domain=${guess}&sz=128`;
+}
+
 // Generate dummy data
 function generateDummyListings() {
   const newListings = [];
@@ -250,7 +321,8 @@ function generateDummyListings() {
       title: `${brand} ${name}`,
       price: `$${price}`,
       time: `${Math.floor(Math.random() * 59) + 1} mins ago`,
-      image: `https://via.placeholder.com/80?text=${type.toUpperCase()}`
+      image: getBrandLogoUrl(brand),
+      fallbackImage: componentIconMap[type] || 'assets/images/component-images/graphic-card.png'
     });
   }
 
@@ -266,7 +338,8 @@ function generateDummyListings() {
       title: `${l.details['Brand'] || ''} ${l.details['Model'] || l.details['Specific Model'] || l.componentType}`,
       price: `₱${l.price}`, // Assuming stored price is raw number
       time: 'Just now', // Simplified for now, could calculate diff
-      image: 'assets/images/component-images/graphic-card.png' // Placeholder for now as we don't have real image storage
+      image: 'assets/images/component-images/graphic-card.png',
+      fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png'
     });
   });
 
@@ -283,10 +356,12 @@ function renderListings(items) {
   feedContainer.innerHTML = '';
 
   items.forEach(item => {
+    const fallback = item.fallbackImage || componentIconMap[item.type] || 'assets/images/component-images/graphic-card.png';
     const card = document.createElement('div');
     card.className = 'listing-card';
     card.innerHTML = `
-      <img src="${item.image}" class="listing-img" alt="${item.title}">
+      <img src="${item.image}" class="listing-img" alt="${item.title}"
+           onerror="this.onerror=null; this.src='${fallback}'; this.classList.add('listing-img-fallback');">
       <div class="listing-details">
         <div>
           <span class="listing-tag ${item.type}">${item.type.toUpperCase()}</span>

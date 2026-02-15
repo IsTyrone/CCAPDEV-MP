@@ -6,7 +6,7 @@
     --primary-blue: #003399;
     --border-color: #e0e0e0;
     --bg-light: #f6f7f9;
-    --text-primary: #1a1a2e;
+    --text-primary: #101010;
     --text-secondary: #666;
     --green: #22c55e;
     --red: #ef4444;
@@ -78,6 +78,14 @@ body {
     padding: 8px 12px;
     cursor: pointer;
     font-size: 16px;
+}
+
+.search-btn-icon {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    filter: brightness(0) invert(0.4);
+    vertical-align: middle;
 }
 
 .header-right {
