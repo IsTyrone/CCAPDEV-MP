@@ -456,6 +456,12 @@ function lCreateGroup(label, id, disabled = false, placeholder = 'Select...') {
 
 // --- Open / Close ---
 function openListingModal() {
+  const currentUser = localStorage.getItem('currentUser');
+  if (!currentUser) {
+    openAuthModal();
+    return;
+  }
+
   const overlay = document.getElementById('listingModalOverlay');
   if (overlay) {
     overlay.classList.add('open');
@@ -463,6 +469,30 @@ function openListingModal() {
     goToStep(1);
   }
 }
+
+// --- Auth Modal Logic ---
+function openAuthModal() {
+  const overlay = document.getElementById('authModalOverlay');
+  if (overlay) {
+    overlay.classList.add('open');
+    // document.body.style.overflow = 'hidden'; // Optional: lock scroll
+  }
+}
+
+function closeAuthModal() {
+  const overlay = document.getElementById('authModalOverlay');
+  if (overlay) {
+    overlay.classList.remove('open');
+    // document.body.style.overflow = '';
+  }
+}
+
+// Close Auth Modal on backdrop click
+document.addEventListener('click', (e) => {
+  if (e.target && e.target.id === 'authModalOverlay') {
+    closeAuthModal();
+  }
+});
 
 function closeListingModal() {
   const overlay = document.getElementById('listingModalOverlay');

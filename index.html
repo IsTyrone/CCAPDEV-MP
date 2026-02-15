@@ -709,6 +709,20 @@
             <div>FAQ</div>
         </footer>
     </div>
+    <!-- Auth Requirement Modal -->
+    <div class="auth-modal-overlay" id="authModalOverlay">
+        <div class="auth-modal">
+            <div class="auth-modal-icon">🔒</div>
+            <h2 class="auth-modal-title">Authentication Required</h2>
+            <p class="auth-modal-text">You must be logged in to post a new listing.</p>
+            <div class="auth-modal-actions">
+                <button class="btn-auth-cancel" onclick="closeAuthModal()">Cancel</button>
+                <button class="btn-auth-login" onclick="window.location.href='pages/login.html'">Login /
+                    Register</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/dropdown-manager.js"></script>
     <script src="js/dashboard.js"></script>
 </body>
