@@ -293,7 +293,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 middleName,
                 username,
                 email,
-                password // In a real app, never store plain text passwords!
+                email,
+                password, // In a real app, never store plain text passwords!
+                role: 'user'
             };
 
             // Retrieve existing users
@@ -318,3 +320,5 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+

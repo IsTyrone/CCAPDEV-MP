@@ -253,6 +253,23 @@ function generateDummyListings() {
       image: `https://via.placeholder.com/80?text=${type.toUpperCase()}`
     });
   }
+
+  // --- MERGE WITH LOCALSTORAGE "APPROVED" LISTINGS ---
+  const storedListings = JSON.parse(localStorage.getItem('listings') || '[]');
+  const approvedListings = storedListings.filter(l => l.status === 'approved');
+
+  approvedListings.forEach(l => {
+    newListings.unshift({
+      id: l.id,
+      type: l.componentType,
+      brand: l.details['Brand'] || l.details['Type'] || 'Generic', // Fallback
+      title: `${l.details['Brand'] || ''} ${l.details['Model'] || l.details['Specific Model'] || l.componentType}`,
+      price: `₱${l.price}`, // Assuming stored price is raw number
+      time: 'Just now', // Simplified for now, could calculate diff
+      image: 'assets/images/component-images/graphic-card.png' // Placeholder for now as we don't have real image storage
+    });
+  });
+
   return newListings;
 }
 
@@ -820,7 +837,17 @@ function submitListing() {
     });
   }
 
-  console.log('📋 New Listing Submitted:', formData);
+  // Add metadata
+  formData.id = Date.now();
+  formData.status = 'pending';
+  formData.date = new Date().toISOString();
+
+  // Save to localStorage
+  const existingListings = JSON.parse(localStorage.getItem('listings') || '[]');
+  existingListings.push(formData);
+  localStorage.setItem('listings', JSON.stringify(existingListings));
+
+  console.log('📋 New Listing Submitted (Pending Approval):', formData);
 
   // Close modal & show toast
   closeListingModal();
