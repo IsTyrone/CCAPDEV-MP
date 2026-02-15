@@ -295,80 +295,86 @@
                 </section>
             </main>
 
-            <!-- New Dashboard Layout (Below existing content) -->
+            <!-- New Dashboard Layout (3-Column Grid) -->
             <div class="new-dashboard-layout">
-                <!-- Main Content Area (Left/Primary - 65% width) -->
+
+                <!-- COLUMN 1: Previously Visited Forums -->
+                <section class="recent-forums-section">
+                    <h3>PREVIOUSLY VISITED FORUMS:</h3>
+                    <div id="recent-forums-list" class="recent-forums-list">
+                        <!-- Populated by JS -->
+                        <div class="forum-card-placeholder">
+                            <div class="placeholder-icon"></div>
+                            <div class="placeholder-text"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMN 2: Component Section (Center) -->
                 <section class="components-section">
-                    <h2 class="section-title">Find Component Prices</h2>
-                    <div class="component-cards-grid">
-
-                        <!-- 1. RAM Card -->
-                        <div class="component-card" data-component="ram">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/ram.png" alt="RAM" class="component-icon">
-                                <h3>RAM / Memory</h3>
+                    <!-- Navigation for Components -->
+                    <div class="component-nav">
+                        <div class="component-nav-header">
+                            <h2>Find Component Prices</h2>
+                        </div>
+                        <div class="nav-icons-row">
+                            <div class="nav-item active" data-target="gpu" title="Graphics Card">
+                                <img src="assets/images/component-images/graphic-card.png" alt="GPU">
                             </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="ram-brand">Brand</label>
-                                    <select class="form-control" id="ram-brand" data-component="ram">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ram-generation">Generation</label>
-                                    <select class="form-control" id="ram-generation" data-component="ram">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ram-speed">Speed</label>
-                                    <select class="form-control" id="ram-speed" data-component="ram" disabled>
-                                        <option value="" disabled selected>Select Generation First...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="ram-capacity">Capacity</label>
-                                    <select class="form-control" id="ram-capacity" data-component="ram">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="ram">Find RAM Prices</button>
+                            <div class="nav-item" data-target="cpu" title="Processor">
+                                <img src="assets/images/component-images/cpu.png" alt="CPU">
+                            </div>
+                            <div class="nav-item" data-target="ram" title="Memory">
+                                <img src="assets/images/component-images/ram.png" alt="RAM">
+                            </div>
+                            <div class="nav-item" data-target="motherboard" title="Motherboard">
+                                <img src="assets/images/component-images/motherboard.png" alt="MOBO">
+                            </div>
+                            <div class="nav-item" data-target="storage" title="Storage">
+                                <img src="assets/images/component-images/hard-drive.png" alt="Storage">
+                            </div>
+                            <div class="nav-item" data-target="psu" title="Power Supply">
+                                <img src="assets/images/component-images/power-supply.png" alt="PSU">
+                            </div>
+                            <div class="nav-item" data-target="case" title="Case">
+                                <img src="assets/images/component-images/case.png" alt="Case">
+                            </div>
+                            <div class="nav-item" data-target="cooling" title="Cooling">
+                                <img src="assets/images/component-images/computer.png" alt="Cooling">
                             </div>
                         </div>
+                    </div>
 
-                        <!-- 2. GPU Card -->
-                        <div class="component-card" data-component="gpu">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/graphic-card.png" alt="GPU"
-                                    class="component-icon">
-                                <h3>Graphics Card (GPU)</h3>
+                    <!-- 1. GPU Card (Default Active) -->
+                    <div class="component-card active" id="card-gpu" data-component="gpu">
+                        <div class="card-header">
+                            <img src="assets/images/component-images/graphic-card.png" alt="GPU" class="component-icon">
+                            <h3>Graphics Card (GPU)</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group">
+                                <label for="gpu-brand">Brand</label>
+                                <select class="form-control" id="gpu-brand" data-component="gpu">
+                                    <option value="" disabled selected>Loading...</option>
+                                </select>
                             </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="gpu-brand">Brand</label>
-                                    <select class="form-control" id="gpu-brand" data-component="gpu">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="gpu-series">Series</label>
-                                    <select class="form-control" id="gpu-series" data-component="gpu" disabled>
-                                        <option value="" disabled selected>Select Brand First...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="gpu-model">Model</label>
-                                    <select class="form-control" id="gpu-model" data-component="gpu" disabled>
-                                        <option value="" disabled selected>Select Series First...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="gpu">Find GPU Prices</button>
+                            <div class="form-group">
+                                <label for="gpu-series">Series</label>
+                                <select class="form-control" id="gpu-series" data-component="gpu" disabled>
+                                    <option value="" disabled selected>Select Brand First...</option>
+                                </select>
                             </div>
+                            <div class="form-group">
+                                <label for="gpu-model">Model</label>
+                                <select class="form-control" id="gpu-model" data-component="gpu" disabled>
+                                    <option value="" disabled selected>Select Series First...</option>
+                                </select>
+                            </div>
+                            <button class="btn-find" data-component="gpu">Find GPU Prices</button>
                         </div>
 
-                        <!-- 3. CPU Card -->
-                        <div class="component-card" data-component="cpu">
+                        <!-- 2. CPU Card -->
+                        <div class="component-card" id="card-cpu" data-component="cpu">
                             <div class="card-header">
                                 <img src="assets/images/component-images/cpu.png" alt="CPU" class="component-icon">
                                 <h3>Processor (CPU)</h3>
@@ -402,8 +408,43 @@
                             </div>
                         </div>
 
+                        <!-- 3. RAM Card -->
+                        <div class="component-card" id="card-ram" data-component="ram">
+                            <div class="card-header">
+                                <img src="assets/images/component-images/ram.png" alt="RAM" class="component-icon">
+                                <h3>RAM / Memory</h3>
+                            </div>
+                            <div class="card-body">
+                                <div class="form-group">
+                                    <label for="ram-brand">Brand</label>
+                                    <select class="form-control" id="ram-brand" data-component="ram">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ram-generation">Generation</label>
+                                    <select class="form-control" id="ram-generation" data-component="ram">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ram-speed">Speed</label>
+                                    <select class="form-control" id="ram-speed" data-component="ram" disabled>
+                                        <option value="" disabled selected>Select Generation First...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ram-capacity">Capacity</label>
+                                    <select class="form-control" id="ram-capacity" data-component="ram">
+                                        <option value="" disabled selected>Loading...</option>
+                                    </select>
+                                </div>
+                                <button class="btn-find" data-component="ram">Find RAM Prices</button>
+                            </div>
+                        </div>
+
                         <!-- 4. Motherboard Card -->
-                        <div class="component-card" data-component="motherboard">
+                        <div class="component-card" id="card-motherboard" data-component="motherboard">
                             <div class="card-header">
                                 <img src="assets/images/component-images/motherboard.png" alt="Motherboard"
                                     class="component-icon">
@@ -440,7 +481,7 @@
                         </div>
 
                         <!-- 5. Storage Card -->
-                        <div class="component-card" data-component="storage">
+                        <div class="component-card" id="card-storage" data-component="storage">
                             <div class="card-header">
                                 <img src="assets/images/component-images/hard-drive.png" alt="Storage"
                                     class="component-icon">
@@ -477,7 +518,7 @@
                         </div>
 
                         <!-- 6. PSU Card -->
-                        <div class="component-card" data-component="psu">
+                        <div class="component-card" id="card-psu" data-component="psu">
                             <div class="card-header">
                                 <img src="assets/images/component-images/power-supply.png" alt="PSU"
                                     class="component-icon">
@@ -513,7 +554,7 @@
                         </div>
 
                         <!-- 7. Case Card -->
-                        <div class="component-card" data-component="case">
+                        <div class="component-card" id="card-case" data-component="case">
                             <div class="card-header">
                                 <img src="assets/images/component-images/case.png" alt="PC Case" class="component-icon">
                                 <h3>PC Case</h3>
@@ -536,7 +577,7 @@
                         </div>
 
                         <!-- 8. Cooling Card -->
-                        <div class="component-card" data-component="cooling">
+                        <div class="component-card" id="card-cooling" data-component="cooling">
                             <div class="card-header">
                                 <img src="assets/images/component-images/computer.png" alt="Cooling"
                                     class="component-icon">
@@ -568,7 +609,7 @@
                     </div>
                 </section>
 
-                <!-- Secondary Area (Right/Sidebar - 35% width) -->
+                <!-- COLUMN 3: Secondary Area (Right/Sidebar) -->
                 <section class="new-listings-section">
                     <div class="listings-header">
                         <h2>Latest Listings</h2>

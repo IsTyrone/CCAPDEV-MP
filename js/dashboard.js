@@ -145,9 +145,22 @@ const distinctRecentViews = JSON.parse(localStorage.getItem('recentViews') || '[
  * reads from the 'distinctRecentViews' array and populates the UL element.
  */
 function renderRecentViews() {
-  const recentList = document.querySelector('.recent-list');
-  if (recentList && distinctRecentViews.length > 0) {
-    recentList.innerHTML = distinctRecentViews.map(item => `<li>${item}</li>`).join('');
+  const recentList = document.getElementById('recent-forums-list');
+  if (!recentList) return;
+
+  if (distinctRecentViews.length > 0) {
+    recentList.innerHTML = distinctRecentViews.map(item => `
+        <div class="recent-item" title="${item}">
+            <div class="recent-item-info">
+                <span class="recent-item-title">${item}</span>
+            </div>
+        </div>
+    `).join('');
+  } else {
+    recentList.innerHTML = `
+        <div class="forum-card-placeholder">
+            <span style="font-size:12px; color:#999; width:100%;">No recent views yet.</span>
+        </div>`;
   }
 }
 
@@ -1122,4 +1135,28 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+});
+
+// --- Component Navigation Logic ---
+document.addEventListener('DOMContentLoaded', () => {
+  const navItems = document.querySelectorAll('.nav-item');
+  const cards = document.querySelectorAll('.component-card');
+
+  navItems.forEach(item => {
+    item.addEventListener('click', () => {
+      const target = item.dataset.target;
+
+      // Update Nav
+      navItems.forEach(nav => nav.classList.remove('active'));
+      item.classList.add('active');
+
+      // Update Cards
+      cards.forEach(card => {
+        card.classList.remove('active');
+        if (card.dataset.component === target) {
+          card.classList.add('active');
+        }
+      });
+    });
+  });
 });
