@@ -420,14 +420,13 @@ function filterListings(itemsToRender = listings) {
 }
 
 function refreshListings() {
-  const btn = document.querySelector('.refresh-btn');
-  const originalHTML = btn.innerHTML;
-  btn.innerHTML = 'Refreshing...';
+  const loader = document.querySelector('.loader');
+  loader.classList.add('loading');
 
   setTimeout(() => {
     listings = generateDummyListings();
     renderListings(listings);
-    btn.innerHTML = originalHTML;
+    loader.classList.remove('loading');
   }, 800);
 }
 

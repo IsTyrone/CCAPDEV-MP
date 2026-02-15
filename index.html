@@ -553,8 +553,10 @@
                 <section class="new-listings-section">
                     <div class="listings-header">
                         <h2>Latest Listings</h2>
-                        <button class="refresh-btn" onclick="refreshListings()"><img src="assets/images/sync.png"
-                                alt="Refresh" class="refresh-icon"> Refresh</button>
+                        <div class="loader" onclick="refreshListings()" title="Refresh listings">
+                            <div class="static-icon"></div>
+                            <div class="spinner"></div>
+                        </div>
                     </div>
                     <div class="listings-controls">
                         <select class="filter-select" id="listing-filter" onchange="filterListings()">
