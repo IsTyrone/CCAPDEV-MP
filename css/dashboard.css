@@ -445,11 +445,14 @@ a {
 .market-ticker {
   display: flex;
   align-items: stretch;
-  background: rgba(31, 32, 34, 0.95);
+  background: #f1f1f1;
   border-radius: 8px;
   overflow: hidden;
   position: relative;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #e5e7eb;
+  max-width: 1360px;
+  margin: 0 auto;
 }
 
 .ticker-label {
@@ -459,8 +462,8 @@ a {
   justify-content: center;
   gap: 4px;
   padding: 12px 16px;
-  background: linear-gradient(135deg, #1a1f2e 0%, #0d1117 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: #f1f1f1;
+  border-right: 1px solid #e5e7eb;
   min-width: 60px;
   z-index: 2;
 }
@@ -513,12 +516,12 @@ a {
 
 .ticker-viewport::before {
   left: 0;
-  background: linear-gradient(to right, rgba(13, 17, 23, 0.95), transparent);
+  background: linear-gradient(to right, #e5e5e5, transparent);
 }
 
 .ticker-viewport::after {
   right: 0;
-  background: linear-gradient(to left, rgba(13, 17, 23, 0.95), transparent);
+  background: linear-gradient(to left, #e5e5e5, transparent);
 }
 
 .ticker-track {
@@ -548,8 +551,8 @@ a {
   width: 200px;
   padding: 10px 14px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: #fff;
+  border: 1px solid #e5e7eb;
   display: flex;
   flex-direction: column;
   gap: 4px;
@@ -558,8 +561,8 @@ a {
 }
 
 .ticker-card:hover {
-  background: rgba(255, 255, 255, 0.08);
-  border-color: rgba(255, 255, 255, 0.12);
+  background: #ebeaea;
+  border-color: #d1d5db;
 }
 
 .ticker-card-category {
@@ -568,13 +571,13 @@ a {
   font-weight: 700;
   letter-spacing: 1.5px;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
+  color: #888;
 }
 
 .ticker-card-name {
   font-size: 12px;
   font-weight: 600;
-  color: #e6edf3;
+  color: #101010;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -592,13 +595,13 @@ a {
   font-family: 'Google Sans', Arial, sans-serif;
   font-size: 14px;
   font-weight: 700;
-  color: #e6edf3;
+  color: #101010;
 }
 
 .ticker-retail-price {
   font-family: 'Google Sans', Arial, sans-serif;
   font-size: 10px;
-  color: rgba(255, 255, 255, 0.3);
+  color: #999;
   text-decoration: line-through;
 }
 
@@ -624,17 +627,17 @@ a {
 /* Side accent glow based on state */
 .ticker-card.ticker-down {
   border-left: 2px solid #22c55e;
-  box-shadow: inset 2px 0 8px rgba(34, 197, 94, 0.08);
+  box-shadow: inset 2px 0 8px rgba(34, 197, 94, 0.15);
 }
 
 .ticker-card.ticker-up {
   border-left: 2px solid #ef4444;
-  box-shadow: inset 2px 0 8px rgba(239, 68, 68, 0.08);
+  box-shadow: inset 2px 0 8px rgba(239, 68, 68, 0.15);
 }
 
 .ticker-card.ticker-neutral {
   border-left: 2px solid #6b7280;
-  box-shadow: inset 2px 0 8px rgba(107, 114, 128, 0.08);
+  box-shadow: inset 2px 0 8px rgba(107, 114, 128, 0.15);
 }
 
 /* Mobile responsive ticker */
@@ -963,7 +966,7 @@ a {
 
 .form-group label {
   font-size: 12px;
-  color: #666;
+  color: #101010;
   font-weight: 500;
 }
 

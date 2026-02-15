@@ -421,13 +421,13 @@ function filterListings(itemsToRender = listings) {
 
 function refreshListings() {
   const btn = document.querySelector('.refresh-btn');
-  const originalText = btn.textContent;
-  btn.textContent = 'Refreshing...';
+  const originalHTML = btn.innerHTML;
+  btn.innerHTML = 'Refreshing...';
 
   setTimeout(() => {
     listings = generateDummyListings();
     renderListings(listings);
-    btn.textContent = originalText;
+    btn.innerHTML = originalHTML;
   }, 800);
 }
 
