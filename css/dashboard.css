@@ -752,7 +752,7 @@ a {
   max-width: 1560px;
   margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 2fr 1fr 1fr 1fr;
   gap: 40px;
   padding-bottom: 40px;
   border-bottom: 1px solid #374151;
@@ -765,6 +765,11 @@ a {
   font-weight: 600;
   margin-top: -20px;
 }
+
+.footer-left-col p {
+  max-width: 360px;
+}
+
 
 .footer-forums {
   margin-top: -15px;
