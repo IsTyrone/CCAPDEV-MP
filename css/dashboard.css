@@ -760,12 +760,17 @@ a {
 
 .footer-left-col h4 {
   color: white;
-  margin-bottom: 20px;
+  margin-bottom: 1px;
   font-size: 50px;
   font-weight: 600;
-  margin-top: -10px;
+  margin-top: -20px;
 }
 
+.footer-forums {
+  margin-top: -15px;
+  margin-bottom: 20px;
+  margin-left: 267px;
+}
 
 .footer-col h4 {
   color: white;
