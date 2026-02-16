@@ -107,34 +107,6 @@ if (userIconBtn && sidebar && overlay) {
 updateSidebarContent();
 
 
-// --- Search Functionality ---
-const searchBar = document.querySelector('.search-bar');
-const searchBtn = document.querySelector('.search-btn');
-const productCards = document.querySelectorAll('.product-card');
-
-/**
- * Filters the product cards based on the search input.
- * Hides cards that do not match the search query (case-insensitive).
- */
-function filterProducts() {
-  const query = searchBar.value.toLowerCase();
-  productCards.forEach(card => {
-    const title = card.querySelector('.product-title').textContent.toLowerCase();
-    if (title.includes(query)) {
-      card.style.display = 'flex';
-    } else {
-      card.style.display = 'none';
-    }
-  });
-}
-
-if (searchBar) {
-  searchBar.addEventListener('input', filterProducts);
-  // Optional: Search on button click (though input covers it)
-  if (searchBtn) searchBtn.addEventListener('click', filterProducts);
-}
-
-
 // --- Recent Views Logic ---
 // Load recent views from localStorage
 const distinctRecentViews = JSON.parse(localStorage.getItem('recentViews') || '[]');
@@ -168,6 +140,7 @@ function renderRecentViews() {
 renderRecentViews();
 
 // Add click event to products to "view" them
+const productCards = document.querySelectorAll('.product-card');
 productCards.forEach(card => {
   card.style.cursor = 'pointer'; // Make it look clickable
   card.addEventListener('click', () => {

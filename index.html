@@ -18,45 +18,22 @@
     <div class="page-wrapper">
 
         <header class="main-header">
-            <div class="logo-img-container"><img src="assets/images/PC-PICKER-LOGO.png" class="logo-img"></div>
-
-            <div class="search-container">
-                <select class="search-select">
-                    <option>All Categories</option>
-                    <option>GPU</option>
-                    <option>CPU</option>
-                </select>
-                <input type="text" class="search-bar" placeholder="Search products..." />
-                <button class="search-btn"><img src="assets/images/search.png" alt="Search"
-                        class="search-btn-icon"></button>
+            <div class="logo-img-container">
+                <img src="assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Picker">
             </div>
+
+            <nav class="header-nav-links">
+                <a href="#">Blogs and Articles</a>
+                <a href="#">About Us</a>
+            </nav>
 
             <div class="header-right">
-                <div class="menu-icon">☰</div>
-                <div class="account-label">account</div>
-
-                <div id="userIconBtn" class="logo-circle user-icon-btn">👤</div>
+                <button class="account-settings-btn" id="userIconBtn" title="Account">
+                    <span class="account-label">Account</span>
+                    <span class="logo-circle user-icon-btn">&#128100;</span>
+                </button>
             </div>
         </header>
-
-        <nav class="nav-strip">
-            <div class="nav-category-btn">
-                ☰ All Products
-            </div>
-            <div class="nav-links">
-                <a href="#">Market Movers</a>
-                <a href="#">Trending GPUs</a>
-                <a href="#">Powered by ASUS</a>
-                <a href="#">NVIDIA</a>
-                <a href="#">Intel</a>
-                <a href="#">Crowdsourced Deals</a>
-                <a href="#">Crowdsourced Deals</a>
-                <a href="#">Crowdsourced Deals</a>
-                <a href="#">Crowdsourced Deals</a>
-                <a href="#">Crowdsourced Deals</a>
-                <a href="#">Crowdsourced Deals</a>
-            </div>
-        </nav>
 
         <div class="layout-container">
             <button id="add-forum" onclick="openListingModal()">
@@ -300,7 +277,9 @@
 
                 <!-- COLUMN 1: Previously Visited Forums -->
                 <section class="recent-forums-section">
-                    <h3>PREVIOUSLY VISITED FORUMS:</h3>
+                    <div class="recent-forums-header">
+                        <h2>Previously Visited Forums</h2>
+                    </div>
                     <div id="recent-forums-list" class="recent-forums-list">
                         <!-- Populated by JS -->
                         <div class="forum-card-placeholder">
@@ -557,7 +536,7 @@
                                 </div>
                         </div>
 
-                        <!-- 7. Case Card -->
+                        <!-- 8. Case Card -->
                         <div class="component-card" id="card-case" data-component="case">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/case.png" alt="PC Case"

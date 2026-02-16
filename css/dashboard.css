@@ -58,6 +58,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  font-family: 'Google Sans', Arial, sans-serif;
 }
 
 body {
@@ -73,13 +74,14 @@ a {
   color: inherit;
 }
 
-/* --- 1. Top White Header --- */
+/* --- 1. Top Header (Logo | Nav Links | Account) --- */
 .main-header {
   background-color: white;
   padding: 10px 20px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 24px;
   border-bottom: 1px solid var(--border-color);
 }
 
@@ -89,150 +91,82 @@ a {
 }
 
 .logo-img {
-  width: 100px;
-  height: 100px;
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
 }
 
-.logo-circle {
-  width: 40px;
-  height: 40px;
-  border: 2px solid black;
-  border-radius: 50%;
+.header-nav-links {
   display: flex;
   align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 20px;
+  gap: 24px;
 }
 
-.search-container {
-  flex: 1;
-  max-width: 600px;
-  margin: 0 20px;
-  display: flex;
-}
-
-.search-bar {
-  width: 100%;
-  padding: 10px 15px;
-  border: 2px solid #e5e7eb;
-  border-right: none;
-  border-left: none;
-  background-color: white;
+.header-nav-links a {
+  color: var(--text-dark);
   font-size: 14px;
-  transition: border-color 0.2s;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 8px 14px;
+  border: 1px solid #f1f1f1;
+  border-radius: 6px;
 }
 
-.search-bar:focus {
-  outline: none;
-  border-color: var(--primary-blue);
-}
-
-.search-btn {
-  padding: 0 20px;
-  background-color: var(--primary-blue);
-  color: white;
-  border: none;
-  border-radius: 0 8px 8px 0;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.2s, transform 0.1s;
-}
-
-.search-btn:hover {
-  background-color: #1e40af;
-  /* Darker blue */
-}
-
-.search-btn:active {
-  transform: scale(0.95);
-}
-
-.search-btn-icon {
-  width: 18px;
-  height: 18px;
-  object-fit: contain;
-  filter: brightness(0) invert(1);
-  vertical-align: middle;
-}
-
-.search-select {
-  padding: 0 15px;
-  border: 2px solid #e5e7eb;
-  border-right: none;
-  border-radius: 8px 0 0 8px;
-  background-color: #f9fafb;
-  font-size: 14px;
-  cursor: pointer;
-  transition: background-color 0.2s;
-}
-
-.search-select:hover {
-  background-color: #f3f4f6;
+.header-nav-links a:hover {
+  color: var(--primary-blue);
+  text-decoration: underline;
 }
 
 .header-right {
   display: flex;
   align-items: center;
-  gap: 15px;
+  margin-left: auto;
 }
 
-.user-icon-btn {
+.account-settings-btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 12px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
   cursor: pointer;
+  font: inherit;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.account-settings-btn:hover {
   background: #f3f4f6;
+  border-color: var(--primary-blue);
 }
 
-.menu-icon {
-  font-size: 24px;
-  cursor: pointer;
-}
-
-.account-label {
+.logo-circle {
+  width: 36px;
+  height: 36px;
+  border: 2px solid var(--text-dark);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-weight: bold;
   font-size: 18px;
 }
 
-/* --- 2. Colored Navigation Bar --- */
-.nav-strip {
-  display: flex;
-  background-color: var(--primary-blue);
-  color: white;
-  font-size: 12px;
+.account-settings-btn .user-icon-btn {
+  background: #f3f4f6;
 }
 
-.nav-category-btn {
-  background-color: var(--accent-red);
-  padding: 10px 20px;
+.account-label {
   font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-  cursor: pointer;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  overflow-x: auto;
-  white-space: nowrap;
-  padding: 0 10px;
-}
-
-.nav-links a {
-  padding: 0 15px;
-  color: white;
-  border-right: 1px solid rgba(255, 255, 255, 0.2);
-}
-
-.nav-links a:hover {
-  text-decoration: underline;
+  font-size: 14px;
 }
 
 /* --- 3. Main Layout Grid (Content | Sidebar) --- */
 .layout-container {
   display: block;
   /* Sidebar is no longer part of the flow */
-  min-height: calc(100vh - 100px);
+  min-height: calc(100vh - 80px);
   position: relative;
 }
 
@@ -850,19 +784,29 @@ a {
 
 /* --- Column 1: Previously Visited Forums --- */
 .recent-forums-section {
-  background: white;
+  background: #f1f1f1;
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  /* border: 1px solid #e5e7eb; */
+  display: flex;
+  flex-direction: column;
 }
 
-.recent-forums-section h3 {
-  font-size: 14px;
-  color: #666;
-  margin-bottom: 15px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+.recent-forums-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  margin: -20px -20px 15px -20px;
+  background: #ebeaea;
+  border-bottom: 1px solid var(--border-color);
+  border-radius: 12px 12px 0 0;
+}
+
+.recent-forums-header h2 {
+  font-size: 18px;
+  margin: 0;
+  font-weight: 600;
 }
 
 .recent-forums-list {
@@ -876,7 +820,7 @@ a {
   align-items: center;
   gap: 10px;
   padding: 10px;
-  background: #f9fafb;
+  background: #ebeaea;
   border-radius: 8px;
 }
 
@@ -1231,7 +1175,7 @@ a {
   border: 1px solid #e5e7eb;
   border-top: 1px solid #e5e7eb;
   /* Main border */
-  margin-top: -1px;
+  margin-top: -2px;
   /* Pull up to meet tabs */
   z-index: 5;
   height: 4px;
@@ -1263,6 +1207,7 @@ a {
   align-items: center;
   gap: 10px;
   border-bottom: 1px solid var(--border-color);
+  margin-top: -15px;
 }
 
 .component-icon {
