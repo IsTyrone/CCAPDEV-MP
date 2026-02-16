@@ -758,10 +758,19 @@ a {
   border-bottom: 1px solid #374151;
 }
 
+.footer-left-col h4 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 50px;
+  font-weight: 600;
+  margin-top: -10px;
+}
+
+
 .footer-col h4 {
   color: white;
   margin-bottom: 20px;
-  font-size: 16px;
+  font-size: 20px;
   font-weight: 600;
 }
 
