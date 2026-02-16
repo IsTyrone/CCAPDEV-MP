@@ -38,8 +38,8 @@ body {
 .auth-header .logo {
   font-size: 28px;
   font-weight: 800;
-  color: #1e3a8a;
-  /* Deep blue */
+  color: #2563eb;
+  /* Tech Blue */
   letter-spacing: -0.5px;
 }
 
@@ -231,4 +231,106 @@ select.form-input {
 
 .modal-overlay.open {
   display: flex;
+}
+
+/* --- Footer (4-Column Layout) - Copied from dashboard.css --- */
+/* (Auth pages usually have simplified footers but making it consistent) */
+.main-footer {
+  background-color: #111827;
+  color: #9ca3af;
+  padding: 60px 20px 20px;
+  font-family: inherit;
+  width: 100%;
+}
+
+.footer-container {
+  max-width: 1560px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 40px;
+  padding-bottom: 40px;
+  border-bottom: 1px solid #374151;
+}
+
+.footer-col h4 {
+  color: white;
+  margin-bottom: 20px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.footer-col ul {
+  list-style: none;
+}
+
+.footer-col ul li {
+  margin-bottom: 12px;
+}
+
+.footer-col ul li a {
+  color: #9ca3af;
+  font-size: 14px;
+  transition: color 0.2s;
+  text-decoration: none;
+}
+
+.footer-col ul li a:hover {
+  color: white;
+}
+
+.footer-social {
+  display: flex;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.footer-social-link {
+  width: 36px;
+  height: 36px;
+  background: #374151;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  transition: background 0.2s;
+  text-decoration: none;
+}
+
+.footer-social-link:hover {
+  background: #2563eb;
+}
+
+.footer-bottom {
+  max-width: 1560px;
+  margin: 0 auto;
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+}
+
+/* Responsive Footer */
+@media (max-width: 900px) {
+  .footer-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .footer-container {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .footer-social {
+    justify-content: center;
+  }
 }

@@ -327,36 +327,36 @@
                         <div class="component-cards-container">
                             <!-- 1. GPU Card (Default Active) -->
                             <div class="component-card active" id="card-gpu" data-component="gpu">
-                            <div class="card-header">
-                                <img src="assets/images/component-images/graphic-card.png" alt="GPU"
-                                    class="component-icon">
-                                <h3>Graphics Card (GPU)</h3>
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/graphic-card.png" alt="GPU"
+                                        class="component-icon">
+                                    <h3>Graphics Card (GPU)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="gpu-brand">Brand</label>
+                                        <select class="form-control" id="gpu-brand" data-component="gpu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gpu-series">Series</label>
+                                        <select class="form-control" id="gpu-series" data-component="gpu" disabled>
+                                            <option value="" disabled selected>Select Brand First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gpu-model">Model</label>
+                                        <select class="form-control" id="gpu-model" data-component="gpu" disabled>
+                                            <option value="" disabled selected>Select Series First...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="gpu">Find GPU Prices</button>
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="form-group">
-                                    <label for="gpu-brand">Brand</label>
-                                    <select class="form-control" id="gpu-brand" data-component="gpu">
-                                        <option value="" disabled selected>Loading...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="gpu-series">Series</label>
-                                    <select class="form-control" id="gpu-series" data-component="gpu" disabled>
-                                        <option value="" disabled selected>Select Brand First...</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label for="gpu-model">Model</label>
-                                    <select class="form-control" id="gpu-model" data-component="gpu" disabled>
-                                        <option value="" disabled selected>Select Series First...</option>
-                                    </select>
-                                </div>
-                                <button class="btn-find" data-component="gpu">Find GPU Prices</button>
-                            </div>
-                        </div>
 
-                        <!-- 2. CPU Card -->
-                        <div class="component-card" id="card-cpu" data-component="cpu">
+                            <!-- 2. CPU Card -->
+                            <div class="component-card" id="card-cpu" data-component="cpu">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/cpu.png" alt="CPU" class="component-icon">
                                     <h3>Processor (CPU)</h3>
@@ -388,10 +388,10 @@
                                     </div>
                                     <button class="btn-find" data-component="cpu">Find CPU Prices</button>
                                 </div>
-                        </div>
+                            </div>
 
-                        <!-- 3. RAM Card -->
-                        <div class="component-card" id="card-ram" data-component="ram">
+                            <!-- 3. RAM Card -->
+                            <div class="component-card" id="card-ram" data-component="ram">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/ram.png" alt="RAM" class="component-icon">
                                     <h3>RAM / Memory</h3>
@@ -423,10 +423,10 @@
                                     </div>
                                     <button class="btn-find" data-component="ram">Find RAM Prices</button>
                                 </div>
-                        </div>
+                            </div>
 
-                        <!-- 4. Motherboard Card -->
-                        <div class="component-card" id="card-motherboard" data-component="motherboard">
+                            <!-- 4. Motherboard Card -->
+                            <div class="component-card" id="card-motherboard" data-component="motherboard">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/motherboard.png" alt="Motherboard"
                                         class="component-icon">
@@ -461,10 +461,10 @@
                                     <button class="btn-find" data-component="motherboard">Find Motherboard
                                         Prices</button>
                                 </div>
-                        </div>
+                            </div>
 
-                        <!-- 5. Storage Card -->
-                        <div class="component-card" id="card-storage" data-component="storage">
+                            <!-- 5. Storage Card -->
+                            <div class="component-card" id="card-storage" data-component="storage">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/hard-drive.png" alt="Storage"
                                         class="component-icon">
@@ -498,10 +498,10 @@
                                     </div>
                                     <button class="btn-find" data-component="storage">Find Storage Prices</button>
                                 </div>
-                        </div>
+                            </div>
 
-                        <!-- 6. PSU Card -->
-                        <div class="component-card" id="card-psu" data-component="psu">
+                            <!-- 6. PSU Card -->
+                            <div class="component-card" id="card-psu" data-component="psu">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/power-supply.png" alt="PSU"
                                         class="component-icon">
@@ -534,10 +534,10 @@
                                     </div>
                                     <button class="btn-find" data-component="psu">Find PSU Prices</button>
                                 </div>
-                        </div>
+                            </div>
 
-                        <!-- 8. Case Card -->
-                        <div class="component-card" id="card-case" data-component="case">
+                            <!-- 8. Case Card -->
+                            <div class="component-card" id="card-case" data-component="case">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/case.png" alt="PC Case"
                                         class="component-icon">
@@ -558,10 +558,10 @@
                                     </div>
                                     <button class="btn-find" data-component="case">Find Case Prices</button>
                                 </div>
-                        </div>
+                            </div>
 
-                        <!-- 8. Cooling Card -->
-                        <div class="component-card" id="card-cooling" data-component="cooling">
+                            <!-- 8. Cooling Card -->
+                            <div class="component-card" id="card-cooling" data-component="cooling">
                                 <div class="card-header">
                                     <img src="assets/images/component-images/computer.png" alt="Cooling"
                                         class="component-icon">
@@ -780,11 +780,62 @@
 
         </div>
 
-        <footer class="footer-strip">
-            <div>footer section</div>
-            <div>need help?</div>
-            <div>about</div>
-            <div>FAQ</div>
+        <footer class="main-footer">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h4>PC Tracker</h4>
+                    <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                        The ultimate destination for PC enthusiasts. Track prices, find deals, and share your builds
+                        with
+                        the community.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="footer-social-link" title="Facebook">f</a>
+                        <a href="#" class="footer-social-link" title="Twitter">t</a>
+                        <a href="#" class="footer-social-link" title="Instagram">i</a>
+                        <a href="#" class="footer-social-link" title="Discord">d</a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Shop Components</h4>
+                    <ul>
+                        <li><a href="#">Graphics Cards</a></li>
+                        <li><a href="#">Processors</a></li>
+                        <li><a href="#">Motherboards</a></li>
+                        <li><a href="#">Memory (RAM)</a></li>
+                        <li><a href="#">Storage</a></li>
+                        <li><a href="#">Power Supplies</a></li>
+                        <li><a href="#">Cases</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">Build Guides</a></li>
+                        <li><a href="#">Completed Builds</a></li>
+                        <li><a href="#">Price Trends</a></li>
+                        <li><a href="#">Blog & News</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 PC Tracker. All rights reserved.</p>
+                <p>Designed for CCAPDEV</p>
+            </div>
         </footer>
     </div>
     <!-- Auth Requirement Modal -->
