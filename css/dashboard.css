@@ -99,7 +99,7 @@ a {
 .header-nav-links {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 15px;
 }
 
 .header-nav-links a {
