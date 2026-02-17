@@ -758,23 +758,21 @@ a {
   border-bottom: 1px solid #374151;
 }
 
-.footer-left-col h4 {
-  color: white;
-  margin-bottom: 1px;
-  font-size: 50px;
-  font-weight: 600;
-  margin-top: -20px;
-}
+
 
 .footer-left-col p {
   max-width: 360px;
 }
 
+.footer-left-col img {
+  max-width: 415px;
+}
 
-.footer-forums {
-  margin-top: -15px;
-  margin-bottom: 20px;
-  margin-left: 267px;
+.footer-logo {
+  max-width: 250px;
+  height: auto;
+  margin-bottom: 15px;
+  display: block;
 }
 
 .footer-col h4 {
