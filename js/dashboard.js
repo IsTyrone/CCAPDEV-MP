@@ -957,8 +957,12 @@ let listingDropdownData = null;
       }
 
       // Add metadata
+      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+      const userName = currentUser.firstName ? `${currentUser.firstName} ${currentUser.lastName || ''}`.trim() : 'Guest';
+
       formData.id = Date.now();
       formData.status = 'pending';
+      formData.user = userName;
       formData.date = new Date().toISOString();
 
       // Save to localStorage

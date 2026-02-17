@@ -24,9 +24,9 @@ body {
   justify-content: center;
   padding: 16px;
 
-  /* Light Blue Gradient Background */
-  background-color: #eff6ff;
-  background: linear-gradient(135deg, #eff6ff 0%, #bfdbfe 100%);
+  /* Professional Gradient Background */
+  background-color: #f1f5f9;
+  background: linear-gradient(135deg, #f1f5f9 0%, #cbd5e1 100%);
 }
 
 /* 3. Header & Logo Section */
@@ -38,8 +38,8 @@ body {
 .auth-header .logo {
   font-size: 28px;
   font-weight: 800;
-  color: #2563eb;
-  /* Tech Blue */
+  color: #4f46e5;
+  /* Tech Indigo */
   letter-spacing: -0.5px;
 }
 
@@ -140,14 +140,14 @@ select.form-input {
 
 /* Primary Blue Button Style */
 .btn-primary {
-  background-color: #2563eb;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
   color: white;
-  box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+  box-shadow: 0 4px 6px -1px rgba(79, 70, 229, 0.2);
 }
 
 .btn-primary:hover {
-  background-color: #1d4ed8;
-  box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+  background: linear-gradient(135deg, #1d4ed8 0%, #4338ca 100%);
+  box-shadow: 0 6px 8px -1px rgba(79, 70, 229, 0.3);
   transform: translateY(-1px);
 }
 
@@ -157,7 +157,7 @@ select.form-input {
 }
 
 .submit-button {
-  background-color: #2563eb;
+  background: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
   color: white;
 }
 
@@ -184,7 +184,7 @@ select.form-input {
 }
 
 .switch-link {
-  color: #2563eb;
+  color: #4f46e5;
   cursor: pointer;
   font-weight: 600;
   text-decoration: none;
@@ -299,7 +299,7 @@ select.form-input {
 }
 
 .footer-social-link:hover {
-  background: #2563eb;
+  background: #4f46e5;
 }
 
 .footer-bottom {

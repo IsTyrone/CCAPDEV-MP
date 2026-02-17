@@ -3,18 +3,34 @@
    ========================================= */
 
 :root {
-    /* --- 1. Modern Color Palette (Synced with dashboard.css) --- */
-    --primary-blue: #2563eb;
-    --primary-hover: #1d4ed8;
-    --border-color: #e5e7eb;
-    --bg-light: #f9fafb;
-    --text-primary: #111827;
-    --text-secondary: #4b5563;
-    --green: #22c55e;
+    /* --- 1. Modern Professional Grade Palette (Synced) --- */
+    --primary-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+    --primary-blue: #4f46e5;
+    --primary-hover: #4338ca;
+    --secondary-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+
+    --accent-red: #ef4444;
+    --accent-green: #10b981;
+    --green: #10b981;
+    /* Legacy alias */
     --red: #ef4444;
+    /* Legacy alias */
+
+    --bg-app: #f1f5f9;
+    --bg-light: #f1f5f9;
+    /* Legacy alias */
+    --bg-card: #ffffff;
+
+    --text-dark: #0f172a;
+    --text-primary: #0f172a;
+    /* Legacy alias */
+    --text-secondary: #64748b;
+
+    --border-color: #e2e8f0;
+    --footer-bg: #0f172a;
+    --footer-text: #94a3b8;
+
     --blue-badge: #3b82f6;
-    --footer-bg: #111827;
-    --footer-text: #9ca3af;
 }
 
 * {
@@ -182,7 +198,7 @@ body {
     width: 56px;
     height: 56px;
     border-radius: 10px;
-    background: linear-gradient(135deg, #003399, #0055dd);
+    background: var(--primary-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -240,9 +256,9 @@ body {
 }
 
 .sort-btn.active {
-    background: var(--primary-blue);
+    background: var(--primary-gradient);
     color: white;
-    border-color: var(--primary-blue);
+    border: none;
 }
 
 /* --- Submission Cards --- */

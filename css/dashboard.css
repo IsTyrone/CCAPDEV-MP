@@ -45,40 +45,63 @@
 }
 
 :root {
-  /* --- 1. Modern Color Palette --- */
-  --primary-blue: #2563eb;
-  /* Updated from #003399 */
-  --primary-hover: #1d4ed8;
-  /* Button Hover */
+  /* --- 1. Modern Professional Grade Palette --- */
+
+  /* Gradients & Brand Colors */
+  --primary-gradient: linear-gradient(135deg, #2563eb 0%, #4f46e5 100%);
+  /* Vivid Blue -> Indigo */
+  --primary-blue: #4f46e5;
+  /* Deep Indigo fallback */
+  --primary-hover: #4338ca;
+
+  --secondary-gradient: linear-gradient(135deg, #0ea5e9 0%, #2563eb 100%);
+  /* Sky -> Blue */
+
   --accent-red: #ef4444;
-  /* Alerts/Deals */
-  --bg-gray: #f9fafb;
-  /* Cleaner main background */
-  --text-dark: #111827;
-  /* Near-black for readability */
-  --text-secondary: #4b5563;
-  /* Secondary text */
-  --border-color: #e5e7eb;
-  /* Light border */
-  --footer-bg: #111827;
-  /* Dark footer */
-  --footer-text: #9ca3af;
-  /* Footer text */
+  --accent-green: #10b981;
+  --accent-amber: #f59e0b;
+
+  /* Surfaces & Backgrounds */
+  --bg-app: #f1f5f9;
+  /* Slate 100 - Cool, professional background */
+  --bg-card: #ffffff;
+  --bg-sidebar: #ffffff;
+
+  /* Typography */
+  --text-dark: #0f172a;
+  /* Slate 900 - Sharp, high contrast */
+  --text-secondary: #64748b;
+  /* Slate 500 */
+  --text-light: #94a3b8;
+  /* Slate 400 */
+
+  /* Borders & Shadows */
+  --border-color: #e2e8f0;
+  /* Slate 200 */
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+
+  /* Footer */
+  --footer-bg: #0f172a;
+  --footer-text: #94a3b8;
 }
 
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Google Sans', Arial, sans-serif;
+  font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 body {
-  font-family: 'Google Sans', Arial, sans-serif;
-  background-color: var(--bg-gray);
+  font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-app);
   color: var(--text-dark);
   height: 100vh;
   overflow-x: hidden;
+  line-height: 1.5;
 }
 
 a {
@@ -89,9 +112,9 @@ a {
 /* --- 1. Top Header (Logo | Nav Links | Account) --- */
 /* --- 1. Top Header (Logo | Nav Links | Account) --- */
 .main-header {
-  background-color: rgba(255, 255, 255, 0.95);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background-color: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   padding: 12px 24px;
   display: flex;
   align-items: center;
@@ -271,7 +294,7 @@ a {
 }
 
 .btn-sidebar-primary {
-  background: var(--primary-blue);
+  background: var(--primary-gradient);
   color: white;
   border: none;
 }
@@ -458,7 +481,7 @@ a {
 }
 
 .carousel-indicator.current-slide {
-  background: var(--primary-blue);
+  background: var(--primary-gradient);
 }
 
 /* --- 5. Market Ticker Strip --- */
@@ -725,7 +748,7 @@ a {
 
 .bar.used {
   height: 40px;
-  background-color: var(--primary-blue);
+  background: var(--primary-gradient);
 }
 
 .price-line {
@@ -819,7 +842,7 @@ a {
 }
 
 .footer-social-link:hover {
-  background: var(--primary-blue);
+  background: var(--primary-gradient);
 }
 
 .footer-bottom {
@@ -1119,14 +1142,14 @@ a {
 }
 
 .refresh-btn {
-  background-color: var(--primary-blue);
+  background: var(--primary-gradient);
   color: white;
   border: none;
   padding: 10px 20px;
   border-radius: 6px;
   cursor: pointer;
   font-weight: 600;
-  transition: background-color 0.2s;
+  transition: all 0.2s;
 }
 
 .refresh-btn:hover {
@@ -1390,13 +1413,13 @@ a {
 .btn-find {
   margin-top: auto;
   padding: 10px;
-  background: var(--primary-blue);
+  background: var(--primary-gradient);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: transform 0.2s;
 }
 
 .btn-find:hover {
@@ -1626,13 +1649,13 @@ a {
   width: 100%;
   padding: 10px;
   margin-top: 15px;
-  background: var(--primary-blue);
+  background: var(--secondary-gradient);
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   font-weight: 600;
-  transition: background 0.2s;
+  transition: transform 0.2s;
 }
 
 .load-more-btn:hover {
@@ -1769,7 +1792,7 @@ a {
 
 .step-dot.active {
   border-color: var(--primary-blue);
-  background: var(--primary-blue);
+  background: var(--primary-gradient);
   color: white;
 }
 
