@@ -115,63 +115,31 @@ if (userIconBtn && sidebar && overlay) {
 updateSidebarContent();
 
 
-// --- Recent Views Logic ---
-// Load recent views from localStorage
-const distinctRecentViews = JSON.parse(localStorage.getItem('recentViews') || '[]');
-
-// Function to render recent views in sidebar
-/**
- * Renders the list of recently viewed products in the sidebar.
- * reads from the 'distinctRecentViews' array and populates the UL element.
- */
+// --- Previously Visited Forums Logic ---
 function renderRecentViews() {
   const recentList = document.getElementById('recent-forums-list');
   if (!recentList) return;
 
-  if (distinctRecentViews.length > 0) {
-    recentList.innerHTML = distinctRecentViews.map(item => `
-        <div class="recent-item" title="${item}">
+  const recentForums = JSON.parse(localStorage.getItem('recentForums') || '[]');
+
+  if (recentForums.length > 0) {
+    recentList.innerHTML = recentForums.map(item => `
+        <a href="pages/forum.html${item.hash}" class="recent-item" title="${item.title}">
             <div class="recent-item-info">
-                <span class="recent-item-title">${item}</span>
+                <span class="recent-item-title">${item.title}</span>
             </div>
-        </div>
+        </a>
     `).join('');
   } else {
     recentList.innerHTML = `
         <div class="forum-card-placeholder">
-            <span style="font-size:12px; color:#999; width:100%;">No recent views yet.</span>
+            <span style="font-size:12px; color:#999; width:100%;">No recently visited forums yet.</span>
         </div>`;
   }
 }
 
-// Render initially
+// Render on load
 renderRecentViews();
-
-// Add click event to products to "view" them
-const productCards = document.querySelectorAll('.product-card');
-productCards.forEach(card => {
-  card.style.cursor = 'pointer'; // Make it look clickable
-  card.addEventListener('click', () => {
-    const title = card.querySelector('.product-title').textContent;
-
-    // Add to array if not already present (or move to top)
-    const index = distinctRecentViews.indexOf(title);
-    if (index > -1) {
-      distinctRecentViews.splice(index, 1);
-    }
-    distinctRecentViews.unshift(title);
-
-    // Keep only top 5
-    if (distinctRecentViews.length > 5) distinctRecentViews.pop();
-
-    // Save and re-render
-    localStorage.setItem('recentViews', JSON.stringify(distinctRecentViews));
-    renderRecentViews();
-
-    // Open sidebar to show it was added (optional UX improvement)
-    if (userIconBtn) userIconBtn.click();
-  });
-});
 
 
 // --- Old dropdown logic removed — now handled by js/dropdown-manager.js ---
@@ -180,6 +148,80 @@ productCards.forEach(card => {
 // --- 3. Live Listings Feed Logic ---
 
 let listings = [];
+
+function buildComponentTitle(type, details) {
+  const d = details || {};
+  let parts;
+  switch (type) {
+    case 'gpu':
+      parts = [d['Brand'], d['Model']];
+      break;
+    case 'cpu':
+      parts = [d['Brand'], d['Specific Model']];
+      break;
+    case 'ram':
+      parts = [d['Brand'], d['Generation'], d['Speed'], d['Capacity']];
+      break;
+    case 'motherboard':
+      parts = [d['Brand'], d['Socket Type'], d['Chipset'], d['Form Factor']];
+      break;
+    case 'storage':
+      parts = [d['Brand'], d['Type'], d['Interface'], d['Capacity']];
+      break;
+    case 'psu':
+      parts = [d['Brand'], d['Wattage'], d['Efficiency Rating'], d['Modularity']];
+      break;
+    case 'case':
+      parts = [d['Brand (Optional)'] || d['Brand'], d['Form Factor'], d['Side Panel']];
+      break;
+    case 'cooling':
+      parts = [d['Brand'], d['Type'], d['Socket Compatibility']];
+      break;
+    default:
+      parts = [d['Brand'], d['Model'] || d['Specific Model'] || type];
+  }
+  return parts.filter(Boolean).join(' ');
+}
+
+function slugifySegment(str) {
+  return (str || '').replace(/\s+/g, '-');
+}
+
+function buildForumHash(type, details) {
+  const d = details || {};
+  const optionalBrand = d['Brand'] ? slugifySegment(d['Brand']) : 'all-brands';
+  const requiredBrand = slugifySegment(d['Brand'] || '');
+  let segments;
+  switch (type) {
+    case 'gpu':
+      segments = [requiredBrand, slugifySegment(d['Series']), slugifySegment(d['Model'])];
+      break;
+    case 'cpu':
+      segments = [requiredBrand, slugifySegment(d['Performance Tier']), slugifySegment(d['Generation']), slugifySegment(d['Specific Model'])];
+      break;
+    case 'ram':
+      segments = [optionalBrand, slugifySegment(d['Generation']), slugifySegment(d['Speed']), slugifySegment(d['Capacity'])];
+      break;
+    case 'motherboard':
+      segments = [optionalBrand, slugifySegment(d['Socket Type']), slugifySegment(d['Chipset']), slugifySegment(d['Form Factor'])];
+      break;
+    case 'storage':
+      segments = [optionalBrand, slugifySegment(d['Type']), slugifySegment(d['Interface']), slugifySegment(d['Capacity'])];
+      break;
+    case 'psu':
+      segments = [optionalBrand, slugifySegment(d['Wattage']), slugifySegment(d['Efficiency Rating']), slugifySegment(d['Modularity'])];
+      break;
+    case 'case':
+      segments = [d['Brand (Optional)'] || d['Brand'] ? slugifySegment(d['Brand (Optional)'] || d['Brand']) : 'all-brands', slugifySegment(d['Form Factor']), slugifySegment(d['Side Panel'])];
+      break;
+    case 'cooling':
+      segments = [optionalBrand, slugifySegment(d['Type']), slugifySegment(d['Socket Compatibility'])];
+      break;
+    default:
+      segments = [requiredBrand, slugifySegment(d['Model'] || d['Specific Model'] || type)];
+  }
+  return `#${type}/${segments.filter(Boolean).join('/')}`;
+}
 
 // Component type definitions for dummy listing generation
 const componentDefs = {
@@ -227,11 +269,118 @@ const componentDefs = {
 
 const componentTypes = Object.keys(componentDefs);
 
+// Price ranges per component type used for dummy listing generation (PHP pesos, no price data in JSON)
+const listingPriceRanges = {
+  gpu: [8000, 95000],
+  cpu: [3000, 40000],
+  ram: [1500, 8000],
+  mobo: [3000, 25000],
+  storage: [1000, 12000],
+  psu: [2000, 12000],
+  case: [2000, 15000],
+  cooling: [500, 10000]
+};
+
+/** Returns a random element from an array. */
+function randPick(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+/**
+ * Builds a dummy listing's {brand, title, details, forumType} from the
+ * loaded components-dropdown.json data for a given component type.
+ */
+function buildDummyFromJson(type, data) {
+  const jsonKey = type === 'mobo' ? 'motherboard' : type;
+  const forumType = jsonKey;
+  const d = data[jsonKey].dropdowns;
+  let brand, title, details;
+
+  switch (type) {
+    case 'gpu': {
+      brand = randPick(d.brand); // NVIDIA / AMD / Intel
+      const series = randPick(d.series[brand]);
+      const model = randPick(d.models[series]);
+      title = `${brand} ${model}`;
+      details = { Brand: brand, Series: series, Model: model };
+      break;
+    }
+    case 'cpu': {
+      brand = randPick(d.brand);
+      const tierFull = randPick(d.tier[brand]); // e.g. "Core i5 (Mainstream)"
+      const tierPrefix = tierFull.split(' (')[0];  // e.g. "Core i5"
+      const generation = randPick(d.generation[tierPrefix]);
+      const modelKey = `${tierPrefix}-${generation}`; // e.g. "Core i5-14th Gen"
+      const specificModel = randPick(d.models[modelKey]);
+      title = `${brand} ${specificModel}`;
+      details = { Brand: brand, 'Performance Tier': tierFull, Generation: generation, 'Specific Model': specificModel };
+      break;
+    }
+    case 'ram': {
+      brand = randPick(d.brand);
+      const generation = randPick(d.generation);
+      const speed = randPick(d.speed[generation]);
+      const capacity = randPick(d.capacity);
+      title = `${brand} ${generation} ${speed} ${capacity}`;
+      details = { Brand: brand, Generation: generation, Speed: speed, Capacity: capacity };
+      break;
+    }
+    case 'mobo': {
+      brand = randPick(d.brand);
+      const socketType = randPick(d.socket_type);
+      const chipset = randPick(d.chipset[socketType]);
+      const formFactor = randPick(d.form_factor);
+      title = `${brand} ${chipset} ${formFactor}`;
+      details = { Brand: brand, 'Socket Type': socketType, Chipset: chipset, 'Form Factor': formFactor };
+      break;
+    }
+    case 'storage': {
+      brand = randPick(d.brand);
+      const storageType = randPick(d.type);
+      const iface = randPick(d.interface[storageType]);
+      const capacity = randPick(d.capacity);
+      title = `${brand} ${storageType} ${capacity}`;
+      details = { Brand: brand, Type: storageType, Interface: iface, Capacity: capacity };
+      break;
+    }
+    case 'psu': {
+      brand = randPick(d.brand);
+      const wattage = randPick(d.wattage);
+      const efficiency = randPick(d.efficiency_rating);
+      const modularity = randPick(d.modularity);
+      title = `${brand} ${wattage} ${efficiency}`;
+      details = { Brand: brand, Wattage: wattage, 'Efficiency Rating': efficiency, Modularity: modularity };
+      break;
+    }
+    case 'case': {
+      brand = randPick(d.brand);
+      const formFactor = randPick(d.form_factor);
+      const sidePanel = randPick(d.side_panel);
+      title = `${brand} ${formFactor} Case`;
+      details = { 'Brand (Optional)': brand, 'Form Factor': formFactor, 'Side Panel': sidePanel };
+      break;
+    }
+    case 'cooling': {
+      brand = randPick(d.brand);
+      const coolingType = randPick(d.type);
+      const socket = randPick(d.socket_compatibility);
+      title = `${brand} ${coolingType}`;
+      details = { Brand: brand, Type: coolingType, 'Socket Compatibility': socket };
+      break;
+    }
+    default:
+      return null;
+  }
+
+  return { brand, title, details, forumType };
+}
+
 // Map component types to their local fallback icon images
 const componentIconMap = {
   gpu: 'assets/images/component-images/graphic-card.png',
   cpu: 'assets/images/component-images/cpu.png',
   ram: 'assets/images/component-images/ram.png',
+  mobo: 'assets/images/component-images/motherboard.png',
   motherboard: 'assets/images/component-images/motherboard.png',
   storage: 'assets/images/component-images/hard-drive.png',
   psu: 'assets/images/component-images/power-supply.png',
@@ -280,7 +429,15 @@ const brandDomainMap = {
   'noctua': 'noctua.at',
   'deepcool': 'deepcool.com',
   'arctic': 'arctic.de',
-  'cooler master': 'coolermaster.com'
+  'cooler master': 'coolermaster.com',
+  // GPU chip brands (from JSON)
+  'nvidia': 'nvidia.com',
+  // Additional storage brands (from JSON)
+  'sk hynix': 'skhynix.com',
+  'toshiba': 'toshiba.com',
+  // Additional RAM brands (from JSON)
+  'patriot': 'patriotmemory.com',
+  'pny': 'pny.com'
 };
 
 /**
@@ -298,25 +455,48 @@ function getBrandLogoUrl(brand) {
   return `https://www.google.com/s2/favicons?domain=${guess}&sz=128`;
 }
 
-// Generate dummy data
+// Populated by loadListingDropdownData() once components-dropdown.json is fetched
+let listingDropdownData = null;
+
+// Generate dummy data — uses components-dropdown.json when loaded, falls back to componentDefs
 function generateDummyListings() {
   const newListings = [];
   for (let i = 0; i < 15; i++) {
     const type = componentTypes[Math.floor(Math.random() * componentTypes.length)];
-    const def = componentDefs[type];
-    const brand = def.brands[Math.floor(Math.random() * def.brands.length)];
-    const name = def.names[Math.floor(Math.random() * def.names.length)];
-    const price = Math.floor(Math.random() * (def.priceRange[1] - def.priceRange[0])) + def.priceRange[0];
+    const range = listingPriceRanges[type];
+    const price = Math.round((Math.random() * (range[1] - range[0]) + range[0]) / 100) * 100;
+
+    let brand, title, forumHash;
+
+    if (listingDropdownData) {
+      const result = buildDummyFromJson(type, listingDropdownData);
+      if (result) {
+        brand = result.brand;
+        title = result.title;
+        forumHash = buildForumHash(result.forumType, result.details);
+      }
+    }
+
+    // Fallback to hardcoded componentDefs if JSON not yet loaded or build failed
+    if (!brand) {
+      const def = componentDefs[type];
+      brand = def.brands[Math.floor(Math.random() * def.brands.length)];
+      const name = def.names[Math.floor(Math.random() * def.names.length)];
+      title = `${brand} ${name}`;
+      const forumType = type === 'mobo' ? 'motherboard' : type;
+      forumHash = `#${forumType}/${slugifySegment(brand)}/${slugifySegment(name)}`;
+    }
 
     newListings.push({
       id: i,
       type: type,
       brand: brand,
-      title: `${brand} ${name}`,
-      price: `$${price}`,
+      title: title,
+      price: `₱${price}`,
       time: `${Math.floor(Math.random() * 59) + 1} mins ago`,
       image: getBrandLogoUrl(brand),
-      fallbackImage: componentIconMap[type] || 'assets/images/component-images/graphic-card.png'
+      fallbackImage: componentIconMap[type] || 'assets/images/component-images/graphic-card.png',
+      forumHash: forumHash
     });
   }
 
@@ -328,12 +508,13 @@ function generateDummyListings() {
     newListings.unshift({
       id: l.id,
       type: l.componentType,
-      brand: l.details['Brand'] || l.details['Type'] || 'Generic', // Fallback
-      title: `${l.details['Brand'] || ''} ${l.details['Model'] || l.details['Specific Model'] || l.componentType}`,
-      price: `₱${l.price}`, // Assuming stored price is raw number
-      time: 'Just now', // Simplified for now, could calculate diff
+      brand: l.details['Brand'] || l.details['Type'] || 'Generic',
+      title: buildComponentTitle(l.componentType, l.details),
+      price: `₱${l.price}`,
+      time: 'Just now',
       image: getBrandLogoUrl(l.details['Brand'] || l.details['Type'] || 'Generic'),
-      fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png'
+      fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png',
+      forumHash: buildForumHash(l.componentType, l.details)
     });
   });
 
@@ -353,6 +534,12 @@ function renderListings(items) {
     const fallback = item.fallbackImage || componentIconMap[item.type] || 'assets/images/component-images/graphic-card.png';
     const card = document.createElement('div');
     card.className = 'listing-card';
+    if (item.forumHash) {
+      card.style.cursor = 'pointer';
+      card.addEventListener('click', () => {
+        window.location.href = `pages/forum.html${item.forumHash}`;
+      });
+    }
     card.innerHTML = `
       <img src="${item.image}" class="listing-img" alt="${item.title}"
            onerror="this.onerror=null; this.src='${fallback}'; this.classList.add('listing-img-fallback');">
@@ -445,9 +632,6 @@ let modalCurrentStep = 1;
 let modalSelectedType = null;
 let modalUploadedFiles = [];
 
-// Dropdown data loaded from components-dropdown.json
-let listingDropdownData = null;
-
 // --- Load the JSON (same approach as dropdown-manager.js) ---
 (function loadListingDropdownData() {
   document.addEventListener('DOMContentLoaded', () => {
@@ -467,6 +651,9 @@ let listingDropdownData = null;
       if (xhr.status === 200 || xhr.status === 0) {
         listingDropdownData = xhr.response ?? JSON.parse(xhr.responseText);
         console.log('Listing modal: dropdown data loaded');
+        // Re-generate the listings feed now that JSON data is available
+        listings = generateDummyListings();
+        if (document.getElementById('listings-feed')) renderListings(listings);
       }
     };
     xhr.onerror = () => console.error('Listing modal: failed to load dropdown data');
@@ -769,24 +956,22 @@ let listingDropdownData = null;
       });
     }
 
-    /*
     function initListingMotherboard(container, d) {
       const brand = lCreateGroup('Brand', 'listing-mobo-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-    
+
       const socket = lCreateGroup('Socket Type', 'listing-mobo-socket');
       lPopulate(socket.select, d.socket_type, 'Select Socket...');
       container.appendChild(socket.group);
-    
+
       const chipset = lCreateGroup('Chipset', 'listing-mobo-chipset', true);
       container.appendChild(chipset.group);
-    
+
       const ff = lCreateGroup('Form Factor', 'listing-mobo-ff');
       lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
       container.appendChild(ff.group);
-    
-      // Socket → Chipset
+
       socket.select.addEventListener('change', () => {
         const val = socket.select.value;
         if (val && d.chipset[val]) {
@@ -796,27 +981,23 @@ let listingDropdownData = null;
         }
       });
     }
-    */
 
-    /*
     function initListingStorage(container, d) {
-      // Brand (independent)
       const brand = lCreateGroup('Brand', 'listing-stor-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-    
+
       const type = lCreateGroup('Type', 'listing-stor-type');
       lPopulate(type.select, d.type, 'Select Type...');
       container.appendChild(type.group);
-    
+
       const iface = lCreateGroup('Interface', 'listing-stor-iface', true);
       container.appendChild(iface.group);
-    
+
       const cap = lCreateGroup('Capacity', 'listing-stor-cap');
       lPopulate(cap.select, d.capacity, 'Select Capacity...');
       container.appendChild(cap.group);
-    
-      // Type → Interface
+
       type.select.addEventListener('change', () => {
         const val = type.select.value;
         if (val && d.interface[val]) {
@@ -826,27 +1007,24 @@ let listingDropdownData = null;
         }
       });
     }
-    */
 
-    /*
     function initListingPSU(container, d) {
       const brand = lCreateGroup('Brand', 'listing-psu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-    
+
       const watt = lCreateGroup('Wattage', 'listing-psu-watt');
       lPopulate(watt.select, d.wattage, 'Select Wattage...');
       container.appendChild(watt.group);
-    
+
       const eff = lCreateGroup('Efficiency Rating', 'listing-psu-eff');
       lPopulate(eff.select, d.efficiency_rating, 'Select Efficiency...');
       container.appendChild(eff.group);
-    
+
       const mod = lCreateGroup('Modularity', 'listing-psu-mod');
       lPopulate(mod.select, d.modularity, 'Select Modularity...');
       container.appendChild(mod.group);
     }
-    */
 
     function initListingCase(container, d) {
       const brand = lCreateGroup('Brand (Optional)', 'listing-case-brand');
@@ -862,21 +1040,19 @@ let listingDropdownData = null;
       container.appendChild(panel.group);
     }
 
-    /*
     function initListingCooling(container, d) {
       const brand = lCreateGroup('Brand', 'listing-cool-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-    
+
       const type = lCreateGroup('Type', 'listing-cool-type');
       lPopulate(type.select, d.type, 'Select Type...');
       container.appendChild(type.group);
-    
+
       const compat = lCreateGroup('Socket Compatibility', 'listing-cool-socket');
       lPopulate(compat.select, d.socket_compatibility, 'Select Compatibility...');
       container.appendChild(compat.group);
     }
-    */
 
     // --- Step 3: Image Upload ---
     (function initImageUpload() {

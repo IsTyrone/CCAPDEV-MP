@@ -51,29 +51,6 @@ body {
     min-height: 100vh;
 }
 
-.main-header {
-    display: flex;
-    align-items: center;
-    padding: 10px 24px;
-    background: white;
-    border-bottom: 1px solid var(--border-color);
-    gap: 16px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-}
-
-.logo-img-container {
-    display: flex;
-    align-items: center;
-    text-decoration: none;
-    flex-shrink: 0;
-}
-
-.logo-img {
-    height: 36px;
-    object-fit: contain;
-}
 
 /* --- Breadcrumb --- */
 .breadcrumb-bar {

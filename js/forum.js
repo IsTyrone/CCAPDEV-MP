@@ -101,7 +101,7 @@ function generateDummySubmissions(componentType, modelName, count = 8) {
     const subs = [];
 
     for (let i = 0; i < count; i++) {
-        const price = randomPrice(range[0], range[1]);
+        const price = Math.round(randomPrice(range[0], range[1]) / 100) * 100;
         const txnType = Math.random() > 0.5 ? 'sold' : 'bought';
         const mins = randomPrice(5, 1440 * 7); // up to a week ago
         let timeStr;
@@ -387,6 +387,63 @@ function renderBreadcrumb(componentType, segments) {
     });
 }
 
+// --- Load approved listings from localStorage matching current forum page ---
+function loadApprovedSubmissions(componentType, segments) {
+    const modelName = segments[segments.length - 1];
+    const allListings = JSON.parse(localStorage.getItem('listings') || '[]');
+
+    return allListings
+        .filter(l => {
+            if (l.status !== 'approved') return false;
+            if (l.componentType !== componentType) return false;
+            // Match the model name against any value in l.details (case-insensitive)
+            const detailValues = Object.values(l.details || {}).map(v => String(v).toLowerCase());
+            return detailValues.some(v => v.includes(modelName.toLowerCase()) || modelName.toLowerCase().includes(v));
+        })
+        .map(l => {
+            const date = new Date(l.date);
+            const minsAgo = Math.max(1, Math.round((Date.now() - date.getTime()) / 60000));
+            let timeStr;
+            if (minsAgo < 60) timeStr = `${minsAgo} mins ago`;
+            else if (minsAgo < 1440) timeStr = `${Math.floor(minsAgo / 60)} hours ago`;
+            else timeStr = `${Math.floor(minsAgo / 1440)} days ago`;
+
+            return {
+                id: l.id,
+                user: l.user || 'Anonymous',
+                txnType: l.transactionType || 'sold',
+                price: parseInt(l.price, 10) || 0,
+                images: Array.isArray(l.images) ? l.images : [],
+                comment: l.comments || '',
+                timeStr,
+                minsAgo,
+                isReal: true
+            };
+        });
+}
+
+// --- Save current forum visit to localStorage.recentForums ---
+function trackForumVisit(componentType, segments) {
+    const modelName = segments[segments.length - 1];
+    const subtitleParts = [componentLabels[componentType] || componentType, ...segments.slice(0, -1)];
+    const subtitle = subtitleParts.map(p => p === 'all brands' ? 'All Brands' : p).join(' › ');
+    const hash = location.hash;
+
+    const recentForums = JSON.parse(localStorage.getItem('recentForums') || '[]');
+
+    // Remove existing entry with same hash (move to top)
+    const existingIndex = recentForums.findIndex(f => f.hash === hash);
+    if (existingIndex > -1) recentForums.splice(existingIndex, 1);
+
+    const fullTitle = segments.join(' ');
+    recentForums.unshift({ title: fullTitle, hash, subtitle });
+
+    // Keep max 5
+    if (recentForums.length > 5) recentForums.pop();
+
+    localStorage.setItem('recentForums', JSON.stringify(recentForums));
+}
+
 // --- Main: Load the forum page ---
 function loadForumPage() {
     const parsed = parseForumHash();
@@ -419,8 +476,10 @@ function loadForumPage() {
     const displayParts = subtitleParts.map(p => p === 'all brands' ? 'All Brands' : p);
     document.getElementById('forum-subtitle').textContent = displayParts.join(' › ');
 
-    // Generate and render submissions
-    submissions = generateDummySubmissions(componentType, modelName);
+    // Load approved real listings and merge with dummy submissions
+    const realSubmissions = loadApprovedSubmissions(componentType, segments);
+    const dummySubmissions = generateDummySubmissions(componentType, modelName);
+    submissions = [...realSubmissions, ...dummySubmissions];
     renderSubmissions(submissions);
     updateSidebarStats(submissions);
 
@@ -428,6 +487,9 @@ function loadForumPage() {
     if (dropdownData) {
         renderRelatedModels(componentType, segments);
     }
+
+    // Track this forum visit for the main page "Previously Visited Forums"
+    trackForumVisit(componentType, segments);
 }
 
 function showErrorState() {
