@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - PC Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/auth.css" />
+</head>
+
+<body>
+
+    <div class="auth-page">
+        <div class="auth-header">
+            <div class="logo">PC Tracker</div>
+        </div>
+
+        <div class="auth-card">
+
+            <div id="loginForm">
+                <div class="auth-title">Welcome back</div>
+                <form id="loginFormElement">
+                    <div class="form-group">
+                        <label class="form-label">Email address</label>
+                        <input type="email" class="form-input" placeholder="you@example.com" required />
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Password</label>
+                        <input type="password" class="form-input" placeholder="••••••••" required />
+                        <div style="text-align: right; margin-top: 5px;">
+                            <a href="forgot-password.html" class="switch-link" style="font-size: 0.9em;">Forgot
+                                Password?</a>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-full">Log in</button>
+                </form>
+
+                <div class="switch-auth">
+                    Don't have an account?
+                    <a class="switch-link" href="register.html">Sign up</a>
+                </div>
+            </div>
+        </div>
+
+        <a href="../index.html" class="back-link">← Back to Dashboard</a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>PC Tracker</h4>
+                <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                    The ultimate destination for PC enthusiasts.
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link">f</a>
+                    <a href="#" class="footer-social-link">t</a>
+                    <a href="#" class="footer-social-link">i</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Account</h4>
+                <ul>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">Register</a></li>
+                    <li><a href="#">Forgot Password</a></li>
+                </ul>
+            </div>
+            <div class="footer-col" style="visibility: hidden;">
+                <!-- Spacer -->
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PC Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+</body>
+
+</html>

@@ -23,7 +23,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (user) {
                 localStorage.setItem('currentUser', JSON.stringify(user));
                 alert('Login Successful!');
-                window.location.href = 'dashboard.html';
+
+                if (user.role === 'admin') {
+                    window.location.href = 'admin.html';
+                } else {
+                    window.location.href = '../index.html';
+                }
             } else {
                 alert('Invalid email or password. Please try again or register.');
             }
@@ -73,3 +78,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 });
+
+// --- Seed Admin Account ---
+(function seedAdmin() {
+    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+    const adminEmail = 'admin@pctracker.com';
+
+    if (!registeredUsers.some(u => u.email === adminEmail)) {
+        const adminUser = {
+            firstName: 'System',
+            lastName: 'Admin',
+            email: adminEmail,
+            password: 'admin123',
+            role: 'admin'
+        };
+        registeredUsers.push(adminUser);
+        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
+        console.log('Admin account seeded.');
+    }
+})();

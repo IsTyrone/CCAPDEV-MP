@@ -5,7 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Register Page - PC Tracker</title>
-    <link rel="stylesheet" href="auth.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/auth.css" />
 </head>
 
 <body>
@@ -36,7 +40,7 @@
                 <div class="form-group phone-group">
                     <label for="countryCode" class="form-label">Phone Number</label>
                     <select id="countryCode" name="countryCode" class="form-input">
-                        <!-- Options populated by script.js -->
+                        <!-- Options populated by register.js -->
                     </select>
                     <input type="text" class="form-input" placeholder="234 567 8901" required
                         style="margin-top: 8px;" />
@@ -65,9 +69,48 @@
             </form>
         </div>
 
-        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        <a href="../index.html" class="back-link">← Back to Dashboard</a>
     </div>
-    <script src="register.js"></script>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="footer-container">
+            <div class="footer-col">
+                <h4>PC Tracker</h4>
+                <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
+                    The ultimate destination for PC enthusiasts.
+                </p>
+                <div class="footer-social">
+                    <a href="#" class="footer-social-link">f</a>
+                    <a href="#" class="footer-social-link">t</a>
+                    <a href="#" class="footer-social-link">i</a>
+                </div>
+            </div>
+            <div class="footer-col">
+                <h4>Support</h4>
+                <ul>
+                    <li><a href="#">Help Center</a></li>
+                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Account</h4>
+                <ul>
+                    <li><a href="#">Login</a></li>
+                    <li><a href="#">Register</a></li>
+                    <li><a href="#">Forgot Password</a></li>
+                </ul>
+            </div>
+            <div class="footer-col" style="visibility: hidden;">
+                <!-- Spacer -->
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 PC Tracker. All rights reserved.</p>
+        </div>
+    </footer>
+    <script src="../js/register.js"></script>
 </body>
 
 </html>

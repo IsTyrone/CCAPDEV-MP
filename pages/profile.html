@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>User Profile - PC Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/profile.css" />
+</head>
+
+<body>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="profile-page">
+        <header class="main-header">
+            <a href="../index.html" class="logo-img-container">
+                <img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Tracker">
+            </a>
+            <nav class="header-nav-links">
+                <a href="#">Blogs and Articles</a>
+                <a href="#">About Us</a>
+            </nav>
+            <div class="header-right">
+                <a href="../index.html" class="back-to-dash">← Back to Dashboard</a>
+                <button class="account-settings-btn" id="userIconBtn" title="Account">
+                    <span class="account-label">Account</span>
+                    <span class="logo-circle user-icon-btn">&#128100;</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="profile-main">
+            <!-- Profile Header Card -->
+            <section class="profile-header-card">
+                <div class="profile-avatar" id="profile-avatar">👤</div>
+                <div class="profile-details">
+                    <h1 class="profile-display-name" id="profile-display-name">Loading...</h1>
+                    <p class="profile-username" id="profile-username">@username</p>
+                    <div class="profile-rep">
+                        <button class="rep-btn rep-up" id="rep-up" title="+Rep">+</button>
+                        <span class="rep-count" id="rep-count">0</span>
+                        <button class="rep-btn rep-down" id="rep-down" title="-Rep">−</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Tabs -->
+            <div class="profile-tabs">
+                <button class="profile-tab active" data-tab="listings">Listings</button>
+                <button class="profile-tab" data-tab="comments">Comments</button>
+            </div>
+
+            <!-- Content Area -->
+            <div class="profile-content">
+                <!-- Listings Tab -->
+                <div class="profile-tab-content active" id="tab-listings">
+                    <div class="listings-grid" id="profile-listings">
+                        <!-- Populated by profile.js -->
+                    </div>
+                    <div class="empty-state" id="listings-empty">
+                        <p>No listings yet. <a href="../index.html">Add a listing</a> from the dashboard.</p>
+                    </div>
+                </div>
+
+                <!-- Comments Tab -->
+                <div class="profile-tab-content" id="tab-comments">
+                    <div class="comment-form-card">
+                        <textarea id="comment-input" placeholder="Write a public comment..." rows="3"></textarea>
+                        <button class="btn-post-comment" id="post-comment-btn">Post Comment</button>
+                    </div>
+                    <div class="comments-list" id="profile-comments">
+                        <!-- Populated by profile.js -->
+                    </div>
+                    <div class="empty-state" id="comments-empty">
+                        <p>No comments yet. Be the first to leave a comment!</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <aside id="rightSidebar" class="right-sidebar">
+            <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+            <div class="logo-circle sidebar-logo">&#128100;</div>
+            <div id="sidebarContent" class="sidebar-content">
+                <h3 class="mb-10">Welcome, Guest</h3>
+                <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+                <div class="sidebar-actions">
+                    <button onclick="window.location.href='login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
+                    <button onclick="window.location.href='register.html'" class="btn-sidebar btn-sidebar-outline">Register</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/profile.js"></script>
+</body>
+
+</html>

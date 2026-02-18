@@ -1,0 +1,135 @@
+/* Account Settings Page - Inherits variables from dashboard.css */
+
+.settings-page {
+  min-height: 100vh;
+  background: var(--bg-app, #f1f5f9);
+  font-family: 'Google Sans', 'Inter', sans-serif;
+}
+
+.settings-main {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: 24px 20px;
+}
+
+.settings-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-dark, #0f172a);
+  margin: 0 0 24px 0;
+}
+
+/* Settings Card - Replicates profile.css card look */
+.settings-card {
+  background: var(--bg-card, #ffffff);
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  padding: 24px 32px;
+  margin-bottom: 24px;
+}
+
+.settings-card-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-dark, #0f172a);
+  margin: 0 0 20px 0;
+}
+
+/* Form Styles */
+.settings-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.settings-form .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.settings-form .form-group label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-dark, #0f172a);
+}
+
+.settings-input {
+  width: 100%;
+  padding: 12px 16px;
+  border: 1px solid var(--border-color, #e2e8f0);
+  border-radius: 8px;
+  font-size: 14px;
+  font-family: inherit;
+  box-sizing: border-box;
+  transition: border-color 0.2s;
+}
+
+.settings-input:focus {
+  outline: none;
+  border-color: var(--primary-blue, #4f46e5);
+}
+
+.settings-input::placeholder {
+  color: var(--text-light, #94a3b8);
+}
+
+.settings-textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Primary Button */
+.btn-primary {
+  padding: 10px 20px;
+  background: var(--primary-blue, #4f46e5);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  width: fit-content;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover, #4338ca);
+}
+
+/* Danger Zone */
+.settings-card.danger-zone {
+  border-color: var(--accent-red, #ef4444);
+  border-width: 2px;
+  background: linear-gradient(to bottom, #fffbfb, var(--bg-card, #ffffff));
+}
+
+.danger-title {
+  color: var(--accent-red, #ef4444);
+}
+
+.danger-description {
+  font-size: 14px;
+  color: var(--text-secondary, #64748b);
+  margin: 0 0 20px 0;
+  line-height: 1.5;
+}
+
+/* Destructive Button */
+.btn-destructive {
+  padding: 10px 20px;
+  background: white;
+  color: var(--accent-red, #ef4444);
+  border: 2px solid var(--accent-red, #ef4444);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  width: fit-content;
+}
+
+.btn-destructive:hover {
+  background: rgba(239, 68, 68, 0.1);
+}

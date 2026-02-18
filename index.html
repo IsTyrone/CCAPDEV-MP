@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PC Tracker Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+
+<body>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="page-wrapper">
+
+        <header class="main-header">
+            <a href="index.html" class="logo-img-container">
+                <img src="assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Picker">
+            </a>
+
+            <nav class="header-nav-links">
+                <a href="#">Blogs and Articles</a>
+                <a href="#">About Us</a>
+            </nav>
+
+            <div class="header-right">
+                <button class="account-settings-btn" id="userIconBtn" title="Account">
+                    <span class="account-label">Account</span>
+                    <span class="logo-circle user-icon-btn">&#128100;</span>
+                </button>
+            </div>
+        </header>
+
+        <div class="layout-container">
+            <button id="add-forum" onclick="openListingModal()">
+                <div class="add-plus">+</div>
+            </button>
+            <main class="main-content">
+                <section class="hero-section">
+                    <button class="carousel-btn prev-btn" id="prevBtn">&#10094;</button>
+                    <div class="carousel-track-container">
+                        <ul class="carousel-track">
+                            <li class="carousel-slide current-slide">
+                                <div class="hero-content">
+                                    <h3>Latest Price Drops</h3>
+                                    <p class="hero-subtitle">Market Analysis for February 2026</p>
+                                </div>
+                            </li>
+                            <li class="carousel-slide">
+                                <div class="hero-content">
+                                    <h3>Placeholder Text 2</h3>
+                                    <p class="hero-subtitle">Description for slide 2</p>
+                                </div>
+                            </li>
+                            <li class="carousel-slide">
+                                <div class="hero-content">
+                                    <h3>Placeholder Text 3</h3>
+                                    <p class="hero-subtitle">Description for slide 3</p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <button class="carousel-btn next-btn" id="nextBtn">&#10095;</button>
+
+                    <div class="carousel-nav">
+                        <button class="carousel-indicator current-slide"></button>
+                        <button class="carousel-indicator"></button>
+                        <button class="carousel-indicator"></button>
+                    </div>
+                </section>
+
+                <!-- Market Ticker Strip -->
+                <section class="market-ticker" id="market-ticker">
+                    <div class="ticker-label">
+                        <img src="assets/images/live.png" alt="Live" class="ticker-label-icon">
+                        <span>LIVE</span>
+                    </div>
+                    <div class="ticker-viewport">
+                        <div class="ticker-track">
+                            <!-- NOTE: All component names, prices, and percentage values below are
+                                 dummy/placeholder data for layout purposes. Replace with real
+                                 market data from your backend or API when available. -->
+                            <!-- Set 1 -->
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#gpu/NVIDIA/RTX-4000/RTX-4070-Ti-Super">
+                                <div class="ticker-card-category">GPU</div>
+                                <div class="ticker-card-name">RTX 4070 Ti Super</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱38,450</span>
+                                    <span class="ticker-retail-price">₱42,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 10.6%</div>
+                            </div>
+                            <div class="ticker-card ticker-up" data-href="pages/forum.html#cpu/AMD/Ryzen-7-(High-Performance)/7000-Series/Ryzen-7-7800X3D">
+                                <div class="ticker-card-category">CPU</div>
+                                <div class="ticker-card-name">Ryzen 7 7800X3D</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱23,100</span>
+                                    <span class="ticker-retail-price">₱21,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 5.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#ram/G.Skill/DDR5/6000MHz/32GB">
+                                <div class="ticker-card-category">RAM</div>
+                                <div class="ticker-card-name">G.Skill Trident Z5 32GB DDR5</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,850</span>
+                                    <span class="ticker-retail-price">₱6,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 9.9%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral" data-href="pages/forum.html#storage/Samsung/SSD-(NVMe)/M.2-PCIe-Gen-4/2TB">
+                                <div class="ticker-card-category">SSD</div>
+                                <div class="ticker-card-name">Samsung 990 Pro 2TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱9,990</span>
+                                    <span class="ticker-retail-price">₱9,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up" data-href="pages/forum.html#motherboard/ASUS/AMD-AM5/B650E/ATX">
+                                <div class="ticker-card-category">MOBO</div>
+                                <div class="ticker-card-name">ASUS ROG Strix B650E-E</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱16,200</span>
+                                    <span class="ticker-retail-price">₱14,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 8.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#psu/Corsair/850W/80+-Gold/Fully-Modular">
+                                <div class="ticker-card-category">PSU</div>
+                                <div class="ticker-card-name">Corsair RM850x 850W</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,950</span>
+                                    <span class="ticker-retail-price">₱7,190</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 17.2%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral" data-href="pages/forum.html#case/NZXT/Mid-Tower/Tempered-Glass">
+                                <div class="ticker-card-category">CASE</div>
+                                <div class="ticker-card-name">NZXT H7 Flow</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱7,490</span>
+                                    <span class="ticker-retail-price">₱7,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#cooling/Arctic/AIO-Liquid-(360mm)/Universal-(Intel-+-AMD)">
+                                <div class="ticker-card-category">AIO</div>
+                                <div class="ticker-card-name">Arctic Liquid Freezer II 360</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱4,800</span>
+                                    <span class="ticker-retail-price">₱5,590</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 14.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up" data-href="pages/forum.html#storage/Western-Digital/SSD-(NVMe)/M.2-PCIe-Gen-4/1TB">
+                                <div class="ticker-card-category">NVMe</div>
+                                <div class="ticker-card-name">WD Black SN850X 1TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,200</span>
+                                    <span class="ticker-retail-price">₱4,890</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 6.3%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#cooling/Noctua/Air-Cooler-(Tower)/Universal-(Intel-+-AMD)">
+                                <div class="ticker-card-category">COOLER</div>
+                                <div class="ticker-card-name">Noctua NH-D15 chromax</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,100</span>
+                                    <span class="ticker-retail-price">₱5,790</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 11.9%</div>
+                            </div>
+
+                            <!-- Set 2 (duplicate for seamless loop) -->
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#gpu/NVIDIA/RTX-4000/RTX-4070-Ti-Super">
+                                <div class="ticker-card-category">GPU</div>
+                                <div class="ticker-card-name">RTX 4070 Ti Super</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱38,450</span>
+                                    <span class="ticker-retail-price">₱42,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 10.6%</div>
+                            </div>
+                            <div class="ticker-card ticker-up" data-href="pages/forum.html#cpu/AMD/Ryzen-7-(High-Performance)/7000-Series/Ryzen-7-7800X3D">
+                                <div class="ticker-card-category">CPU</div>
+                                <div class="ticker-card-name">Ryzen 7 7800X3D</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱23,100</span>
+                                    <span class="ticker-retail-price">₱21,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 5.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#ram/G.Skill/DDR5/6000MHz/32GB">
+                                <div class="ticker-card-category">RAM</div>
+                                <div class="ticker-card-name">G.Skill Trident Z5 32GB DDR5</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,850</span>
+                                    <span class="ticker-retail-price">₱6,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 9.9%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral" data-href="pages/forum.html#storage/Samsung/SSD-(NVMe)/M.2-PCIe-Gen-4/2TB">
+                                <div class="ticker-card-category">SSD</div>
+                                <div class="ticker-card-name">Samsung 990 Pro 2TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱9,990</span>
+                                    <span class="ticker-retail-price">₱9,995</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up" data-href="pages/forum.html#motherboard/ASUS/AMD-AM5/B650E/ATX">
+                                <div class="ticker-card-category">MOBO</div>
+                                <div class="ticker-card-name">ASUS ROG Strix B650E-E</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱16,200</span>
+                                    <span class="ticker-retail-price">₱14,990</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 8.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#psu/Corsair/850W/80+-Gold/Fully-Modular">
+                                <div class="ticker-card-category">PSU</div>
+                                <div class="ticker-card-name">Corsair RM850x 850W</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,950</span>
+                                    <span class="ticker-retail-price">₱7,190</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 17.2%</div>
+                            </div>
+                            <div class="ticker-card ticker-neutral" data-href="pages/forum.html#case/NZXT/Mid-Tower/Tempered-Glass">
+                                <div class="ticker-card-category">CASE</div>
+                                <div class="ticker-card-name">NZXT H7 Flow</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱7,490</span>
+                                    <span class="ticker-retail-price">₱7,490</span>
+                                </div>
+                                <div class="ticker-card-delta delta-neutral">— 0.0%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#cooling/Arctic/AIO-Liquid-(360mm)/Universal-(Intel-+-AMD)">
+                                <div class="ticker-card-category">AIO</div>
+                                <div class="ticker-card-name">Arctic Liquid Freezer II 360</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱4,800</span>
+                                    <span class="ticker-retail-price">₱5,590</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 14.1%</div>
+                            </div>
+                            <div class="ticker-card ticker-up" data-href="pages/forum.html#storage/Western-Digital/SSD-(NVMe)/M.2-PCIe-Gen-4/1TB">
+                                <div class="ticker-card-category">NVMe</div>
+                                <div class="ticker-card-name">WD Black SN850X 1TB</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,200</span>
+                                    <span class="ticker-retail-price">₱4,890</span>
+                                </div>
+                                <div class="ticker-card-delta delta-up">↑ 6.3%</div>
+                            </div>
+                            <div class="ticker-card ticker-down" data-href="pages/forum.html#cooling/Noctua/Air-Cooler-(Tower)/Universal-(Intel-+-AMD)">
+                                <div class="ticker-card-category">COOLER</div>
+                                <div class="ticker-card-name">Noctua NH-D15 chromax</div>
+                                <div class="ticker-card-prices">
+                                    <span class="ticker-current-price">₱5,100</span>
+                                    <span class="ticker-retail-price">₱5,790</span>
+                                </div>
+                                <div class="ticker-card-delta delta-down">↓ 11.9%</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+
+            <!-- New Dashboard Layout (3-Column Grid) -->
+            <div class="new-dashboard-layout">
+
+                <!-- COLUMN 1: Previously Visited Forums -->
+                <section class="recent-forums-section">
+                    <div class="recent-forums-header">
+                        <h2>Previously Visited Forums</h2>
+                    </div>
+                    <div id="recent-forums-list" class="recent-forums-list">
+                        <!-- Populated by JS -->
+                        <div class="forum-card-placeholder">
+                            <div class="placeholder-icon"></div>
+                            <div class="placeholder-text"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMN 2: Component Section (Center) -->
+                <section class="components-section">
+                    <!-- Navigation for Components -->
+                    <div class="component-nav">
+                        <div class="component-nav-header">
+                            <h2>Find Component Prices</h2>
+                        </div>
+                        <div class="nav-icons-row">
+                            <div class="nav-item active" data-target="gpu" title="Graphics Card">
+                                <img src="assets/images/component-images/graphic-card.png" alt="GPU">
+                            </div>
+                            <div class="nav-item" data-target="cpu" title="Processor">
+                                <img src="assets/images/component-images/cpu.png" alt="CPU">
+                            </div>
+                            <div class="nav-item" data-target="ram" title="Memory">
+                                <img src="assets/images/component-images/ram.png" alt="RAM">
+                            </div>
+                            <div class="nav-item" data-target="motherboard" title="Motherboard">
+                                <img src="assets/images/component-images/motherboard.png" alt="MOBO">
+                            </div>
+                            <div class="nav-item" data-target="storage" title="Storage">
+                                <img src="assets/images/component-images/hard-drive.png" alt="Storage">
+                            </div>
+                            <div class="nav-item" data-target="psu" title="Power Supply">
+                                <img src="assets/images/component-images/power-supply.png" alt="PSU">
+                            </div>
+                            <div class="nav-item" data-target="case" title="Case">
+                                <img src="assets/images/component-images/case.png" alt="Case">
+                            </div>
+                            <div class="nav-item" data-target="cooling" title="Cooling">
+                                <img src="assets/images/component-images/computer.png" alt="Cooling">
+                            </div>
+                        </div>
+
+                        <!-- Component Cards Container -->
+                        <div class="component-cards-container">
+                            <!-- 1. GPU Card (Default Active) -->
+                            <div class="component-card active" id="card-gpu" data-component="gpu">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/graphic-card.png" alt="GPU"
+                                        class="component-icon">
+                                    <h3>Graphics Card (GPU)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="gpu-brand">Brand</label>
+                                        <select class="form-control" id="gpu-brand" data-component="gpu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gpu-series">Series</label>
+                                        <select class="form-control" id="gpu-series" data-component="gpu" disabled>
+                                            <option value="" disabled selected>Select Brand First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="gpu-model">Model</label>
+                                        <select class="form-control" id="gpu-model" data-component="gpu" disabled>
+                                            <option value="" disabled selected>Select Series First...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="gpu">Find GPU Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 2. CPU Card -->
+                            <div class="component-card" id="card-cpu" data-component="cpu">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/cpu.png" alt="CPU" class="component-icon">
+                                    <h3>Processor (CPU)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="cpu-brand">Brand</label>
+                                        <select class="form-control" id="cpu-brand" data-component="cpu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cpu-tier">Performance Tier</label>
+                                        <select class="form-control" id="cpu-tier" data-component="cpu" disabled>
+                                            <option value="" disabled selected>Select Brand First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cpu-generation">Generation</label>
+                                        <select class="form-control" id="cpu-generation" data-component="cpu" disabled>
+                                            <option value="" disabled selected>Select Tier First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cpu-model">Specific Model</label>
+                                        <select class="form-control" id="cpu-model" data-component="cpu" disabled>
+                                            <option value="" disabled selected>Select Generation First...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="cpu">Find CPU Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 3. RAM Card -->
+                            <div class="component-card" id="card-ram" data-component="ram">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/ram.png" alt="RAM" class="component-icon">
+                                    <h3>RAM / Memory</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="ram-brand">Brand</label>
+                                        <select class="form-control" id="ram-brand" data-component="ram">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ram-generation">Generation</label>
+                                        <select class="form-control" id="ram-generation" data-component="ram">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ram-speed">Speed</label>
+                                        <select class="form-control" id="ram-speed" data-component="ram" disabled>
+                                            <option value="" disabled selected>Select Generation First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="ram-capacity">Capacity</label>
+                                        <select class="form-control" id="ram-capacity" data-component="ram">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="ram">Find RAM Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 4. Motherboard Card -->
+                            <div class="component-card" id="card-motherboard" data-component="motherboard">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/motherboard.png" alt="Motherboard"
+                                        class="component-icon">
+                                    <h3>Motherboard</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="mobo-brand">Brand</label>
+                                        <select class="form-control" id="mobo-brand" data-component="motherboard">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobo-socket">Socket Type</label>
+                                        <select class="form-control" id="mobo-socket" data-component="motherboard">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobo-chipset">Chipset</label>
+                                        <select class="form-control" id="mobo-chipset" data-component="motherboard"
+                                            disabled>
+                                            <option value="" disabled selected>Select Socket First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="mobo-formfactor">Form Factor</label>
+                                        <select class="form-control" id="mobo-formfactor" data-component="motherboard">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="motherboard">Find Motherboard
+                                        Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 5. Storage Card -->
+                            <div class="component-card" id="card-storage" data-component="storage">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/hard-drive.png" alt="Storage"
+                                        class="component-icon">
+                                    <h3>Storage (SSD/HDD)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="storage-brand">Brand</label>
+                                        <select class="form-control" id="storage-brand" data-component="storage">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="storage-type">Type</label>
+                                        <select class="form-control" id="storage-type" data-component="storage">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="storage-interface">Interface</label>
+                                        <select class="form-control" id="storage-interface" data-component="storage"
+                                            disabled>
+                                            <option value="" disabled selected>Select Type First...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="storage-capacity">Capacity</label>
+                                        <select class="form-control" id="storage-capacity" data-component="storage">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="storage">Find Storage Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 6. PSU Card -->
+                            <div class="component-card" id="card-psu" data-component="psu">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/power-supply.png" alt="PSU"
+                                        class="component-icon">
+                                    <h3>Power Supply (PSU)</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="psu-brand">Brand</label>
+                                        <select class="form-control" id="psu-brand" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="psu-wattage">Wattage</label>
+                                        <select class="form-control" id="psu-wattage" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="psu-efficiency">Efficiency Rating</label>
+                                        <select class="form-control" id="psu-efficiency" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="psu-modularity">Modularity</label>
+                                        <select class="form-control" id="psu-modularity" data-component="psu">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="psu">Find PSU Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 8. Case Card -->
+                            <div class="component-card" id="card-case" data-component="case">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/case.png" alt="PC Case"
+                                        class="component-icon">
+                                    <h3>PC Case</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="case-brand">Brand <span class="optional-label">(Optional)</span></label>
+                                        <select class="form-control" id="case-brand" data-component="case">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="case-formfactor">Form Factor</label>
+                                        <select class="form-control" id="case-formfactor" data-component="case">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="case-panel">Side Panel</label>
+                                        <select class="form-control" id="case-panel" data-component="case">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="case">Find Case Prices</button>
+                                </div>
+                            </div>
+
+                            <!-- 8. Cooling Card -->
+                            <div class="component-card" id="card-cooling" data-component="cooling">
+                                <div class="card-header">
+                                    <img src="assets/images/component-images/computer.png" alt="Cooling"
+                                        class="component-icon">
+                                    <h3>Cooling System</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="form-group">
+                                        <label for="cooling-brand">Brand</label>
+                                        <select class="form-control" id="cooling-brand" data-component="cooling">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cooling-type">Type</label>
+                                        <select class="form-control" id="cooling-type" data-component="cooling">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="cooling-compatibility">Socket Compatibility</label>
+                                        <select class="form-control" id="cooling-compatibility"
+                                            data-component="cooling">
+                                            <option value="" disabled selected>Loading...</option>
+                                        </select>
+                                    </div>
+                                    <button class="btn-find" data-component="cooling">Find Cooling Prices</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- COLUMN 3: Secondary Area (Right/Sidebar) -->
+                <section class="new-listings-section">
+                    <div class="listings-header">
+                        <h2>Latest Listings</h2>
+                        <div class="loader" onclick="refreshListings()" title="Refresh listings">
+                            <div class="static-icon"></div>
+                            <div class="spinner"></div>
+                        </div>
+                    </div>
+                    <div class="listings-controls">
+                        <select class="filter-select" id="listing-filter" onchange="filterListings()">
+                            <option value="all">All Components</option>
+                            <option value="gpu">GPU</option>
+                            <option value="cpu">CPU</option>
+                            <option value="ram">RAM</option>
+                            <option value="mobo">Motherboard</option>
+                            <option value="storage">Storage</option>
+                            <option value="psu">PSU</option>
+                            <option value="case">Case</option>
+                            <option value="cooling">Cooling</option>
+                        </select>
+                        <select class="sort-select" id="listing-sort" onchange="sortListings()">
+                            <option value="recent">Most Recent</option>
+                            <option value="low-price">Lowest Price</option>
+                            <option value="high-price">Highest Price</option>
+                        </select>
+                    </div>
+
+                    <div class="listings-scroll-pane">
+                        <div class="listings-feed" id="listings-feed">
+                            <!-- Feed items will be populated by JS -->
+                            <div class="listing-card-skeleton"></div>
+                            <div class="listing-card-skeleton"></div>
+                            <div class="listing-card-skeleton"></div>
+                        </div>
+
+                        <button class="load-more-btn" onclick="loadMoreListings()">Load More Listings</button>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Add Listing Modal -->
+            <div class="listing-modal-overlay" id="listingModalOverlay">
+                <div class="listing-modal">
+                    <div class="modal-header">
+                        <h2 class="modal-title">Add New Listing</h2>
+                        <div class="modal-step-dots">
+                            <span class="step-dot active" data-step="1">1</span>
+                            <span class="step-dot" data-step="2">2</span>
+                            <span class="step-dot" data-step="3">3</span>
+                        </div>
+                        <button class="modal-close-btn" onclick="closeListingModal()">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+                        <!-- Step 1: Choose Component Type -->
+                        <div class="modal-step active" id="modal-step-1">
+                            <p class="step-label">What component are you listing?</p>
+                            <div class="component-type-grid">
+                                <div class="type-tile" data-type="ram" onclick="selectComponentType('ram')">
+                                    <img src="assets/images/component-images/ram.png" alt="RAM">
+                                    <span>RAM / Memory</span>
+                                </div>
+                                <div class="type-tile" data-type="gpu" onclick="selectComponentType('gpu')">
+                                    <img src="assets/images/component-images/graphic-card.png" alt="GPU">
+                                    <span>Graphics Card</span>
+                                </div>
+                                <div class="type-tile" data-type="cpu" onclick="selectComponentType('cpu')">
+                                    <img src="assets/images/component-images/cpu.png" alt="CPU">
+                                    <span>Processor</span>
+                                </div>
+                                <div class="type-tile" data-type="motherboard"
+                                    onclick="selectComponentType('motherboard')">
+                                    <img src="assets/images/component-images/motherboard.png" alt="Motherboard">
+                                    <span>Motherboard</span>
+                                </div>
+                                <div class="type-tile" data-type="storage" onclick="selectComponentType('storage')">
+                                    <img src="assets/images/component-images/hard-drive.png" alt="Storage">
+                                    <span>Storage</span>
+                                </div>
+                                <div class="type-tile" data-type="psu" onclick="selectComponentType('psu')">
+                                    <img src="assets/images/component-images/power-supply.png" alt="PSU">
+                                    <span>Power Supply</span>
+                                </div>
+                                <div class="type-tile" data-type="case" onclick="selectComponentType('case')">
+                                    <img src="assets/images/component-images/case.png" alt="Case">
+                                    <span>PC Case</span>
+                                </div>
+                                <div class="type-tile" data-type="cooling" onclick="selectComponentType('cooling')">
+                                    <img src="assets/images/component-images/computer.png" alt="Cooling">
+                                    <span>Cooling</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Component Details & Price -->
+                        <div class="modal-step" id="modal-step-2">
+                            <p class="step-label">Component Details</p>
+                            <div class="listing-form" id="listing-dropdowns">
+                                <!-- Dropdowns populated dynamically by JS -->
+                            </div>
+                            <hr class="modal-divider">
+                            <p class="step-label">Transaction Info</p>
+                            <div class="listing-form">
+                                <div class="listing-form-group">
+                                    <label>Transaction Type</label>
+                                    <select class="form-control" id="listing-txn-type">
+                                        <option value="" disabled selected>Select...</option>
+                                        <option value="sold">Sold</option>
+                                        <option value="bought">Bought</option>
+                                    </select>
+                                </div>
+                                <div class="listing-form-group">
+                                    <label>Price (₱)</label>
+                                    <input type="number" class="form-control" id="listing-price"
+                                        placeholder="e.g. 15000" min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Images & Comments -->
+                        <div class="modal-step" id="modal-step-3">
+                            <p class="step-label">Upload Images</p>
+                            <div class="image-upload-zone" id="imageUploadZone">
+                                <input type="file" id="listing-images" accept="image/*" multiple hidden>
+                                <div class="upload-placeholder"
+                                    onclick="document.getElementById('listing-images').click()">
+                                    <span class="upload-icon">📷</span>
+                                    <span>Click or drag images here</span>
+                                    <span class="upload-hint">Max 5 images (JPG, PNG)</span>
+                                </div>
+                            </div>
+                            <div class="image-preview-row" id="imagePreviewRow"></div>
+
+                            <div class="listing-form" style="margin-top: 16px;">
+                                <div class="listing-form-group">
+                                    <label>Additional Details / Comments</label>
+                                    <textarea class="form-control" id="listing-comments" rows="4"
+                                        placeholder="Condition, warranty info, reason for selling, etc."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button class="btn-modal-back" id="modal-back-btn" onclick="modalGoBack()"
+                            style="display: none;">← Back</button>
+                        <div class="modal-footer-spacer"></div>
+                        <button class="btn-modal-next" id="modal-next-btn" onclick="modalGoNext()"
+                            style="display: none;">Next →</button>
+                        <button class="btn-modal-submit" id="modal-submit-btn" onclick="submitListing()"
+                            style="display: none;">Submit Listing</button>
+                    </div>
+                </div>
+            </div>
+
+            <aside id="rightSidebar" class="right-sidebar">
+                <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+
+                <div class="logo-circle sidebar-logo">👤</div>
+
+                <div id="sidebarContent" class="sidebar-content">
+                    <h3 class="mb-10">Welcome, Guest</h3>
+                    <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+
+                    <div class="sidebar-actions">
+                        <button onclick="window.location.href='pages/login.html'"
+                            class="btn-sidebar btn-sidebar-primary">Login</button>
+                        <button onclick="window.location.href='pages/register.html'"
+                            class="btn-sidebar btn-sidebar-outline">Register</button>
+                    </div>
+                </div>
+
+            </aside>
+
+        </div>
+
+        <footer class="main-footer">
+            <div class="footer-container">
+                <div class="footer-left-col">
+                    <img src="assets/images/footer-name.png" alt="The Second Silicon Forums" class="footer-logo">
+                    <p
+                        style="  font-size: 14px; line-height: 1.6; margin-bottom: 20px; text-align: justify; padding-right: 30px;">
+                        The ultimate destination for PC enthusiasts. Track second-hand prices, find deals, and share
+                        your builds with the community.
+                    </p>
+                    <div class="footer-social">
+                        <a href="#" class="footer-social-link" title="Facebook">f</a>
+                        <a href="#" class="footer-social-link" title="Twitter">t</a>
+                        <a href="#" class="footer-social-link" title="Instagram">i</a>
+                        <a href="#" class="footer-social-link" title="Discord">d</a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Shop Components</h4>
+                    <ul>
+                        <li><a href="#">Graphics Cards</a></li>
+                        <li><a href="#">Processors</a></li>
+                        <li><a href="#">Motherboards</a></li>
+                        <li><a href="#">Memory (RAM)</a></li>
+                        <li><a href="#">Storage</a></li>
+                        <li><a href="#">Power Supplies</a></li>
+                        <li><a href="#">Cases</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Community</h4>
+                    <ul>
+                        <li><a href="#">Forums</a></li>
+                        <li><a href="#">Build Guides</a></li>
+                        <li><a href="#">Completed Builds</a></li>
+                        <li><a href="#">Price Trends</a></li>
+                        <li><a href="#">Blog & News</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h4>Support</h4>
+                    <ul>
+                        <li><a href="#">Help Center</a></li>
+                        <li><a href="#">Contact Us</a></li>
+                        <li><a href="#">Terms of Service</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                        <li><a href="#">Cookie Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 PC Tracker. All rights reserved.</p>
+                <p>Designed for CCAPDEV</p>
+            </div>
+        </footer>
+    </div>
+    <!-- Auth Requirement Modal -->
+    <div class="auth-modal-overlay" id="authModalOverlay">
+        <div class="auth-modal">
+            <div class="auth-modal-icon"><img src="assets/images/lock.png" alt="Lock" class="auth-modal-lock-img"></div>
+            <h2 class="auth-modal-title">Authentication Required</h2>
+            <p class="auth-modal-text">You must be logged in to post a new listing.</p>
+            <div class="auth-modal-actions">
+                <button class="btn-auth-cancel" onclick="closeAuthModal()">Cancel</button>
+                <button class="btn-auth-login" onclick="window.location.href='pages/login.html'">Login /
+                    Register</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/dropdown-manager.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+
+</html>
