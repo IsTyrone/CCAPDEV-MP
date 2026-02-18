@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Account Settings - PC Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/settings.css" />
+</head>
+
+<body>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+    <div class="settings-page">
+        <header class="main-header">
+            <a href="../index.html" class="logo-img-container">
+                <img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Tracker">
+            </a>
+            <nav class="header-nav-links">
+                <a href="#">Blogs and Articles</a>
+                <a href="#">About Us</a>
+            </nav>
+            <div class="header-right">
+                <a href="../index.html" class="back-to-dash">← Back to Dashboard</a>
+                <button class="account-settings-btn" id="userIconBtn" title="Account">
+                    <span class="account-label">Account</span>
+                    <span class="logo-circle user-icon-btn">&#128100;</span>
+                </button>
+            </div>
+        </header>
+
+        <main class="settings-main">
+            <h1 class="settings-title">Account Settings</h1>
+
+            <!-- Profile Information -->
+            <section class="settings-card">
+                <h2 class="settings-card-title">Profile Information</h2>
+                <form class="settings-form" id="profile-form">
+                    <div class="form-group">
+                        <label for="display-name">Display Name</label>
+                        <input type="text" id="display-name" name="displayName" class="settings-input"
+                            placeholder="Your display name" />
+                    </div>
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" class="settings-input"
+                            placeholder="@username" />
+                    </div>
+                    <div class="form-group">
+                        <label for="bio">Bio</label>
+                        <textarea id="bio" name="bio" class="settings-input settings-textarea" rows="4"
+                            placeholder="Tell us about yourself..."></textarea>
+                    </div>
+                    <button type="submit" class="btn-primary">Save Changes</button>
+                </form>
+            </section>
+
+            <!-- Account Security -->
+            <section class="settings-card">
+                <h2 class="settings-card-title">Account Security</h2>
+                <form class="settings-form" id="security-form">
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" name="email" class="settings-input"
+                            placeholder="your@email.com" />
+                    </div>
+                    <div class="form-group">
+                        <label for="current-password">Current Password</label>
+                        <input type="password" id="current-password" name="currentPassword" class="settings-input"
+                            placeholder="••••••••" />
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">New Password</label>
+                        <input type="password" id="new-password" name="newPassword" class="settings-input"
+                            placeholder="••••••••" />
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm New Password</label>
+                        <input type="password" id="confirm-password" name="confirmPassword" class="settings-input"
+                            placeholder="••••••••" />
+                    </div>
+                    <button type="submit" class="btn-primary">Update Security</button>
+                </form>
+            </section>
+
+            <!-- Danger Zone -->
+            <section class="settings-card danger-zone">
+                <h2 class="settings-card-title danger-title">Danger Zone</h2>
+                <p class="danger-description">
+                    Once you delete your account, there is no going back. Please be certain.
+                </p>
+                <button type="button" class="btn-destructive" id="delete-account-btn">Delete Account</button>
+            </section>
+        </main>
+
+        <aside id="rightSidebar" class="right-sidebar">
+            <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+            <div class="logo-circle sidebar-logo">&#128100;</div>
+            <div id="sidebarContent" class="sidebar-content">
+                <h3 class="mb-10">Welcome, Guest</h3>
+                <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+                <div class="sidebar-actions">
+                    <button onclick="window.location.href='login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
+                    <button onclick="window.location.href='register.html'" class="btn-sidebar btn-sidebar-outline">Register</button>
+                </div>
+            </div>
+            <hr class="sidebar-divider">
+            <div class="recent-views">
+                <p><strong>Recent Views:</strong></p>
+                <ul class="recent-list">
+                    <li style="color: #999; font-style: italic;">No recent views</li>
+                </ul>
+            </div>
+        </aside>
+    </div>
+
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/settings.js"></script>
+</body>
+
+</html>

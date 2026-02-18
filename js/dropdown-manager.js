@@ -213,6 +213,7 @@ class DropdownManager {
 
     initCase() {
         const d = this.data.case.dropdowns;
+        this.populate('case-brand', d.brand, 'All Brands (Optional)');
         this.populate('case-formfactor', d.form_factor, 'Select Form Factor...');
         this.populate('case-panel', d.side_panel, 'Select Side Panel...');
     }
@@ -239,13 +240,13 @@ document.addEventListener('DOMContentLoaded', () => {
         motherboard: ['mobo-brand', 'mobo-socket', 'mobo-chipset', 'mobo-formfactor'],
         storage: ['storage-brand', 'storage-type', 'storage-interface', 'storage-capacity'],
         psu: ['psu-brand', 'psu-wattage', 'psu-efficiency', 'psu-modularity'],
-        case: ['case-formfactor', 'case-panel'],
+        case: ['case-brand', 'case-formfactor', 'case-panel'],
         cooling: ['cooling-brand', 'cooling-type', 'cooling-compatibility']
     };
 
     // Brand selects that are optional (CPU & GPU brands are required for cascading)
     const optionalBrandIds = new Set([
-        'ram-brand', 'mobo-brand', 'storage-brand', 'psu-brand', 'cooling-brand'
+        'ram-brand', 'mobo-brand', 'storage-brand', 'psu-brand', 'cooling-brand', 'case-brand'
     ]);
 
     document.querySelectorAll('.btn-find[data-component]').forEach(btn => {

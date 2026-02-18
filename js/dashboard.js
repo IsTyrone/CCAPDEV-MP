@@ -26,6 +26,13 @@ function handleLogout() {
 function updateSidebarContent() {
   if (!sidebarContent) return;
 
+  // Path logic: use correct relative paths when on sub-pages (pages/*.html)
+  const isInPages = window.location.pathname.includes('/pages/') || window.location.pathname.includes('pages/');
+  const profilePath = isInPages ? 'profile.html' : 'pages/profile.html';
+  const settingsPath = isInPages ? 'settings.html' : 'pages/settings.html';
+  const loginPath = isInPages ? 'login.html' : 'pages/login.html';
+  const registerPath = isInPages ? 'register.html' : 'pages/register.html';
+
   // Select the account label in the header
   const accountLabel = document.querySelector('.account-label');
   // const userIcon = document.querySelector('.user-icon-btn'); // Optional
@@ -45,9 +52,10 @@ function updateSidebarContent() {
             <h3 class="mb-10">${userObj.firstName} ${userObj.lastName || ''}</h3>
             <p class="verified-session">✓ Verified Session</p>
             <div class="user-menu">
-               <div class="menu-item">My Saved Builds</div>
-               <div class="menu-item">Price Alerts</div>
-               <div class="menu-item">Account Settings</div>
+               <button class="menu-btn">My Saved Builds</button>
+               <button class="menu-btn">Price Alerts</button>
+               <a href="${profilePath}" class="menu-btn">User Profile</a>
+               <a href="${settingsPath}" class="menu-btn">Account Settings</a>
                <button id="logoutBtn" class="logout-btn">Logout</button>
             </div>
         `;
@@ -70,8 +78,8 @@ function updateSidebarContent() {
             <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
             
             <div class="sidebar-actions">
-              <button onclick="window.location.href='pages/login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
-              <button onclick="window.location.href='pages/register.html'" class="btn-sidebar btn-sidebar-outline">Register</button>
+              <button onclick="window.location.href='${loginPath}'" class="btn-sidebar btn-sidebar-primary">Login</button>
+              <button onclick="window.location.href='${registerPath}'" class="btn-sidebar btn-sidebar-outline">Register</button>
             </div>
         `;
   }
@@ -840,17 +848,19 @@ let listingDropdownData = null;
     }
     */
 
-    /*
     function initListingCase(container, d) {
+      const brand = lCreateGroup('Brand (Optional)', 'listing-case-brand');
+      lPopulate(brand.select, d.brand, 'All Brands (Optional)');
+      container.appendChild(brand.group);
+
       const ff = lCreateGroup('Form Factor', 'listing-case-ff');
       lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
       container.appendChild(ff.group);
-    
+
       const panel = lCreateGroup('Side Panel', 'listing-case-panel');
       lPopulate(panel.select, d.side_panel, 'Select Side Panel...');
       container.appendChild(panel.group);
     }
-    */
 
     /*
     function initListingCooling(container, d) {
@@ -963,6 +973,7 @@ let listingDropdownData = null;
       formData.id = Date.now();
       formData.status = 'pending';
       formData.user = userName;
+      formData.ownerEmail = currentUser.email || '';
       formData.date = new Date().toISOString();
 
       // Save to localStorage
@@ -1165,4 +1176,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetDotIndex = dots.findIndex(dot => dot === targetDot);
     if (targetDotIndex !== -1) moveToSlide(targetDotIndex + 1);
   });
+});
+
+// --- Ticker card click: navigate to forum page ---
+document.getElementById('market-ticker')?.addEventListener('click', (e) => {
+  const card = e.target.closest('.ticker-card');
+  if (card?.dataset.href) {
+    window.location.href = card.dataset.href;
+  }
 });

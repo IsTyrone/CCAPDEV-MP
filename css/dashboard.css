@@ -165,7 +165,19 @@ a {
 .header-right {
   display: flex;
   align-items: center;
+  gap: 12px;
   margin-left: auto;
+}
+
+.back-to-dash {
+  color: var(--primary-blue, #4f46e5);
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.back-to-dash:hover {
+  text-decoration: underline;
 }
 
 .account-settings-btn {
@@ -335,6 +347,28 @@ a {
   text-align: left;
   width: 100%;
   padding: 0 10px;
+}
+
+.menu-btn {
+  display: block;
+  width: 100%;
+  padding: 10px 15px;
+  text-align: left;
+  background: white;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-dark);
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+  margin-bottom: 8px;
+  text-decoration: none;
+}
+
+.menu-btn:hover {
+  background: var(--bg-app);
+  border-color: var(--primary-blue);
 }
 
 .menu-item {
@@ -601,7 +635,7 @@ a {
   flex-direction: column;
   gap: 4px;
   transition: all 0.2s ease;
-  cursor: default;
+  cursor: pointer;
 }
 
 .ticker-card:hover {
@@ -1394,6 +1428,12 @@ a {
   font-size: 12px;
   color: #101010;
   font-weight: 500;
+}
+
+.optional-label {
+  font-weight: 400;
+  color: var(--text-secondary, #64748b);
+  font-size: 11px;
 }
 
 .form-control {

@@ -292,8 +292,13 @@ function renderRelatedModels(componentType, segments) {
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
         }
+        case 'case': {
+            // segments: [brand, form_factor, side_panel] — show other brands (optional)
+            relatedItems = d.brand || [];
+            currentModel = segments[0] === 'all brands' ? '' : segments[0];
+            break;
+        }
         default:
-            // For case — no brand yet, just show top-level options
             const firstKey = Object.keys(d)[0];
             if (Array.isArray(d[firstKey])) {
                 relatedItems = d[firstKey];
@@ -323,7 +328,7 @@ function renderRelatedModels(componentType, segments) {
             newSegments[2] = item; // replace chipset segment
         } else if (componentType === 'storage' && segments.length >= 3) {
             newSegments[2] = item; // replace interface segment
-        } else if (componentType === 'psu' || componentType === 'cooling') {
+        } else if (componentType === 'psu' || componentType === 'cooling' || componentType === 'case') {
             newSegments[0] = item; // replace brand segment
         } else if (segments.length >= 2) {
             newSegments[newSegments.length - 1] = item;

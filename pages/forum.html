@@ -9,26 +9,31 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+    <link rel="stylesheet" href="../css/dashboard.css" />
     <link rel="stylesheet" href="../css/forum.css" />
 </head>
 
 <body>
+    <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
     <div class="page-wrapper">
 
-        <!-- Header -->
         <header class="main-header">
             <a href="../index.html" class="logo-img-container">
                 <img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Tracker">
             </a>
 
-            <div class="search-container">
-                <input type="text" class="search-bar" placeholder="Search this forum..." />
-                <button class="search-btn"><img src="../assets/images/search.png" alt="Search"
-                        class="search-btn-icon"></button>
-            </div>
+            <nav class="header-nav-links">
+                <a href="#">Blogs and Articles</a>
+                <a href="#">About Us</a>
+            </nav>
 
             <div class="header-right">
-                <a href="../index.html" class="back-to-dash">← Dashboard</a>
+                <a href="../index.html" class="back-to-dash">← Back to Dashboard</a>
+                <button class="account-settings-btn" id="userIconBtn" title="Account">
+                    <span class="account-label">Account</span>
+                    <span class="logo-circle user-icon-btn">&#128100;</span>
+                </button>
             </div>
         </header>
 
@@ -164,8 +169,29 @@
                 <p>Designed for CCAPDEV</p>
             </div>
         </footer>
+
+        <aside id="rightSidebar" class="right-sidebar">
+            <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+            <div class="logo-circle sidebar-logo">&#128100;</div>
+            <div id="sidebarContent" class="sidebar-content">
+                <h3 class="mb-10">Welcome, Guest</h3>
+                <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+                <div class="sidebar-actions">
+                    <button onclick="window.location.href='login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
+                    <button onclick="window.location.href='register.html'" class="btn-sidebar btn-sidebar-outline">Register</button>
+                </div>
+            </div>
+            <hr class="sidebar-divider">
+            <div class="recent-views">
+                <p><strong>Recent Views:</strong></p>
+                <ul class="recent-list">
+                    <li style="color: #999; font-style: italic;">No recent views</li>
+                </ul>
+            </div>
+        </aside>
     </div>
 
+    <script src="../js/dashboard.js"></script>
     <script src="../js/forum.js"></script>
 </body>
 
