@@ -2,11 +2,11 @@
 
 <h3>Authors</h3>
 <ul>
-    <li>Abenes Mark Gabriel - Frontend</li>
-    <li>Morgan Jack Owen - Frontend</li>
+    <li>Abenes Mark Gabriel - Frontend(UI/UX)</li>
+    <li>Morgan Jack Owen - Frontend(UI/UX)</li>
     <li>Lee Tyrone Julius - Backend</li>
-    <li>Campo Enzo Bennett - Frontend</li>
-    <li>Sanchez Roland Benedict - Frontend</li>
+    <li>Campo Enzo Bennett - Frontend(Layout Designer)</li>
+    <li>Sanchez Roland Benedict - Frontend(Element Designer)</li>
 </ul>
 
 <h3>About</h3>
