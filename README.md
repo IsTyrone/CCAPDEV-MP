@@ -16,11 +16,13 @@
     <li>A user reputation system which informs other users about reliable sellers</li>
     <li>A forum for reviews on sellers and or items</li>
     <li>A user profile which allows others to view ones past listings/contributions</li>
+    <li>Login/Register</li>
+    <li>Users can make their own forums regarding listings</li>
 </ul>
 
 <p3>Important Information</p3>
     <ul>
-        <li></li>
+        <li>...</li>
         <li>Admin User: admin@pctracker.com admin123</li>
     </ul>
 
