@@ -20,7 +20,7 @@
     <li>Users can make their own forums regarding listings</li>
 </ul>
 
-<p3>Important Information</p3>
+<h3>Important Information</h3>
     <ul>
         <li>...</li>
         <li>Admin User: admin@pctracker.com admin123</li>
