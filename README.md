@@ -10,7 +10,7 @@
 </ul>
 
 <h3>About</h3>
-<p1>    2nd Silicon is a website that contains different listings found on multiple platforms of used computer parts. The objective of this website is to act as a sort of hub for the used market. The site includes features such as but not limited to:</p1>
+<p1>&emsp 2nd Silicon is a website that contains different listings found on multiple platforms of used computer parts. The objective of this website is to act as a sort of hub for the used market. The site includes features such as but not limited to:</p1>
 <ul>
     <li>A list of trending used parts</li>
     <li>A user reputation system which informs other users about reliable sellers</li>
