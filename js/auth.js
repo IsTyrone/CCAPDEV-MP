@@ -5,32 +5,36 @@ document.addEventListener('DOMContentLoaded', () => {
     if (loginForm) {
         /**
          * Handles the login form submission.
-         * Verifies the email and password against the stored 'registeredUsers' in localStorage.
-         * If successful, sets the 'currentUser' and redirects to the dashboard.
+         * Sends credentials to the server API for authentication.
          * @param {Event} e - The submit event.
          */
-        loginForm.addEventListener('submit', (e) => {
+        loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const email = document.querySelector('input[type="email"]').value;
             const password = document.querySelector('input[type="password"]').value;
 
-            // Retrieve registered users
-            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
 
-            // Find matching user
-            const user = registeredUsers.find(u => u.email === email && u.password === password);
+                const data = await res.json();
 
-            if (user) {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                alert('Login Successful!');
-
-                if (user.role === 'admin') {
-                    window.location.href = 'admin.html';
+                if (res.ok) {
+                    alert('Login Successful!');
+                    if (data.user && data.user.role === 'admin') {
+                        window.location.href = 'admin.html';
+                    } else {
+                        window.location.href = '../index.html';
+                    }
                 } else {
-                    window.location.href = '../index.html';
+                    alert(data.error || 'Invalid email or password. Please try again or register.');
                 }
-            } else {
-                alert('Invalid email or password. Please try again or register.');
+            } catch (err) {
+                console.error('Login error:', err);
+                alert('An error occurred during login. Please try again.');
             }
         });
     }
@@ -40,10 +44,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (forgotPasswordForm) {
         /**
          * Handles the forgot password form submission.
-         * Finds the user by email and updates their password in localStorage.
+         * Sends the new password to the server API.
          * @param {Event} e - The submit event.
          */
-        forgotPasswordForm.addEventListener('submit', (e) => {
+        forgotPasswordForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             const email = document.getElementById('resetEmail').value;
@@ -55,45 +59,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Retrieve registered users
-            let registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            try {
+                const res = await fetch('/api/auth/forgot-password', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, newPassword })
+                });
 
-            // Find user index
-            const userIndex = registeredUsers.findIndex(u => u.email === email);
+                const data = await res.json();
 
-            if (userIndex === -1) {
-                alert('Email not found.');
-                return;
+                if (res.ok) {
+                    alert('Password reset successful! Please log in with your new password.');
+                    window.location.href = 'login.html';
+                } else {
+                    alert(data.error || 'Failed to reset password.');
+                }
+            } catch (err) {
+                console.error('Forgot password error:', err);
+                alert('An error occurred. Please try again.');
             }
-
-            // Update password
-            registeredUsers[userIndex].password = newPassword;
-
-            // Save back to localStorage
-            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-
-            alert('Password reset successful! Please log in with your new password.');
-            window.location.href = 'login.html';
         });
     }
 
 });
-
-// --- Seed Admin Account ---
-(function seedAdmin() {
-    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-    const adminEmail = 'admin@pctracker.com';
-
-    if (!registeredUsers.some(u => u.email === adminEmail)) {
-        const adminUser = {
-            firstName: 'System',
-            lastName: 'Admin',
-            email: adminEmail,
-            password: 'admin123',
-            role: 'admin'
-        };
-        registeredUsers.push(adminUser);
-        localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-        console.log('Admin account seeded.');
-    }
-})();

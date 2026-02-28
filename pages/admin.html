@@ -78,8 +78,12 @@
 
     <script>
         // Simple logout for admin
-        function handleLogout() {
-            localStorage.removeItem('currentUser');
+        async function handleLogout() {
+            try {
+                await fetch('/api/auth/logout', { method: 'POST' });
+            } catch (err) {
+                console.error('Logout error:', err);
+            }
             window.location.href = 'login.html';
         }
     </script>

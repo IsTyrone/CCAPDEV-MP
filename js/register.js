@@ -263,18 +263,15 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         /**
          * Handles the submission of the registration form.
-         * Validates passwords, creates a new user object, checks for existing emails,
-         * saves the user to localStorage, and auto-logs them in.
+         * Validates passwords and sends registration data to the server API.
          * @param {Event} e - The submit event.
          */
-        registerForm.addEventListener('submit', (e) => {
+        registerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
             // Gather inputs
             const firstName = document.getElementById('firstName').value;
             const lastName = document.getElementById('lastName').value;
-            // register.html IDs: lastName, firstName, middleName, username, countryCode, email, password, confirmPassword
-
             const middleName = document.getElementById('middleName')?.value || '';
             const username = document.getElementById('username')?.value || '';
             const email = document.getElementById('email').value;
@@ -286,39 +283,26 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            // Create new user object
-            const newUser = {
-                firstName,
-                lastName,
-                middleName,
-                username,
-                email,
-                email,
-                password, // In a real app, never store plain text passwords!
-                role: 'user'
-            };
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ firstName, lastName, middleName, username, email, password })
+                });
 
-            // Retrieve existing users
-            const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+                const data = await res.json();
 
-            // Check if email already exists
-            if (registeredUsers.some(u => u.email === email)) {
-                alert('An account with this email already exists.');
-                return;
+                if (res.ok) {
+                    alert('Registration Successful!');
+                    window.location.href = '../index.html';
+                } else {
+                    alert(data.error || 'Registration failed. Please try again.');
+                }
+            } catch (err) {
+                console.error('Registration error:', err);
+                alert('An error occurred during registration. Please try again.');
             }
-
-            // Save new user
-            registeredUsers.push(newUser);
-            localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-
-            // Auto-login registered user
-            localStorage.setItem('currentUser', JSON.stringify(newUser));
-
-            alert('Registration Successful!');
-            window.location.href = '../index.html';
         });
     }
 
 });
-
-

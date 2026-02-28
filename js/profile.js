@@ -1,65 +1,99 @@
 /**
  * Profile Page - User profile with listings, reputation, and comments.
- * Data persisted in localStorage (simulation-style).
+ * Data fetched from server API.
  */
 
 // --- Resolve target user ---
-function getTargetUser() {
+async function getTargetUser() {
   const params = new URLSearchParams(location.search);
   const emailParam = params.get('email');
+
   if (emailParam) {
-    const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-    return registeredUsers.find(u => u.email === emailParam) || null;
+    try {
+      const res = await fetch(`/api/users/${encodeURIComponent(emailParam)}`);
+      const data = await res.json();
+      return data.user || null;
+    } catch (err) {
+      console.error('Failed to fetch target user:', err);
+      return null;
+    }
   }
-  const currentUser = localStorage.getItem('currentUser');
-  return currentUser ? JSON.parse(currentUser) : null;
+
+  // No email param — get current logged-in user
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    return data.user || null;
+  } catch (err) {
+    console.error('Failed to fetch current user:', err);
+    return null;
+  }
 }
 
 // --- State ---
 let targetUser = null;
 
-// --- Reputation (stored in registeredUsers) ---
-function getRep() {
-  if (!targetUser || !targetUser.email) return 0;
-  const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-  const user = registeredUsers.find(u => u.email === targetUser.email);
-  return (user && user.rep) || 0;
+// --- Reputation ---
+function renderRep() {
+  const repCount = document.getElementById('rep-count');
+  if (repCount && targetUser) repCount.textContent = targetUser.rep || 0;
 }
 
-function setRep(value) {
+async function changeRep(delta) {
   if (!targetUser || !targetUser.email) return;
-  const registeredUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-  const idx = registeredUsers.findIndex(u => u.email === targetUser.email);
-  if (idx === -1) return;
-  registeredUsers[idx].rep = value;
-  localStorage.setItem('registeredUsers', JSON.stringify(registeredUsers));
-  targetUser.rep = value;
-  renderRep();
+  try {
+    const res = await fetch(`/api/users/${encodeURIComponent(targetUser.email)}/rep`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ delta })
+    });
+    const data = await res.json();
+    if (res.ok) {
+      targetUser.rep = data.rep;
+      renderRep();
+    }
+  } catch (err) {
+    console.error('Rep update error:', err);
+  }
 }
 
-// --- Listings (filter by ownerEmail) ---
-function getProfileListings() {
-  const listings = JSON.parse(localStorage.getItem('listings') || '[]');
+// --- Listings (filter by ownerEmail from server) ---
+async function getProfileListings() {
   if (!targetUser || !targetUser.email) return [];
-  return listings.filter(l => l.ownerEmail === targetUser.email);
+  try {
+    const res = await fetch(`/api/listings?ownerEmail=${encodeURIComponent(targetUser.email)}`);
+    const data = await res.json();
+    return data.listings || [];
+  } catch (err) {
+    console.error('Failed to fetch profile listings:', err);
+    return [];
+  }
 }
 
-// --- Comments (localStorage['profileComments']) ---
-const PROFILE_COMMENTS_KEY = 'profileComments';
-
-function getProfileComments() {
-  const all = JSON.parse(localStorage.getItem(PROFILE_COMMENTS_KEY) || '{}');
-  const key = targetUser && targetUser.email ? targetUser.email : '_guest';
-  return all[key] || [];
+// --- Comments ---
+async function getProfileComments() {
+  if (!targetUser || !targetUser.email) return [];
+  try {
+    const res = await fetch(`/api/profile-comments/${encodeURIComponent(targetUser.email)}`);
+    const data = await res.json();
+    return data.comments || [];
+  } catch (err) {
+    console.error('Failed to fetch profile comments:', err);
+    return [];
+  }
 }
 
-function addProfileComment(comment) {
-  const all = JSON.parse(localStorage.getItem(PROFILE_COMMENTS_KEY) || '{}');
-  const key = targetUser && targetUser.email ? targetUser.email : '_guest';
-  const list = all[key] || [];
-  list.unshift(comment);
-  all[key] = list;
-  localStorage.setItem(PROFILE_COMMENTS_KEY, JSON.stringify(all));
+async function addProfileComment(comment) {
+  if (!targetUser || !targetUser.email) return;
+  try {
+    await fetch(`/api/profile-comments/${encodeURIComponent(targetUser.email)}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(comment)
+    });
+  } catch (err) {
+    console.error('Failed to add profile comment:', err);
+  }
 }
 
 // --- Render ---
@@ -87,17 +121,12 @@ function renderProfileHeader() {
   renderRep();
 }
 
-function renderRep() {
-  const repCount = document.getElementById('rep-count');
-  if (repCount) repCount.textContent = getRep();
-}
-
-function renderListings() {
+async function renderListings() {
   const container = document.getElementById('profile-listings');
   const emptyEl = document.getElementById('listings-empty');
   if (!container) return;
 
-  const listings = getProfileListings();
+  const listings = await getProfileListings();
   container.innerHTML = '';
 
   if (listings.length === 0) {
@@ -132,12 +161,12 @@ function renderListings() {
   });
 }
 
-function renderComments() {
+async function renderComments() {
   const container = document.getElementById('profile-comments');
   const emptyEl = document.getElementById('comments-empty');
   if (!container) return;
 
-  const comments = getProfileComments();
+  const comments = await getProfileComments();
   container.innerHTML = '';
 
   if (comments.length === 0) {
@@ -188,8 +217,8 @@ function initTabs() {
 function initRepButtons() {
   const repUp = document.getElementById('rep-up');
   const repDown = document.getElementById('rep-down');
-  if (repUp) repUp.addEventListener('click', () => setRep(getRep() + 1));
-  if (repDown) repDown.addEventListener('click', () => setRep(getRep() - 1));
+  if (repUp) repUp.addEventListener('click', () => changeRep(1));
+  if (repDown) repDown.addEventListener('click', () => changeRep(-1));
 }
 
 // --- Post comment ---
@@ -198,18 +227,29 @@ function initCommentForm() {
   const btn = document.getElementById('post-comment-btn');
   if (!btn || !input) return;
 
-  btn.addEventListener('click', () => {
+  btn.addEventListener('click', async () => {
     const body = input.value.trim();
     if (!body) return;
     if (!targetUser) {
       alert('Please log in to post a comment.');
       return;
     }
-    const author = [targetUser.firstName, targetUser.lastName].filter(Boolean).join(' ') || targetUser.username || 'Anonymous';
-    addProfileComment({
-      author,
-      body,
-      time: new Date().toISOString()
+
+    // Get the current logged-in user for the author name
+    let authorName = 'Anonymous';
+    try {
+      const meRes = await fetch('/api/auth/me');
+      const meData = await meRes.json();
+      if (meData.user) {
+        authorName = [meData.user.firstName, meData.user.lastName].filter(Boolean).join(' ') || meData.user.username || 'Anonymous';
+      }
+    } catch (err) {
+      console.error('Failed to get current user for comment:', err);
+    }
+
+    await addProfileComment({
+      author: authorName,
+      body
     });
     input.value = '';
     renderComments();
@@ -217,8 +257,8 @@ function initCommentForm() {
 }
 
 // --- Init ---
-document.addEventListener('DOMContentLoaded', () => {
-  targetUser = getTargetUser();
+document.addEventListener('DOMContentLoaded', async () => {
+  targetUser = await getTargetUser();
 
   if (!targetUser) {
     const main = document.querySelector('.profile-main');

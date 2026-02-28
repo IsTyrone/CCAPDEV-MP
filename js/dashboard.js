@@ -1,5 +1,19 @@
-// --- User Session ---
-const currentUser = localStorage.getItem('currentUser');
+// --- User Session (fetched from server) ---
+let currentUserData = null;
+
+// Fetch current user session from server
+async function fetchCurrentUser() {
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    currentUserData = data.user || null;
+    return currentUserData;
+  } catch (err) {
+    console.error('Failed to fetch current user:', err);
+    currentUserData = null;
+    return null;
+  }
+}
 
 // --- Sidebar & Header Logic ---
 const userIconBtn = document.getElementById('userIconBtn');
@@ -10,12 +24,16 @@ const sidebarContent = document.getElementById('sidebarContent');
 
 /**
  * Handles the logout process.
- * Removes the current user from localStorage and reloads the page to reset the UI.
+ * Calls the server API to destroy the session, then reloads the page.
  */
-function handleLogout() {
-  localStorage.removeItem('currentUser');
+async function handleLogout() {
+  try {
+    await fetch('/api/auth/logout', { method: 'POST' });
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
   alert('Logged out');
-  window.location.reload(); // Refresh to update UI
+  window.location.reload();
 }
 
 /**
@@ -35,15 +53,13 @@ function updateSidebarContent() {
 
   // Select the account label in the header
   const accountLabel = document.querySelector('.account-label');
-  // const userIcon = document.querySelector('.user-icon-btn'); // Optional
 
-  if (currentUser) {
+  if (currentUserData) {
     // User is Logged In
-    const userObj = JSON.parse(currentUser);
+    const userObj = currentUserData;
 
     // 1. Update Header Label
     if (accountLabel) {
-      // Use First Name
       accountLabel.textContent = userObj.firstName;
     }
 
@@ -111,8 +127,10 @@ if (userIconBtn && sidebar && overlay) {
   overlay.addEventListener('click', closeSidebarFunc);
 }
 
-// Call immediately to set state on page load
-updateSidebarContent();
+// Fetch user and update sidebar on load
+fetchCurrentUser().then(() => {
+  updateSidebarContent();
+});
 
 
 // --- Previously Visited Forums Logic ---
@@ -458,6 +476,9 @@ function getBrandLogoUrl(brand) {
 // Populated by loadListingDropdownData() once components-dropdown.json is fetched
 let listingDropdownData = null;
 
+// Cached approved listings from server
+let cachedApprovedListings = [];
+
 // Generate dummy data — uses components-dropdown.json when loaded, falls back to componentDefs
 function generateDummyListings() {
   const newListings = [];
@@ -500,13 +521,10 @@ function generateDummyListings() {
     });
   }
 
-  // --- MERGE WITH LOCALSTORAGE "APPROVED" LISTINGS ---
-  const storedListings = JSON.parse(localStorage.getItem('listings') || '[]');
-  const approvedListings = storedListings.filter(l => l.status === 'approved');
-
-  approvedListings.forEach(l => {
+  // --- MERGE WITH SERVER-FETCHED APPROVED LISTINGS ---
+  cachedApprovedListings.forEach(l => {
     newListings.unshift({
-      id: l.id,
+      id: l._id,
       type: l.componentType,
       brand: l.details['Brand'] || l.details['Type'] || 'Generic',
       title: buildComponentTitle(l.componentType, l.details),
@@ -521,8 +539,25 @@ function generateDummyListings() {
   return newListings;
 }
 
+// Fetch approved listings from server
+async function fetchApprovedListings() {
+  try {
+    const res = await fetch('/api/listings/approved');
+    const data = await res.json();
+    cachedApprovedListings = data.listings || [];
+  } catch (err) {
+    console.error('Failed to fetch approved listings:', err);
+    cachedApprovedListings = [];
+  }
+}
+
 // Initial Load
-listings = generateDummyListings();
+fetchApprovedListings().then(() => {
+  listings = generateDummyListings();
+  if (document.getElementById('listings-feed')) {
+    renderListings(listings);
+  }
+});
 
 function renderListings(items) {
   const feedContainer = document.getElementById('listings-feed');
@@ -558,13 +593,6 @@ function renderListings(items) {
     feedContainer.appendChild(card);
   });
 }
-
-// Render on load
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('listings-feed')) {
-    renderListings(listings);
-  }
-});
 
 function sortListings() {
   const sortValue = document.getElementById('listing-sort').value;
@@ -604,11 +632,11 @@ function refreshListings() {
   const loader = document.querySelector('.loader');
   loader.classList.add('loading');
 
-  setTimeout(() => {
+  fetchApprovedListings().then(() => {
     listings = generateDummyListings();
     renderListings(listings);
     loader.classList.remove('loading');
-  }, 800);
+  });
 }
 
 function loadMoreListings() {
@@ -652,8 +680,10 @@ let modalUploadedFiles = [];
         listingDropdownData = xhr.response ?? JSON.parse(xhr.responseText);
         console.log('Listing modal: dropdown data loaded');
         // Re-generate the listings feed now that JSON data is available
-        listings = generateDummyListings();
-        if (document.getElementById('listings-feed')) renderListings(listings);
+        fetchApprovedListings().then(() => {
+          listings = generateDummyListings();
+          if (document.getElementById('listings-feed')) renderListings(listings);
+        });
       }
     };
     xhr.onerror = () => console.error('Listing modal: failed to load dropdown data');
@@ -708,8 +738,7 @@ let modalUploadedFiles = [];
 
     // --- Open / Close ---
     function openListingModal() {
-      const currentUser = localStorage.getItem('currentUser');
-      if (!currentUser) {
+      if (!currentUserData) {
         openAuthModal();
         return;
       }
@@ -727,7 +756,6 @@ let modalUploadedFiles = [];
       const overlay = document.getElementById('authModalOverlay');
       if (overlay) {
         overlay.classList.add('open');
-        // document.body.style.overflow = 'hidden'; // Optional: lock scroll
       }
     }
 
@@ -735,7 +763,6 @@ let modalUploadedFiles = [];
       const overlay = document.getElementById('authModalOverlay');
       if (overlay) {
         overlay.classList.remove('open');
-        // document.body.style.overflow = '';
       }
     }
 
@@ -841,26 +868,17 @@ let modalUploadedFiles = [];
     // --- Per-component init functions (mirrors dropdown-manager.js) ---
 
     function initListingRAM(container, d) {
-      // Brand (independent)
       const brand = lCreateGroup('Brand', 'listing-ram-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
-      // Generation (independent)
       const gen = lCreateGroup('Generation', 'listing-ram-gen');
       lPopulate(gen.select, d.generation, 'Select Generation...');
       container.appendChild(gen.group);
-
-      // Speed (cascading: depends on Generation)
       const speed = lCreateGroup('Speed', 'listing-ram-speed', true);
       container.appendChild(speed.group);
-
-      // Capacity (independent)
       const cap = lCreateGroup('Capacity', 'listing-ram-cap');
       lPopulate(cap.select, d.capacity, 'Select Capacity...');
       container.appendChild(cap.group);
-
-      // Cascade: Generation → Speed
       gen.select.addEventListener('change', () => {
         const val = gen.select.value;
         if (val && d.speed[val]) {
@@ -875,14 +893,10 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-gpu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const series = lCreateGroup('Series', 'listing-gpu-series', true);
       container.appendChild(series.group);
-
       const model = lCreateGroup('Model', 'listing-gpu-model', true);
       container.appendChild(model.group);
-
-      // Brand → Series
       brand.select.addEventListener('change', () => {
         lResetDropdown(model.select);
         const val = brand.select.value;
@@ -892,8 +906,6 @@ let modalUploadedFiles = [];
           lResetDropdown(series.select);
         }
       });
-
-      // Series → Model
       series.select.addEventListener('change', () => {
         const val = series.select.value;
         if (val && d.models[val]) {
@@ -908,17 +920,12 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-cpu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const tier = lCreateGroup('Performance Tier', 'listing-cpu-tier', true);
       container.appendChild(tier.group);
-
       const gen = lCreateGroup('Generation', 'listing-cpu-gen', true);
       container.appendChild(gen.group);
-
       const model = lCreateGroup('Specific Model', 'listing-cpu-model', true);
       container.appendChild(model.group);
-
-      // Brand → Tier
       brand.select.addEventListener('change', () => {
         lResetDropdown(gen.select);
         lResetDropdown(model.select);
@@ -929,20 +936,16 @@ let modalUploadedFiles = [];
           lResetDropdown(tier.select);
         }
       });
-
-      // Tier → Generation  (key = base name before parenthetical, e.g. "Core i5")
       tier.select.addEventListener('change', () => {
         lResetDropdown(model.select);
         const tierVal = tier.select.value;
-        const base = tierVal.replace(/\s*\(.*\)/, '');  // "Core i5 (Mainstream)" → "Core i5"
+        const base = tierVal.replace(/\s*\(.*\)/, '');
         if (base && d.generation[base]) {
           lPopulate(gen.select, d.generation[base], 'Select Generation...');
         } else {
           lResetDropdown(gen.select);
         }
       });
-
-      // Generation → Model  (key = "baseTier-generation", e.g. "Core i5-12th Gen")
       gen.select.addEventListener('change', () => {
         const tierVal = tier.select.value;
         const base = tierVal.replace(/\s*\(.*\)/, '');
@@ -960,18 +963,14 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-mobo-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const socket = lCreateGroup('Socket Type', 'listing-mobo-socket');
       lPopulate(socket.select, d.socket_type, 'Select Socket...');
       container.appendChild(socket.group);
-
       const chipset = lCreateGroup('Chipset', 'listing-mobo-chipset', true);
       container.appendChild(chipset.group);
-
       const ff = lCreateGroup('Form Factor', 'listing-mobo-ff');
       lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
       container.appendChild(ff.group);
-
       socket.select.addEventListener('change', () => {
         const val = socket.select.value;
         if (val && d.chipset[val]) {
@@ -986,18 +985,14 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-stor-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const type = lCreateGroup('Type', 'listing-stor-type');
       lPopulate(type.select, d.type, 'Select Type...');
       container.appendChild(type.group);
-
       const iface = lCreateGroup('Interface', 'listing-stor-iface', true);
       container.appendChild(iface.group);
-
       const cap = lCreateGroup('Capacity', 'listing-stor-cap');
       lPopulate(cap.select, d.capacity, 'Select Capacity...');
       container.appendChild(cap.group);
-
       type.select.addEventListener('change', () => {
         const val = type.select.value;
         if (val && d.interface[val]) {
@@ -1012,15 +1007,12 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-psu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const watt = lCreateGroup('Wattage', 'listing-psu-watt');
       lPopulate(watt.select, d.wattage, 'Select Wattage...');
       container.appendChild(watt.group);
-
       const eff = lCreateGroup('Efficiency Rating', 'listing-psu-eff');
       lPopulate(eff.select, d.efficiency_rating, 'Select Efficiency...');
       container.appendChild(eff.group);
-
       const mod = lCreateGroup('Modularity', 'listing-psu-mod');
       lPopulate(mod.select, d.modularity, 'Select Modularity...');
       container.appendChild(mod.group);
@@ -1030,11 +1022,9 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand (Optional)', 'listing-case-brand');
       lPopulate(brand.select, d.brand, 'All Brands (Optional)');
       container.appendChild(brand.group);
-
       const ff = lCreateGroup('Form Factor', 'listing-case-ff');
       lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
       container.appendChild(ff.group);
-
       const panel = lCreateGroup('Side Panel', 'listing-case-panel');
       lPopulate(panel.select, d.side_panel, 'Select Side Panel...');
       container.appendChild(panel.group);
@@ -1044,11 +1034,9 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-cool-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const type = lCreateGroup('Type', 'listing-cool-type');
       lPopulate(type.select, d.type, 'Select Type...');
       container.appendChild(type.group);
-
       const compat = lCreateGroup('Socket Compatibility', 'listing-cool-socket');
       lPopulate(compat.select, d.socket_compatibility, 'Select Compatibility...');
       container.appendChild(compat.group);
@@ -1122,7 +1110,7 @@ let modalUploadedFiles = [];
     }
 
     // --- Submit Listing ---
-    function submitListing() {
+    async function submitListing() {
       // Gather all form data
       const formData = {
         componentType: modalSelectedType,
@@ -1142,31 +1130,36 @@ let modalUploadedFiles = [];
         });
       }
 
-      // Add metadata
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const userName = currentUser.firstName ? `${currentUser.firstName} ${currentUser.lastName || ''}`.trim() : 'Guest';
+      // Add metadata from session
+      const userName = currentUserData ? `${currentUserData.firstName} ${currentUserData.lastName || ''}`.trim() : 'Guest';
 
-      formData.id = Date.now();
-      formData.status = 'pending';
       formData.user = userName;
-      formData.ownerEmail = currentUser.email || '';
-      formData.date = new Date().toISOString();
+      formData.ownerEmail = currentUserData ? currentUserData.email : '';
 
-      // Save to localStorage
-      const existingListings = JSON.parse(localStorage.getItem('listings') || '[]');
-      existingListings.push(formData);
-      localStorage.setItem('listings', JSON.stringify(existingListings));
+      try {
+        const res = await fetch('/api/listings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
 
-      console.log('📋 New Listing Submitted (Pending Approval):', formData);
+        const data = await res.json();
 
-      // Close modal & show toast
-      closeListingModal();
-      showListingToast('✅ Listing submitted successfully!');
+        if (res.ok) {
+          console.log('📋 New Listing Submitted (Pending Approval):', data.listing);
+          closeListingModal();
+          showListingToast('✅ Listing submitted successfully!');
+        } else {
+          alert(data.error || 'Failed to submit listing.');
+        }
+      } catch (err) {
+        console.error('Submit listing error:', err);
+        alert('An error occurred while submitting the listing.');
+      }
     }
 
     // --- Toast ---
     function showListingToast(message) {
-      // Create toast if it doesn't exist
       let toast = document.querySelector('.listing-toast');
       if (!toast) {
         toast = document.createElement('div');
@@ -1175,7 +1168,6 @@ let modalUploadedFiles = [];
       }
 
       toast.textContent = message;
-      // Trigger reflow for animation restart
       toast.classList.remove('show');
       void toast.offsetWidth;
       toast.classList.add('show');
@@ -1189,14 +1181,11 @@ let modalUploadedFiles = [];
       modalSelectedType = null;
       modalUploadedFiles = [];
 
-      // Reset tile selection
       document.querySelectorAll('.type-tile').forEach(tile => tile.classList.remove('selected'));
 
-      // Clear dynamic dropdowns
       const ddContainer = document.getElementById('listing-dropdowns');
       if (ddContainer) ddContainer.innerHTML = '';
 
-      // Reset fixed form fields
       const txnType = document.getElementById('listing-txn-type');
       if (txnType) txnType.selectedIndex = 0;
 
@@ -1206,11 +1195,9 @@ let modalUploadedFiles = [];
       const comments = document.getElementById('listing-comments');
       if (comments) comments.value = '';
 
-      // Clear image previews
       const previewRow = document.getElementById('imagePreviewRow');
       if (previewRow) previewRow.innerHTML = '';
 
-      // Reset step UI
       goToStep(1);
     }
 
@@ -1241,26 +1228,15 @@ function setupComponentTabs() {
 
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
-      // Prevent any default link behavior if applicable
       e.preventDefault();
-
-      // 1. Remove active class from all nav items
       navItems.forEach(nav => nav.classList.remove('active'));
-
-      // 2. Add active class to clicked item
       item.classList.add('active');
-
-      // 3. Get target component
       const target = item.getAttribute('data-target');
       if (!target) {
         console.warn('Nav item has no data-target:', item);
         return;
       }
-
-      // 4. Hide all component cards
       componentCards.forEach(card => card.classList.remove('active'));
-
-      // 5. Show target component card
       const targetCard = document.querySelector(`.component-card[data-component="${target}"]`);
       if (targetCard) {
         targetCard.classList.add('active');

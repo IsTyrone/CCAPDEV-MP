@@ -20,10 +20,19 @@
     <li>Users can make their own forums regarding listings</li>
 </ul>
 
+<h3>Tech Stack</h3>
+<ul>
+    <li><strong>Frontend:</strong> HTML, CSS, Vanilla JavaScript</li>
+    <li><strong>Backend:</strong> Node.js, Express.js</li>
+    <li><strong>Database:</strong> MongoDB (with Mongoose)</li>
+    <li><strong>Authentication:</strong> express-session, bcrypt password hashing</li>
+</ul>
+
+<h3>Setup Instructions</h3>
+<p>Please refer to <a href="INSTRUCTIONS.md">INSTRUCTIONS.md</a> for detailed instructions on installing MongoDB, configuring the database, and running the server.</p>
+
 <h3>Important Information</h3>
-    <ul>
-        <li>...</li>
-        <li>Admin User: admin@pctracker.com admin123</li>
-    </ul>
-
-
+<ul>
+    <li>Admin User: <code>admin@pctracker.com</code> | Password: <code>admin123</code></li>
+    <li>The admin account is automatically seeded into the database when the server starts for the first time.</li>
+</ul>

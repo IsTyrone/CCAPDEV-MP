@@ -230,13 +230,11 @@ function renderRelatedModels(componentType, segments) {
     // Try to find sibling models based on the component type
     switch (componentType) {
         case 'gpu': {
-            // segments: [brand, series, model]
-            const series = segments[1]; // e.g. "RTX 4000"
+            const series = segments[1];
             relatedItems = d.models?.[series] || [];
             break;
         }
         case 'cpu': {
-            // segments: [brand, tier, gen, model]
             const base = segments[1]?.replace(/\s*\(.*\)/, '');
             const gen = segments[2];
             const key = `${base}-${gen}`;
@@ -244,9 +242,7 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'ram': {
-            // segments: [brand, generation, speed, capacity] — show other speeds
             if (segments[0] === 'all brands') {
-                // Show brand list when no specific brand selected
                 relatedItems = d.brand || [];
                 currentModel = '';
             } else {
@@ -257,7 +253,6 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'motherboard': {
-            // segments: [brand, socket, chipset, formfactor] — show other chipsets
             if (segments[0] === 'all brands') {
                 relatedItems = d.brand || [];
                 currentModel = '';
@@ -269,7 +264,6 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'storage': {
-            // segments: [brand, type, interface, capacity] — show other interfaces
             if (segments[0] === 'all brands') {
                 relatedItems = d.brand || [];
                 currentModel = '';
@@ -281,19 +275,16 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'psu': {
-            // segments: [brand, wattage, efficiency, modularity] — show other brands
             relatedItems = d.brand || [];
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
         }
         case 'cooling': {
-            // segments: [brand, type, compatibility] — show other brands
             relatedItems = d.brand || [];
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
         }
         case 'case': {
-            // segments: [brand, form_factor, side_panel] — show other brands (optional)
             relatedItems = d.brand || [];
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
@@ -312,24 +303,22 @@ function renderRelatedModels(componentType, segments) {
         a.className = 'related-link' + (item === currentModel ? ' current' : '');
         a.textContent = item;
 
-        // Build the hash link for the related model
         const newSegments = [...segments];
         const isAllBrands = segments[0] === 'all brands';
-        // Replace the segment that corresponds to this level
         if (componentType === 'gpu' && segments.length >= 3) {
             newSegments[2] = item;
         } else if (componentType === 'cpu' && segments.length >= 4) {
             newSegments[3] = item;
         } else if ((componentType === 'ram' || componentType === 'motherboard' || componentType === 'storage') && isAllBrands) {
-            newSegments[0] = item; // replace 'all brands' with specific brand
+            newSegments[0] = item;
         } else if (componentType === 'ram' && segments.length >= 3) {
-            newSegments[2] = item; // replace speed segment
+            newSegments[2] = item;
         } else if (componentType === 'motherboard' && segments.length >= 3) {
-            newSegments[2] = item; // replace chipset segment
+            newSegments[2] = item;
         } else if (componentType === 'storage' && segments.length >= 3) {
-            newSegments[2] = item; // replace interface segment
+            newSegments[2] = item;
         } else if (componentType === 'psu' || componentType === 'cooling' || componentType === 'case') {
-            newSegments[0] = item; // replace brand segment
+            newSegments[0] = item;
         } else if (segments.length >= 2) {
             newSegments[newSegments.length - 1] = item;
         } else {
@@ -350,7 +339,6 @@ function renderBreadcrumb(componentType, segments) {
 
     const label = componentLabels[componentType] || componentType;
 
-    // Component type breadcrumb
     const sep1 = document.createElement('span');
     sep1.className = 'breadcrumb-sep';
     sep1.textContent = '›';
@@ -361,7 +349,6 @@ function renderBreadcrumb(componentType, segments) {
     typeLink.textContent = label;
     bar.appendChild(typeLink);
 
-    // Each segment
     segments.forEach((seg, i) => {
         const sep = document.createElement('span');
         sep.className = 'breadcrumb-sep';
@@ -371,13 +358,11 @@ function renderBreadcrumb(componentType, segments) {
         const displaySeg = seg === 'all brands' ? 'All Brands' : seg;
 
         if (i === segments.length - 1) {
-            // Last segment — not a link
             const span = document.createElement('span');
             span.className = 'breadcrumb-current';
             span.textContent = displaySeg;
             bar.appendChild(span);
         } else {
-            // Intermediate segments — links to partial hash
             const partialHash = `#${componentType}/${segments.slice(0, i + 1).map(slugify).join('/')}`;
             const a = document.createElement('a');
             a.href = partialHash;
@@ -387,42 +372,47 @@ function renderBreadcrumb(componentType, segments) {
     });
 }
 
-// --- Load approved listings from localStorage matching current forum page ---
-function loadApprovedSubmissions(componentType, segments) {
+// --- Load approved listings from server matching current forum page ---
+async function loadApprovedSubmissions(componentType, segments) {
     const modelName = segments[segments.length - 1];
-    const allListings = JSON.parse(localStorage.getItem('listings') || '[]');
 
-    return allListings
-        .filter(l => {
-            if (l.status !== 'approved') return false;
-            if (l.componentType !== componentType) return false;
-            // Match the model name against any value in l.details (case-insensitive)
-            const detailValues = Object.values(l.details || {}).map(v => String(v).toLowerCase());
-            return detailValues.some(v => v.includes(modelName.toLowerCase()) || modelName.toLowerCase().includes(v));
-        })
-        .map(l => {
-            const date = new Date(l.date);
-            const minsAgo = Math.max(1, Math.round((Date.now() - date.getTime()) / 60000));
-            let timeStr;
-            if (minsAgo < 60) timeStr = `${minsAgo} mins ago`;
-            else if (minsAgo < 1440) timeStr = `${Math.floor(minsAgo / 60)} hours ago`;
-            else timeStr = `${Math.floor(minsAgo / 1440)} days ago`;
+    try {
+        const res = await fetch(`/api/listings/approved?componentType=${encodeURIComponent(componentType)}`);
+        const data = await res.json();
+        const allListings = data.listings || [];
 
-            return {
-                id: l.id,
-                user: l.user || 'Anonymous',
-                txnType: l.transactionType || 'sold',
-                price: parseInt(l.price, 10) || 0,
-                images: Array.isArray(l.images) ? l.images : [],
-                comment: l.comments || '',
-                timeStr,
-                minsAgo,
-                isReal: true
-            };
-        });
+        return allListings
+            .filter(l => {
+                const detailValues = Object.values(l.details || {}).map(v => String(v).toLowerCase());
+                return detailValues.some(v => v.includes(modelName.toLowerCase()) || modelName.toLowerCase().includes(v));
+            })
+            .map(l => {
+                const date = new Date(l.date);
+                const minsAgo = Math.max(1, Math.round((Date.now() - date.getTime()) / 60000));
+                let timeStr;
+                if (minsAgo < 60) timeStr = `${minsAgo} mins ago`;
+                else if (minsAgo < 1440) timeStr = `${Math.floor(minsAgo / 60)} hours ago`;
+                else timeStr = `${Math.floor(minsAgo / 1440)} days ago`;
+
+                return {
+                    id: l._id,
+                    user: l.user || 'Anonymous',
+                    txnType: l.transactionType || 'sold',
+                    price: parseInt(l.price, 10) || 0,
+                    images: Array.isArray(l.images) ? l.images : [],
+                    comment: l.comments || '',
+                    timeStr,
+                    minsAgo,
+                    isReal: true
+                };
+            });
+    } catch (err) {
+        console.error('Failed to load approved submissions:', err);
+        return [];
+    }
 }
 
-// --- Save current forum visit to localStorage.recentForums ---
+// --- Save current forum visit to localStorage.recentForums (browser-local preference) ---
 function trackForumVisit(componentType, segments) {
     const modelName = segments[segments.length - 1];
     const subtitleParts = [componentLabels[componentType] || componentType, ...segments.slice(0, -1)];
@@ -431,21 +421,19 @@ function trackForumVisit(componentType, segments) {
 
     const recentForums = JSON.parse(localStorage.getItem('recentForums') || '[]');
 
-    // Remove existing entry with same hash (move to top)
     const existingIndex = recentForums.findIndex(f => f.hash === hash);
     if (existingIndex > -1) recentForums.splice(existingIndex, 1);
 
     const fullTitle = segments.join(' ');
     recentForums.unshift({ title: fullTitle, hash, subtitle });
 
-    // Keep max 5
     if (recentForums.length > 5) recentForums.pop();
 
     localStorage.setItem('recentForums', JSON.stringify(recentForums));
 }
 
 // --- Main: Load the forum page ---
-function loadForumPage() {
+async function loadForumPage() {
     const parsed = parseForumHash();
     if (!parsed || !parsed.segments.length) {
         showErrorState();
@@ -453,7 +441,7 @@ function loadForumPage() {
     }
 
     const { componentType, segments } = parsed;
-    const modelName = segments[segments.length - 1]; // last segment is the model
+    const modelName = segments[segments.length - 1];
     const isAllBrands = segments[0] === 'all brands';
 
     // Set page title
@@ -471,13 +459,13 @@ function loadForumPage() {
     // Set forum title
     document.getElementById('forum-title').textContent = modelName;
 
-    // Build subtitle from the path — replace 'all brands' with 'All Brands' for display
+    // Build subtitle
     const subtitleParts = [componentLabels[componentType] || componentType, ...segments.slice(0, -1)];
     const displayParts = subtitleParts.map(p => p === 'all brands' ? 'All Brands' : p);
     document.getElementById('forum-subtitle').textContent = displayParts.join(' › ');
 
-    // Load approved real listings and merge with dummy submissions
-    const realSubmissions = loadApprovedSubmissions(componentType, segments);
+    // Load approved real listings from server and merge with dummy submissions
+    const realSubmissions = await loadApprovedSubmissions(componentType, segments);
     const dummySubmissions = generateDummySubmissions(componentType, modelName);
     submissions = [...realSubmissions, ...dummySubmissions];
     renderSubmissions(submissions);
@@ -488,7 +476,7 @@ function loadForumPage() {
         renderRelatedModels(componentType, segments);
     }
 
-    // Track this forum visit for the main page "Previously Visited Forums"
+    // Track this forum visit (stays in localStorage — browser-local preference)
     trackForumVisit(componentType, segments);
 }
 
@@ -528,7 +516,7 @@ function loadDropdownJSON() {
 // --- Bootstrap ---
 document.addEventListener('DOMContentLoaded', async () => {
     await loadDropdownJSON();
-    loadForumPage();
+    await loadForumPage();
 });
 
 // Re-render on hash change (for related model clicks)
