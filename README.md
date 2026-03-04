@@ -1,4 +1,4 @@
-<h1>2nd Silicon Website</h1>
+<h1>The Second Silicon Forums</h1>
 
 <h3>Authors</h3>
 <ul>
