@@ -10,14 +10,12 @@
 </ul>
 
 <h3>About</h3>
-<p1>Second Silicon is a website that contains different listings found on multiple platforms of used computer parts. The objective of this website is to act as a sort of hub for the used market. The site includes features such as but not limited to:</p1>
+<p1>Second Silicon is a community-driven forum and price-tracker for the second-hand PC market — addressing the challenge of information asymmetry in informal peer-to-peer hardware markets. The site includes features such as but not limited to:</p1>
 <ul>
-    <li>A list of trending used parts</li>
-    <li>A user reputation system which informs other users about reliable sellers</li>
-    <li>A forum for reviews on sellers and or items</li>
-    <li>A user profile which allows others to view ones past listings/contributions</li>
-    <li>Login/Register</li>
-    <li>Users can make their own forums regarding listings</li>
+    <li>Consensus-driven pricing index aggregated from user-reported listings</li>
+    <li>Users accessing forums dedicated to a specific computer component</li>
+    <li>Reputation system to identify reliable accounts</li>
+    <li>User profiles displaying past listings and contributions</li>
 </ul>
 
 <h3>Important Information</h3>
