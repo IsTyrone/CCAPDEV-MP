@@ -41,17 +41,57 @@ router.get('/users/:email', async (req, res) => {
 });
 
 // PUT /api/users/:email/rep — update reputation (+1 or -1)
-router.put('/users/:email/rep', async (req, res) => {
+router.put('/users/:email/rep', requireAuth, async (req, res) => {
     try {
         const { delta } = req.body; // +1 or -1
-        const user = await User.findOne({ email: req.params.email.toLowerCase() });
+        const voterId = req.session.userId;
+        const targetEmail = req.params.email.toLowerCase();
+
+        const user = await User.findOne({ email: targetEmail });
         if (!user) {
             return res.status(404).json({ error: 'User not found.' });
         }
 
-        user.rep = (user.rep || 0) + (delta || 0);
-        await user.save();
+        // Prevent self-voting
+        if (user._id.toString() === voterId) {
+            return res.status(403).json({ error: 'You cannot vote on your own profile.' });
+        }
 
+        const isUpvote = delta === 1;
+        const isDownvote = delta === -1;
+
+        if (!isUpvote && !isDownvote) {
+            return res.status(400).json({ error: 'Invalid delta value.' });
+        }
+
+        // Initialize arrays if they don't exist
+        if (!user.upvotedBy) user.upvotedBy = [];
+        if (!user.downvotedBy) user.downvotedBy = [];
+
+        const hasUpvoted = user.upvotedBy.includes(voterId);
+        const hasDownvoted = user.downvotedBy.includes(voterId);
+
+        if (isUpvote) {
+            if (hasUpvoted) return res.status(400).json({ error: 'You have already upvoted this user.' });
+            user.upvotedBy.push(voterId);
+            user.rep += 1;
+            // Remove from downvoted if swapping
+            if (hasDownvoted) {
+                user.downvotedBy = user.downvotedBy.filter(id => id !== voterId);
+                user.rep += 1; // recover the previous downvote
+            }
+        } else if (isDownvote) {
+            if (hasDownvoted) return res.status(400).json({ error: 'You have already downvoted this user.' });
+            user.downvotedBy.push(voterId);
+            user.rep -= 1;
+            // Remove from upvoted if swapping
+            if (hasUpvoted) {
+                user.upvotedBy = user.upvotedBy.filter(id => id !== voterId);
+                user.rep -= 1; // recover the previous upvote
+            }
+        }
+
+        await user.save();
         res.json({ rep: user.rep });
     } catch (err) {
         console.error('Update rep error:', err);

@@ -51,9 +51,12 @@ async function changeRep(delta) {
     if (res.ok) {
       targetUser.rep = data.rep;
       renderRep();
+    } else {
+      alert(data.error || 'Failed to update reputation.');
     }
   } catch (err) {
     console.error('Rep update error:', err);
+    alert('An error occurred while updating reputation.');
   }
 }
 
@@ -124,9 +127,15 @@ function renderProfileHeader() {
 async function renderListings() {
   const container = document.getElementById('profile-listings');
   const emptyEl = document.getElementById('listings-empty');
+  const countEl = document.getElementById('profile-listings-count');
   if (!container) return;
 
   const listings = await getProfileListings();
+  
+  if (countEl) {
+    countEl.textContent = `${listings.length} Listing${listings.length !== 1 ? 's' : ''}`;
+  }
+  
   container.innerHTML = '';
 
   if (listings.length === 0) {

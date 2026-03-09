@@ -9,6 +9,8 @@ const userSchema = new mongoose.Schema({
   password:    { type: String, required: true },
   role:        { type: String, enum: ['user', 'admin'], default: 'user' },
   rep:         { type: Number, default: 0 },
+  upvotedBy:   { type: [String], default: [] },
+  downvotedBy: { type: [String], default: [] },
   displayName: { type: String, default: '' },
   bio:         { type: String, default: '' }
 }, { timestamps: true });

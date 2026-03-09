@@ -115,9 +115,11 @@ function generateDummySubmissions(componentType, modelName, count = 8) {
             images.push(`https://via.placeholder.com/240x180?text=${slugify(modelName)}+${j + 1}`);
         }
 
+        const user = randomFrom(dummyUsers);
         subs.push({
             id: i,
-            user: randomFrom(dummyUsers),
+            user: user,
+            ownerEmail: `${slugify(user)}@dummy.com`,
             txnType,
             price,
             images,
@@ -163,7 +165,7 @@ function renderSubmissions(subs) {
       <div class="submission-header">
         <div class="user-avatar">${initials}</div>
         <div class="user-info">
-          <div class="user-name">${sub.user}</div>
+          <div class="user-name"><a href="../pages/profile.html?email=${encodeURIComponent(sub.ownerEmail)}" class="forum-user-link" style="color: inherit; text-decoration: none;">${sub.user}</a></div>
           <div class="submission-time">${sub.timeStr}</div>
         </div>
         <span class="txn-badge ${sub.txnType}">${sub.txnType}</span>
@@ -397,6 +399,7 @@ async function loadApprovedSubmissions(componentType, segments) {
                 return {
                     id: l._id,
                     user: l.user || 'Anonymous',
+                    ownerEmail: l.ownerEmail || '',
                     txnType: l.transactionType || 'sold',
                     price: parseInt(l.price, 10) || 0,
                     images: Array.isArray(l.images) ? l.images : [],

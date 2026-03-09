@@ -2,7 +2,21 @@
  * Account Settings Page - Integrated with backend API
  */
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  // Load current settings
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    if (data.user) {
+      if (document.getElementById('display-name')) document.getElementById('display-name').value = data.user.displayName || '';
+      if (document.getElementById('username')) document.getElementById('username').value = data.user.username || '';
+      if (document.getElementById('bio')) document.getElementById('bio').value = data.user.bio || '';
+      if (document.getElementById('email')) document.getElementById('email').value = data.user.email || '';
+    }
+  } catch (err) {
+    console.error('Failed to load current settings:', err);
+  }
+
   const profileForm = document.getElementById('profile-form');
   const securityForm = document.getElementById('security-form');
   const deleteBtn = document.getElementById('delete-account-btn');
