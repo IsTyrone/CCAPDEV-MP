@@ -55,84 +55,6 @@ let dropdownData = null;
 let submissions = [];
 let currentSort = 'recent';
 
-// --- Random data helpers for dummy submissions ---
-const dummyUsers = [
-    'techguy_ph', 'build_master', 'pcmart_deals', 'silicon_sam',
-    'overclocked99', 'budgetpc_mnl', 'rig_builder', 'component_hunter',
-    'upgrade_king', 'bargain_chip', 'gpu_flipper', 'ram_dealer'
-];
-
-const dummyComments = [
-    'Barely used, like new condition. No issues at all.',
-    'Upgraded to a newer model. This one still runs great.',
-    'Bought last year, selling because I switched platforms.',
-    'Brand new sealed in box, receipt available.',
-    'Used for about 6 months. Still under warranty until 2026.',
-    'Great condition, never overclocked. Comes with original box.',
-    'Price is firm. Meet-up in Makati or GH.',
-    'Selling to fund a new build. Works perfectly.',
-    'RFS: Upgraded. No defects. Can test before buying.',
-    'Price is slightly negotiable for serious buyers.'
-];
-
-function randomFrom(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function randomPrice(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// Component price ranges (in PHP pesos)
-const priceRanges = {
-    ram: [1500, 8000],
-    gpu: [8000, 95000],
-    cpu: [3000, 40000],
-    motherboard: [3000, 25000],
-    storage: [1000, 12000],
-    psu: [2000, 12000],
-    case: [2000, 15000],
-    cooling: [500, 10000]
-};
-
-// --- Generate dummy submissions ---
-function generateDummySubmissions(componentType, modelName, count = 8) {
-    const range = priceRanges[componentType] || [1000, 20000];
-    const subs = [];
-
-    for (let i = 0; i < count; i++) {
-        const price = Math.round(randomPrice(range[0], range[1]) / 100) * 100;
-        const txnType = Math.random() > 0.5 ? 'sold' : 'bought';
-        const mins = randomPrice(5, 1440 * 7); // up to a week ago
-        let timeStr;
-        if (mins < 60) timeStr = `${mins} mins ago`;
-        else if (mins < 1440) timeStr = `${Math.floor(mins / 60)} hours ago`;
-        else timeStr = `${Math.floor(mins / 1440)} days ago`;
-
-        const imgCount = Math.floor(Math.random() * 4); // 0 to 3 images
-        const images = [];
-        for (let j = 0; j < imgCount; j++) {
-            images.push(`https://via.placeholder.com/240x180?text=${slugify(modelName)}+${j + 1}`);
-        }
-
-        const user = randomFrom(dummyUsers);
-        subs.push({
-            id: i,
-            user: user,
-            ownerEmail: `${slugify(user)}@dummy.com`,
-            txnType,
-            price,
-            images,
-            comment: randomFrom(dummyComments),
-            timeStr,
-            minsAgo: mins
-        });
-    }
-
-    // Sort by most recent by default
-    subs.sort((a, b) => a.minsAgo - b.minsAgo);
-    return subs;
-}
 
 // --- Render submissions ---
 function renderSubmissions(subs) {
@@ -467,10 +389,9 @@ async function loadForumPage() {
     const displayParts = subtitleParts.map(p => p === 'all brands' ? 'All Brands' : p);
     document.getElementById('forum-subtitle').textContent = displayParts.join(' › ');
 
-    // Load approved real listings from server and merge with dummy submissions
+    // Load approved real listings from server
     const realSubmissions = await loadApprovedSubmissions(componentType, segments);
-    const dummySubmissions = generateDummySubmissions(componentType, modelName);
-    submissions = [...realSubmissions, ...dummySubmissions];
+    submissions = realSubmissions;
     renderSubmissions(submissions);
     updateSidebarStats(submissions);
 
