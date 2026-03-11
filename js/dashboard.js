@@ -530,7 +530,7 @@ function generateDummyListings() {
       title: buildComponentTitle(l.componentType, l.details),
       price: `₱${l.price}`,
       time: 'Just now',
-      image: getBrandLogoUrl(l.details['Brand'] || l.details['Type'] || 'Generic'),
+      image: (l.images && l.images.length > 0) ? l.images[0] : getBrandLogoUrl(l.details['Brand'] || l.details['Type'] || 'Generic'),
       fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png',
       forumHash: buildForumHash(l.componentType, l.details)
     });
@@ -1044,28 +1044,26 @@ let modalUploadedFiles = [];
 
     // --- Step 3: Image Upload ---
     (function initImageUpload() {
-      document.addEventListener('DOMContentLoaded', () => {
-        const zone = document.getElementById('imageUploadZone');
-        const input = document.getElementById('listing-images');
-        if (!zone || !input) return;
+      const zone = document.getElementById('imageUploadZone');
+      const input = document.getElementById('listing-images');
+      if (!zone || !input) return;
 
-        // Drag events
-        zone.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          zone.classList.add('drag-over');
-        });
-        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-        zone.addEventListener('drop', (e) => {
-          e.preventDefault();
-          zone.classList.remove('drag-over');
-          handleImageFiles(e.dataTransfer.files);
-        });
+      // Drag events
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        handleImageFiles(e.dataTransfer.files);
+      });
 
-        // File input change
-        input.addEventListener('change', () => {
-          handleImageFiles(input.files);
-          input.value = ''; // Reset so same file can be re-selected
-        });
+      // File input change
+      input.addEventListener('change', () => {
+        handleImageFiles(input.files);
+        input.value = ''; // Reset so same file can be re-selected
       });
     })();
 
@@ -1111,13 +1109,23 @@ let modalUploadedFiles = [];
 
     // --- Submit Listing ---
     async function submitListing() {
+      // Convert all images to base64 Data URLs
+      const base64Images = await Promise.all(modalUploadedFiles.map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.onerror = e => reject(e);
+          reader.readAsDataURL(file);
+        });
+      }));
+
       // Gather all form data
       const formData = {
         componentType: modalSelectedType,
         details: {},
         transactionType: document.getElementById('listing-txn-type')?.value || '',
         price: document.getElementById('listing-price')?.value || '',
-        images: modalUploadedFiles.map(f => f.name),
+        images: base64Images,
         comments: document.getElementById('listing-comments')?.value || ''
       };
 

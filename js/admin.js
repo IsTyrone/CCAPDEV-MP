@@ -71,9 +71,15 @@ async function renderListings() {
                 `;
             }
 
+            // Render image if available
+            const imageHtml = (item.images && item.images.length > 0)
+                ? `<img src="${item.images[0]}" alt="Listing Image" style="max-width: 150px; border-radius: 8px; margin-right: 15px; cursor: pointer;" onclick="openImageModal('${item.images[0]}')">`
+                : '';
+
             return `
-            <div class="listing-card ${currentTab}">
-                <div class="listing-header">
+            <div class="listing-card ${currentTab}" style="display: flex; align-items: flex-start;">
+                ${imageHtml}
+                <div class="listing-header" style="flex-grow: 1;">
                     <div>
                         <h3 class="listing-title">${item.componentType.toUpperCase()} - ${item.details['Brand'] || item.details['Type'] || 'Generic'}</h3>
                         <p class="listing-meta">
@@ -190,9 +196,32 @@ async function saveCorrection(event) {
 
 // Close modal if clicking outside
 window.onclick = function (event) {
-    const modal = document.getElementById('edit-modal');
-    if (event.target == modal) {
-        modal.style.display = "none";
+    const editModal = document.getElementById('edit-modal');
+    if (event.target == editModal) {
+        editModal.style.display = "none";
+    }
+    
+    const imageModal = document.getElementById('image-modal');
+    if (event.target == imageModal) {
+        imageModal.style.display = "none";
+    }
+}
+
+// Lightbox functions
+function openImageModal(imgSrc) {
+    const modal = document.getElementById('image-modal');
+    const img = document.getElementById('expanded-image');
+    if (modal && img) {
+        img.src = imgSrc;
+        modal.style.display = 'block';
+    }
+}
+
+function closeImageModal() {
+    const modal = document.getElementById('image-modal');
+    if (modal) {
+        modal.style.display = 'none';
+        document.getElementById('expanded-image').src = '';
     }
 }
 
