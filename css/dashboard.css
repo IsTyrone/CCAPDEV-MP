@@ -607,21 +607,7 @@ a {
   gap: 14px;
   padding: 12px 0;
   width: max-content;
-  animation: ticker-scroll 35s linear infinite;
-}
-
-.ticker-track:hover {
-  animation-play-state: paused;
-}
-
-@keyframes ticker-scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
+  will-change: transform;
 }
 
 .ticker-card {
@@ -720,6 +706,81 @@ a {
   box-shadow: inset 2px 0 8px rgba(107, 114, 128, 0.15);
 }
 
+/* Ticker controls panel */
+.ticker-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+  gap: 4px;
+  padding: 10px 12px;
+  background: white;
+  border-left: 1px solid var(--border-color);
+  min-width: 76px;
+  z-index: 2;
+}
+
+.ticker-speed-btns {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.ticker-speed-btn {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 4px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  color: #888;
+  text-align: center;
+  width: 100%;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  font-family: 'Google Sans', Arial, sans-serif;
+  letter-spacing: 0.3px;
+  line-height: 1.5;
+}
+
+.ticker-speed-btn.ticker-speed-active,
+.ticker-speed-btn:hover {
+  background: #101010;
+  color: #fff;
+  border-color: #101010;
+}
+
+.ticker-pause-btn {
+  font-size: 9px;
+  font-weight: 600;
+  padding: 4px 0;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  background: transparent;
+  cursor: pointer;
+  color: #555;
+  text-align: center;
+  width: 100%;
+  transition: background 0.15s;
+  font-family: 'Google Sans', Arial, sans-serif;
+  white-space: nowrap;
+  line-height: 1.5;
+}
+
+.ticker-pause-btn:hover {
+  background: #f3f4f6;
+}
+
+.ticker-ts {
+  font-size: 8px;
+  color: #bbb;
+  font-family: 'Google Sans', Arial, sans-serif;
+  text-align: center;
+  line-height: 1.4;
+  white-space: nowrap;
+  padding-top: 1px;
+}
+
 /* Mobile responsive ticker */
 @media (max-width: 768px) {
   .ticker-card {
@@ -738,6 +799,17 @@ a {
   .ticker-label {
     padding: 10px 10px;
     min-width: 48px;
+  }
+
+  .ticker-controls {
+    padding: 8px 8px;
+    min-width: 62px;
+  }
+
+  .ticker-speed-btn,
+  .ticker-pause-btn {
+    font-size: 8px;
+    padding: 3px 0;
   }
 }
 
