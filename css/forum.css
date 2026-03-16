@@ -562,3 +562,76 @@ body {
         justify-content: center;
     }
 }
+
+/* ============================================================
+   Price History Graph (sidebar card)
+   ============================================================ */
+
+/* Canvas wrapper — needed for crosshair absolute positioning */
+.price-graph-area {
+    position: relative;
+    height: 160px;
+    margin-top: 10px;
+}
+
+/* Vertical crosshair line */
+#price-graph-crosshair {
+    position: absolute;
+    top: 0;
+    width: 1px;
+    pointer-events: none;
+    background: rgba(79, 70, 229, 0.35);
+    display: none;
+}
+
+/* Floating tooltip (fixed to viewport to escape overflow:hidden) */
+#price-graph-tooltip {
+    position: fixed;
+    z-index: 9999;
+    pointer-events: none;
+    background: var(--bg-card);
+    border: 1px solid var(--primary-blue);
+    border-radius: 8px;
+    padding: 8px 10px;
+    font-size: 12px;
+    font-family: 'Google Sans', Arial, sans-serif;
+    line-height: 1.5;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: none;
+    color: var(--text-primary);
+    min-width: 130px;
+}
+
+/* Empty state message */
+.price-graph-empty {
+    font-size: 12px;
+    color: var(--text-secondary);
+    text-align: center;
+    padding: 20px 0 4px;
+    display: none;
+}
+
+/* Legend row below the card title */
+.price-graph-legend {
+    display: flex;
+    gap: 12px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    margin-top: 4px;
+}
+
+.price-graph-legend span {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+/* Colored dot inside each legend entry */
+.price-graph-legend em {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    font-style: normal;
+    flex-shrink: 0;
+}
