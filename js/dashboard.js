@@ -1458,6 +1458,12 @@ let modalUploadedFiles = [];
 
     // --- Submit Listing ---
     async function submitListing() {
+      // Require at least one image before submitting
+      if (modalUploadedFiles.length === 0) {
+        alert('Please upload at least one image before submitting your listing.');
+        return;
+      }
+
       // Convert all images to base64 Data URLs
       const base64Images = await Promise.all(modalUploadedFiles.map(file => {
         return new Promise((resolve, reject) => {
