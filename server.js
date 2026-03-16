@@ -7,7 +7,6 @@ const path = require('path');
 const bcrypt = require('bcrypt');
 
 const User = require('./models/User');
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/pctracker';
