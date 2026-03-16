@@ -9,6 +9,7 @@
 </head>
 
 <body class="about-page">
+  <div id="sidebarOverlay" class="sidebar-overlay"></div>
 
   <!-- Navigation -->
   <header class="main-header">
@@ -143,5 +144,19 @@
             
   </footer>
 
+  <aside id="rightSidebar" class="right-sidebar">
+    <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+    <div class="logo-circle sidebar-logo">&#128100;</div>
+    <div id="sidebarContent" class="sidebar-content">
+      <h3 class="mb-10">Welcome, Guest</h3>
+      <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+      <div class="sidebar-actions">
+        <button onclick="window.location.href='login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
+        <button onclick="window.location.href='register.html'" class="btn-sidebar btn-sidebar-outline">Register</button>
+      </div>
+    </div>
+  </aside>
+
+  <script src="../js/dashboard.js"></script>
 </body>
 </html>
