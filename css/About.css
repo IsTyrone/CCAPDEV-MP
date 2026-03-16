@@ -200,6 +200,27 @@
 }
 
 /* --- Team Grid --- */
+/* Ensure the avatar container remains a perfect circle */
+.team-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    overflow: hidden; /* This clips the image to the circle */
+    background: var(--primary-gradient, linear-gradient(135deg, #2563eb 0%, #4f46e5 100%));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 12px;
+}
+
+/* Make the image fill the circle properly */
+.team-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This prevents stretching by cropping the edges */
+    display: block;
+}
+
 .about-team-grid {
     display: grid;
     grid-template-columns: repeat(5, 1fr);
