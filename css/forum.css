@@ -475,16 +475,31 @@ body {
     max-width: 1560px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 40px;
     padding-bottom: 40px;
     border-bottom: 1px solid #374151;
 }
 
+.footer-left-col p {
+    max-width: 360px;
+}
+
+.footer-left-col img {
+    max-width: 415px;
+}
+
+.footer-logo {
+    max-width: 250px;
+    height: auto;
+    margin-bottom: 15px;
+    display: block;
+}
+
 .footer-col h4 {
     color: white;
     margin-bottom: 20px;
-    font-size: 16px;
+    font-size: 20px;
     font-weight: 600;
 }
 

@@ -15,48 +15,60 @@
 <body>
     <div class="auth-page">
         <div class="auth-header">
-            <div class="logo">PC Tracker</div>
+            <a href="../index.html" class="logo"><img src="../assets/images/PC-PICKER-LOGO.png" alt="PC Tracker"
+                    style="height: 60px;"></a>
         </div>
 
-        <div class="auth-card" id="FormCard">
+        <div class="auth-card register-card" id="FormCard">
             <div class="auth-title">Create an Account</div>
             <form id="registerFormElement">
-                <div class="form-group names-group">
-                    <label for="lastName" class="form-label">Last Name</label>
-                    <input type="text" id="lastName" class="form-input" placeholder="Doe" required />
+                <div class="register-columns">
+                    <!-- Left Column: Personal Info -->
+                    <div class="register-col">
+                        <div class="form-group names-group">
+                            <label for="lastName" class="form-label">Last Name</label>
+                            <input type="text" id="lastName" class="form-input" placeholder="Doe" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="firstName" class="form-label">First Name</label>
+                            <input type="text" id="firstName" class="form-input" placeholder="John" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="middleName" class="form-label">Middle Name</label>
+                            <input type="text" id="middleName" class="form-input" placeholder="Morgan" />
+                        </div>
+                        <div class="form-group">
+                            <label for="username" class="form-label">Username</label>
+                            <input type="text" id="username" class="form-input" placeholder="johndoe123" required />
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Contact & Security -->
+                    <div class="register-col">
+                        <div class="form-group phone-group">
+                            <label class="form-label">Phone Number</label>
+                            <div class="phone-input-row">
+                                <span class="phone-prefix">(+63)</span>
+                                <input type="text" class="form-input" placeholder="912 345 6789" />
+                            </div>
+                        </div>
+                        <div class="form-group email-group">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" id="email" class="form-input" placeholder="john.doe@example.com"
+                                required />
+                        </div>
+                        <div class="form-group">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" class="form-input" placeholder="••••••••" required />
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword" class="form-label">Confirm Password</label>
+                            <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••"
+                                required />
+                        </div>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="firstName" class="form-label">First Name</label>
-                    <input type="text" id="firstName" class="form-input" placeholder="John" required />
-                </div>
-                <div class="form-group">
-                    <label for="middleName" class="form-label">Middle Name</label>
-                    <input type="text" id="middleName" class="form-input" placeholder="Morgan" />
-                </div>
-                <div class="form-group">
-                    <label for="username" class="form-label">Username</label>
-                    <input type="text" id="username" class="form-input" placeholder="johndoe123" required />
-                </div>
-                <div class="form-group phone-group">
-                    <label for="countryCode" class="form-label">Phone Number</label>
-                    <select id="countryCode" name="countryCode" class="form-input">
-                        <!-- Options populated by register.js -->
-                    </select>
-                    <input type="text" class="form-input" placeholder="234 567 8901"
-                        style="margin-top: 8px;" />
-                </div>
-                <div class="form-group email-group">
-                    <label for="email" class="form-label">Email Address</label>
-                    <input type="email" id="email" class="form-input" placeholder="john.doe@example.com" required />
-                </div>
-                <div class="form-group">
-                    <label for="password" class="form-label">Password</label>
-                    <input type="password" id="password" class="form-input" placeholder="••••••••" required />
-                </div>
-                <div class="form-group">
-                    <label for="confirmPassword" class="form-label">Confirm Password</label>
-                    <input type="password" id="confirmPassword" class="form-input" placeholder="••••••••" required />
-                </div>
+
                 <div class="RegButtons">
                     <button type="submit" class="submit-button btn-primary btn-full">Register</button>
                     <button type="reset" class="reset-button btn-full" style="margin-top: 8px;">Clear all
@@ -72,44 +84,9 @@
         <a href="../index.html" class="back-link">← Back to Dashboard</a>
     </div>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="footer-container">
-            <div class="footer-col">
-                <h4>PC Tracker</h4>
-                <p style="font-size: 14px; line-height: 1.6; margin-bottom: 20px;">
-                    The ultimate destination for PC enthusiasts.
-                </p>
-                <div class="footer-social">
-                    <a href="#" class="footer-social-link">f</a>
-                    <a href="#" class="footer-social-link">t</a>
-                    <a href="#" class="footer-social-link">i</a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>Support</h4>
-                <ul>
-                    <li><a href="#">Help Center</a></li>
-                    <li><a href="#">Contact Us</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Account</h4>
-                <ul>
-                    <li><a href="#">Login</a></li>
-                    <li><a href="#">Register</a></li>
-                    <li><a href="#">Forgot Password</a></li>
-                </ul>
-            </div>
-            <div class="footer-col" style="visibility: hidden;">
-                <!-- Spacer -->
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <p>&copy; 2026 PC Tracker. All rights reserved.</p>
-        </div>
-    </footer>
+    <!-- Footer (loaded from shared footer.js) -->
+    <div id="footer-placeholder"></div>
+    <script src="../js/footer.js"></script>
     <script src="../js/register.js"></script>
 </body>
 
