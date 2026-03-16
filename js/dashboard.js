@@ -139,12 +139,19 @@ function renderRecentViews() {
   if (!recentList) return;
 
   const recentForums = JSON.parse(localStorage.getItem('recentForums') || '[]');
+  const decodeRecentText = (text) => {
+    try {
+      return decodeURIComponent(text);
+    } catch {
+      return text;
+    }
+  };
 
   if (recentForums.length > 0) {
     recentList.innerHTML = recentForums.map(item => `
-        <a href="pages/forum.html${item.hash}" class="recent-item" title="${item.title}">
+        <a href="pages/forum.html${item.hash}" class="recent-item" title="${decodeRecentText(item.title)}">
             <div class="recent-item-info">
-                <span class="recent-item-title">${item.title}</span>
+                <span class="recent-item-title">${decodeRecentText(item.title)}</span>
             </div>
         </a>
     `).join('');
@@ -1165,7 +1172,72 @@ let modalUploadedFiles = [];
       submitBtn.style.display = step === 3 ? 'inline-block' : 'none';
     }
 
+    function getMissingListingFields() {
+      const missing = [];
+      const dropdownContainer = document.getElementById('listing-dropdowns');
+
+      if (!modalSelectedType) {
+        missing.push('Component Type');
+      }
+
+      if (dropdownContainer) {
+        dropdownContainer.querySelectorAll('.listing-form-group').forEach(group => {
+          const sel = group.querySelector('select');
+          const label = group.querySelector('label')?.textContent?.trim() || 'Component detail';
+          const isOptional = /\(optional\)/i.test(label);
+          if (!sel || isOptional) return;
+
+          if (sel.disabled || !sel.value) {
+            missing.push(label);
+          }
+        });
+      }
+
+      const txnType = document.getElementById('listing-txn-type');
+      if (!txnType?.value) {
+        missing.push('Transaction Type');
+      }
+
+      const price = document.getElementById('listing-price');
+      const priceValue = Number(price?.value);
+      if (!price?.value || !Number.isFinite(priceValue) || priceValue <= 0) {
+        missing.push('Price');
+      }
+
+      return [...new Set(missing)];
+    }
+
+    function showMissingFieldsPopup(missingFields) {
+      if (!missingFields.length) return;
+      alert(`Please provide: ${missingFields.join(', ')}.`);
+    }
+
+    function getMissingStage3Fields() {
+      const missing = [];
+      const minCommentLength = 10;
+      const comments = document.getElementById('listing-comments');
+      const commentText = comments?.value?.trim() || '';
+
+      if (modalUploadedFiles.length === 0) {
+        missing.push('at least one image');
+      }
+
+      if (commentText.length < minCommentLength) {
+        missing.push(`brief details/comments (at least ${minCommentLength} characters)`);
+      }
+
+      return missing;
+    }
+
     function modalGoNext() {
+      if (modalCurrentStep === 2) {
+        const missing = getMissingListingFields();
+        if (missing.length) {
+          showMissingFieldsPopup(missing);
+          return;
+        }
+      }
+
       if (modalCurrentStep < 3) goToStep(modalCurrentStep + 1);
     }
 
@@ -1458,9 +1530,17 @@ let modalUploadedFiles = [];
 
     // --- Submit Listing ---
     async function submitListing() {
-      // Require at least one image before submitting
-      if (modalUploadedFiles.length === 0) {
-        alert('Please upload at least one image before submitting your listing.');
+      // Ensure all required component and transaction details are filled.
+      const missing = getMissingListingFields();
+      if (missing.length) {
+        showMissingFieldsPopup(missing);
+        return;
+      }
+
+      // Stage 3 requirements: at least one image + brief details/comments.
+      const missingStage3 = getMissingStage3Fields();
+      if (missingStage3.length) {
+        showMissingFieldsPopup(missingStage3);
         return;
       }
 

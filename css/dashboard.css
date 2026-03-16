@@ -91,12 +91,12 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
-  font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Google Sans', Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 body {
-  font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+  font-family: 'Google Sans', Arial, sans-serif;
   background-color: var(--bg-app);
   color: var(--text-dark);
   height: 100vh;

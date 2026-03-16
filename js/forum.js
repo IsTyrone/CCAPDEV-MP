@@ -34,8 +34,16 @@ function slugify(str) {
     return str.replace(/\s+/g, '-');
 }
 
+function safeDecodeURIComponent(value) {
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return value;
+    }
+}
+
 function deslugify(str) {
-    return str.replace(/-/g, ' ');
+    return safeDecodeURIComponent(str).replace(/-/g, ' ');
 }
 
 // --- Parse hash ---
@@ -354,7 +362,8 @@ function trackForumVisit(componentType, segments) {
     const existingIndex = recentForums.findIndex(f => f.hash === hash);
     if (existingIndex > -1) recentForums.splice(existingIndex, 1);
 
-    const fullTitle = segments.join(' ');
+    const titleParts = segments.filter(seg => seg !== 'all brands');
+    const fullTitle = titleParts.join(' ') || modelName;
     recentForums.unshift({ title: fullTitle, hash, subtitle });
 
     if (recentForums.length > 5) recentForums.pop();

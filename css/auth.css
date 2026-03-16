@@ -9,7 +9,7 @@
 }
 
 body {
-  font-family: 'Google Sans', Arial, Helvetica, sans-serif;
+  font-family: 'Google Sans', Arial, sans-serif;
   color: #101010;
   line-height: 1.5;
 }
@@ -211,6 +211,23 @@ select.form-input {
 .register-col {
   display: flex;
   flex-direction: column;
+}
+
+/* Keep both register columns visually aligned row-by-row */
+.register-card .register-col {
+  display: grid;
+  grid-template-rows: repeat(4, auto);
+  gap: 16px;
+}
+
+.register-card .form-group {
+  margin-bottom: 0;
+}
+
+.register-card .names-group,
+.register-card .phone-group,
+.register-card .email-group {
+  margin-bottom: 0;
 }
 
 @media (max-width: 600px) {

@@ -6,7 +6,7 @@
 .about-page {
     min-height: 100vh;
     background: var(--bg-app, #f1f5f9);
-    font-family: 'Google Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    font-family: 'Google Sans', Arial, sans-serif;
 }
 
 .about-main {
@@ -458,12 +458,6 @@
 .footer-left-col {
     display: flex;
     flex-direction: column;
-}
-
-.footer-left-col .footer-logo {
-    max-width: 180px;
-    margin-bottom: 16px;
-    object-fit: contain;
 }
 
 .footer-col h4 {

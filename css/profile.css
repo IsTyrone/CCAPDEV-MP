@@ -3,7 +3,7 @@
 .profile-page {
   min-height: 100vh;
   background: var(--bg-app, #f1f5f9);
-  font-family: 'Google Sans', 'Inter', sans-serif;
+  font-family: 'Google Sans', Arial, sans-serif;
 }
 
 .profile-main {
