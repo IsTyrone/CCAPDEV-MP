@@ -527,16 +527,19 @@ function generateDummyListings() {
 
   // --- MERGE WITH SERVER-FETCHED APPROVED LISTINGS ---
   cachedApprovedListings.forEach(l => {
+    const details = l.details || {};
+    const type = l.componentType || 'gpu';
+    const brand = details['Brand'] || details['Type'] || 'Generic';
     newListings.unshift({
       id: l._id,
-      type: l.componentType,
-      brand: l.details['Brand'] || l.details['Type'] || 'Generic',
-      title: buildComponentTitle(l.componentType, l.details),
+      type: type,
+      brand: brand,
+      title: buildComponentTitle(type, details),
       price: `₱${l.price}`,
       time: 'Just now',
-      image: (l.images && l.images.length > 0) ? l.images[0] : getBrandLogoUrl(l.details['Brand'] || l.details['Type'] || 'Generic'),
-      fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png',
-      forumHash: buildForumHash(l.componentType, l.details)
+      image: (l.images && l.images.length > 0) ? l.images[0] : getBrandLogoUrl(brand),
+      fallbackImage: componentIconMap[type] || 'assets/images/component-images/graphic-card.png',
+      forumHash: buildForumHash(type, details)
     });
   });
 
@@ -750,32 +753,38 @@ function initTickerResizeHandler() {
 function populateTicker() {
   const track = document.querySelector('.ticker-track');
   if (!track) return;
+  const viewport = track.parentElement;
+  const emptyEl = viewport?.querySelector('.ticker-empty');
 
   tickerTrackEl = track;
 
   // Group approved listings by unique component (same forum hash = same model)
   const groups = {};
   cachedApprovedListings.forEach(l => {
-    const hash = buildForumHash(l.componentType, l.details);
+    const type = l.componentType || 'gpu';
+    const details = l.details || {};
+    const hash = buildForumHash(type, details);
     if (!groups[hash]) groups[hash] = { listing: l, prices: [] };
     groups[hash].prices.push({ price: Number(l.price), date: new Date(l.date) });
   });
 
   // Build one card data object per unique component
   let realCards = Object.values(groups).map(({ listing, prices }) => {
+    const type = listing.componentType || 'gpu';
+    const details = listing.details || {};
     prices.sort((a, b) => b.date - a.date);
     const current = prices[0].price;
     const avg = prices.reduce((sum, p) => sum + p.price, 0) / prices.length;
     const pct = prices.length > 1 ? ((current - avg) / avg) * 100 : 0;
     const dir = pct > 1 ? 'up' : pct < -1 ? 'down' : 'neutral';
     return {
-      category:     getTickerCategoryLabel(listing.componentType, listing.details),
-      name:         buildComponentTitle(listing.componentType, listing.details),
+      category:     getTickerCategoryLabel(type, details),
+      name:         buildComponentTitle(type, details),
       currentPrice: current,
       refPrice:     Math.round(avg),
       pct,
       dir,
-      href: 'pages/forum.html' + buildForumHash(listing.componentType, listing.details)
+      href: 'pages/forum.html' + buildForumHash(type, details)
     };
   });
 
@@ -788,7 +797,13 @@ function populateTicker() {
     return latestB - latestA;
   });
 
+  // Wire up controls and resize listener (idempotent)
+  initTickerControls();
+  initTickerResizeHandler();
+
   if (realCards.length === 0) {
+    viewport?.classList.add('ticker-no-data');
+    if (emptyEl) emptyEl.hidden = false;
     track.innerHTML = '';
     track.style.transform = '';
     tickerPosX = 0;
@@ -796,6 +811,8 @@ function populateTicker() {
     tickerSingleWidth = 0;
     return;
   }
+  viewport?.classList.remove('ticker-no-data');
+  if (emptyEl) emptyEl.hidden = true;
 
   const cards = realCards;
 
@@ -864,9 +881,6 @@ function populateTicker() {
     tsEl.textContent = `${h12}:${mm}:${ss} ${ampm}`;
   }
 
-  // Wire up controls (idempotent)
-  initTickerControls();
-  initTickerResizeHandler();
 }
 
 function renderListings(items) {
@@ -956,6 +970,7 @@ function refreshListings() {
   fetchApprovedListings().then(() => {
     listings = generateDummyListings();
     renderListings(listings);
+    populateTicker();
     loader.classList.remove('loading');
   });
 }
@@ -977,6 +992,7 @@ function loadMoreListings() {
   fetchApprovedListings().then(() => {
     listings = generateDummyListings(); // only returns real approved listings now
     filterListings();
+    populateTicker();
     btn.textContent = 'Load More Listings';
   });
 }
@@ -1015,6 +1031,7 @@ let modalUploadedFiles = [];
         fetchApprovedListings().then(() => {
           listings = generateDummyListings();
           if (document.getElementById('listings-feed')) renderListings(listings);
+          populateTicker();
         });
       }
     };
