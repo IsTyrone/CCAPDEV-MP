@@ -480,8 +480,11 @@ let listingDropdownData = null;
 let cachedApprovedListings = [];
 
 // Generate dummy data — uses components-dropdown.json when loaded, falls back to componentDefs
+// NOTE: Dummy generation is commented out. Only real server-approved listings are shown.
 function generateDummyListings() {
   const newListings = [];
+
+  /* --- DUMMY LISTING GENERATION (COMMENTED OUT) ---
   for (let i = 0; i < 15; i++) {
     const type = componentTypes[Math.floor(Math.random() * componentTypes.length)];
     const range = listingPriceRanges[type];
@@ -520,6 +523,7 @@ function generateDummyListings() {
       forumHash: forumHash
     });
   }
+  --- END DUMMY LISTING GENERATION --- */
 
   // --- MERGE WITH SERVER-FETCHED APPROVED LISTINGS ---
   cachedApprovedListings.forEach(l => {
@@ -564,6 +568,17 @@ function renderListings(items) {
   if (!feedContainer) return;
 
   feedContainer.innerHTML = '';
+
+  // Show empty state if no listings
+  if (!items || items.length === 0) {
+    feedContainer.innerHTML = `
+      <div style="text-align:center; padding:40px 20px; color:#888; grid-column: 1 / -1;">
+        <p style="font-size:1.1rem; margin-bottom:8px;">No listings available yet.</p>
+        <p style="font-size:0.9rem;">Be the first to add a listing!</p>
+      </div>
+    `;
+    return;
+  }
 
   items.forEach(item => {
     const fallback = item.fallbackImage || componentIconMap[item.type] || 'assets/images/component-images/graphic-card.png';
@@ -643,12 +658,21 @@ function loadMoreListings() {
   const btn = document.querySelector('.load-more-btn');
   btn.textContent = 'Loading...';
 
+  /* --- DUMMY "LOAD MORE" LOGIC (COMMENTED OUT) ---
   setTimeout(() => {
     const moreListings = generateDummyListings().slice(0, 5);
     listings = [...listings, ...moreListings];
     filterListings();
     btn.textContent = 'Load More Listings';
   }, 800);
+  --- END DUMMY LOAD MORE --- */
+
+  // Real behavior: re-fetch approved listings from server
+  fetchApprovedListings().then(() => {
+    listings = generateDummyListings(); // only returns real approved listings now
+    filterListings();
+    btn.textContent = 'Load More Listings';
+  });
 }
 
 
@@ -680,6 +704,8 @@ let modalUploadedFiles = [];
         listingDropdownData = xhr.response ?? JSON.parse(xhr.responseText);
         console.log('Listing modal: dropdown data loaded');
         // Re-generate the listings feed now that JSON data is available
+        // NOTE: No longer needed since dummy listings are commented out,
+        //       but kept to refresh approved listings on data load.
         fetchApprovedListings().then(() => {
           listings = generateDummyListings();
           if (document.getElementById('listings-feed')) renderListings(listings);
