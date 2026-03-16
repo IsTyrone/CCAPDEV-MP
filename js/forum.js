@@ -70,6 +70,7 @@ function renderSubmissions(subs) {
         <p>Be the first to submit a listing for this component!</p>
       </div>
     `;
+        renderPriceGraph(submissions);
         return;
     }
 
@@ -98,6 +99,9 @@ function renderSubmissions(subs) {
     `;
         feed.appendChild(card);
     });
+
+    // Re-render price graph with full chronological dataset (ignores sort order)
+    renderPriceGraph(submissions);
 }
 
 // --- Sort ---
@@ -326,6 +330,7 @@ async function loadApprovedSubmissions(componentType, segments) {
                     price: parseInt(l.price, 10) || 0,
                     images: Array.isArray(l.images) ? l.images : [],
                     comment: l.comments || '',
+                    date: l.date,
                     timeStr,
                     minsAgo,
                     isReal: true
@@ -436,6 +441,206 @@ function loadDropdownJSON() {
         xhr.send();
     });
 }
+
+// ============================================================
+// --- Price History Graph ---
+// ============================================================
+let priceChart = null;
+
+function renderPriceGraph(subs) {
+    const canvas = document.getElementById('priceChart');
+    const area = document.getElementById('price-graph-area');
+    const emptyMsg = document.getElementById('price-graph-empty');
+    const legendEl = document.getElementById('price-graph-legend');
+    if (!canvas || !area || !emptyMsg || !legendEl) return;
+
+    // Sort sold and bought points chronologically (oldest first)
+    const soldPts = subs
+        .filter(s => s.txnType === 'sold' && s.date)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    const boughtPts = subs
+        .filter(s => s.txnType === 'bought' && s.date)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // Destroy any existing chart instance before re-rendering
+    if (priceChart) {
+        priceChart.destroy();
+        priceChart = null;
+    }
+
+    // Not enough sold data — show empty state
+    if (soldPts.length < 2) {
+        area.style.display = 'none';
+        legendEl.style.display = 'none';
+        emptyMsg.style.display = 'block';
+        return;
+    }
+
+    area.style.display = 'block';
+    emptyMsg.style.display = 'none';
+
+    // Build legend
+    let legendHTML = `<span><em class="price-graph-legend-dot" style="background:#4f46e5"></em>Sold</span>`;
+    if (boughtPts.length >= 1) {
+        legendHTML += `<span><em class="price-graph-legend-dot" style="background:#94a3b8"></em>Bought</span>`;
+    }
+    legendEl.innerHTML = legendHTML;
+    legendEl.style.display = 'flex';
+
+    // Format a Date for the X-axis label (short)
+    function fmtLabel(d) {
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    // Format a Date for the tooltip (full)
+    function fmtTooltip(d) {
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    const soldLabels = soldPts.map(s => fmtLabel(new Date(s.date)));
+    const soldValues = soldPts.map(s => s.price);
+    const soldDates  = soldPts.map(s => fmtTooltip(new Date(s.date)));
+
+    const boughtLabels = boughtPts.map(s => fmtLabel(new Date(s.date)));
+    const boughtValues = boughtPts.map(s => s.price);
+    const boughtDates  = boughtPts.map(s => fmtTooltip(new Date(s.date)));
+
+    // Crosshair + tooltip elements
+    const crosshair = document.getElementById('price-graph-crosshair');
+    const tooltip   = document.getElementById('price-graph-tooltip');
+
+    // Custom Chart.js plugin for crosshair + tooltip on hover
+    const crosshairTooltipPlugin = {
+        id: 'crosshairTooltip',
+        afterEvent(chart, args) {
+            const { event, inChartArea } = args;
+
+            if (!inChartArea || event.type === 'mouseleave' || event.type === 'mouseout') {
+                crosshair.style.display = 'none';
+                tooltip.style.display   = 'none';
+                return;
+            }
+
+            const elements = chart.getElementsAtEventForMode(
+                event.native, 'index', { intersect: false }, true
+            );
+            if (!elements.length) {
+                crosshair.style.display = 'none';
+                tooltip.style.display   = 'none';
+                return;
+            }
+
+            const { x, y: chartY } = elements[0].element;
+            const { top, bottom } = chart.chartArea;
+            const canvasRect = chart.canvas.getBoundingClientRect();
+
+            // Position crosshair (absolute within .price-graph-area)
+            crosshair.style.left    = (x - chart.canvas.offsetLeft) + 'px';
+            crosshair.style.top     = (top - chart.canvas.offsetTop) + 'px';
+            crosshair.style.height  = (bottom - top) + 'px';
+            crosshair.style.display = 'block';
+
+            // Build tooltip content — show all datasets at this index
+            const idx = elements[0].index;
+            let lines = '';
+            chart.data.datasets.forEach((ds, di) => {
+                const val = ds.data[idx];
+                if (val === undefined || val === null) return;
+                const date = di === 0 ? soldDates[idx] : boughtDates[idx];
+                const dot  = `<em style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${ds.borderColor};margin-right:4px;vertical-align:middle"></em>`;
+                lines += `<div>${dot}<strong>₱${val.toLocaleString()}</strong></div>`;
+                if (date) lines += `<div style="color:#94a3b8;font-size:11px;margin-left:11px">${date}</div>`;
+            });
+            tooltip.innerHTML = lines;
+
+            // Position tooltip (fixed to viewport), flip if near right edge
+            const tipW = 148;
+            let tx = canvasRect.left + x + 12;
+            if (tx + tipW > window.innerWidth - 8) tx = canvasRect.left + x - tipW - 12;
+            tooltip.style.left    = tx + 'px';
+            tooltip.style.top     = (canvasRect.top + chartY - 16) + 'px';
+            tooltip.style.display = 'block';
+        }
+    };
+
+    // Build gradient fill for sold line
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.offsetHeight || 160);
+    gradient.addColorStop(0,   'rgba(79, 70, 229, 0.18)');
+    gradient.addColorStop(1,   'rgba(79, 70, 229, 0)');
+
+    const datasets = [
+        {
+            label: 'Sold',
+            data: soldValues,
+            borderColor: '#4f46e5',
+            backgroundColor: gradient,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: '#4f46e5',
+            borderWidth: 2
+        }
+    ];
+
+    if (boughtPts.length >= 1) {
+        datasets.push({
+            label: 'Bought',
+            data: boughtValues,
+            borderColor: '#94a3b8',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.35,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: '#94a3b8',
+            borderWidth: 1.5,
+            borderDash: [4, 4]
+        });
+    }
+
+    priceChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: soldLabels,
+            datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 300 },
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#64748b',
+                        font: { size: 10, family: "'Google Sans', Arial, sans-serif" },
+                        maxTicksLimit: 5,
+                        maxRotation: 0
+                    },
+                    grid: { color: '#e2e8f0', drawBorder: false }
+                },
+                y: {
+                    ticks: {
+                        color: '#64748b',
+                        font: { size: 10, family: "'Google Sans', Arial, sans-serif" },
+                        maxTicksLimit: 4,
+                        callback: v => '₱' + v.toLocaleString()
+                    },
+                    grid: { color: '#e2e8f0', drawBorder: false }
+                }
+            }
+        },
+        plugins: [crosshairTooltipPlugin]
+    });
+}
+// ============================================================
 
 // --- Bootstrap ---
 document.addEventListener('DOMContentLoaded', async () => {
