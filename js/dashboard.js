@@ -1,5 +1,19 @@
-// --- User Session ---
-const currentUser = localStorage.getItem('currentUser');
+// --- User Session (fetched from server) ---
+let currentUserData = null;
+
+// Fetch current user session from server
+async function fetchCurrentUser() {
+  try {
+    const res = await fetch('/api/auth/me');
+    const data = await res.json();
+    currentUserData = data.user || null;
+    return currentUserData;
+  } catch (err) {
+    console.error('Failed to fetch current user:', err);
+    currentUserData = null;
+    return null;
+  }
+}
 
 // --- Sidebar & Header Logic ---
 const userIconBtn = document.getElementById('userIconBtn');
@@ -10,12 +24,16 @@ const sidebarContent = document.getElementById('sidebarContent');
 
 /**
  * Handles the logout process.
- * Removes the current user from localStorage and reloads the page to reset the UI.
+ * Calls the server API to destroy the session, then reloads the page.
  */
-function handleLogout() {
-  localStorage.removeItem('currentUser');
+async function handleLogout() {
+  try {
+    await fetch('/api/auth/logout', { method: 'POST' });
+  } catch (err) {
+    console.error('Logout error:', err);
+  }
   alert('Logged out');
-  window.location.reload(); // Refresh to update UI
+  window.location.reload();
 }
 
 /**
@@ -35,15 +53,13 @@ function updateSidebarContent() {
 
   // Select the account label in the header
   const accountLabel = document.querySelector('.account-label');
-  // const userIcon = document.querySelector('.user-icon-btn'); // Optional
 
-  if (currentUser) {
+  if (currentUserData) {
     // User is Logged In
-    const userObj = JSON.parse(currentUser);
+    const userObj = currentUserData;
 
     // 1. Update Header Label
     if (accountLabel) {
-      // Use First Name
       accountLabel.textContent = userObj.firstName;
     }
 
@@ -111,8 +127,10 @@ if (userIconBtn && sidebar && overlay) {
   overlay.addEventListener('click', closeSidebarFunc);
 }
 
-// Call immediately to set state on page load
-updateSidebarContent();
+// Fetch user and update sidebar on load
+fetchCurrentUser().then(() => {
+  updateSidebarContent();
+});
 
 
 // --- Previously Visited Forums Logic ---
@@ -121,12 +139,19 @@ function renderRecentViews() {
   if (!recentList) return;
 
   const recentForums = JSON.parse(localStorage.getItem('recentForums') || '[]');
+  const decodeRecentText = (text) => {
+    try {
+      return decodeURIComponent(text);
+    } catch {
+      return text;
+    }
+  };
 
   if (recentForums.length > 0) {
     recentList.innerHTML = recentForums.map(item => `
-        <a href="pages/forum.html${item.hash}" class="recent-item" title="${item.title}">
+        <a href="pages/forum.html${item.hash}" class="recent-item" title="${decodeRecentText(item.title)}">
             <div class="recent-item-info">
-                <span class="recent-item-title">${item.title}</span>
+                <span class="recent-item-title">${decodeRecentText(item.title)}</span>
             </div>
         </a>
     `).join('');
@@ -458,9 +483,15 @@ function getBrandLogoUrl(brand) {
 // Populated by loadListingDropdownData() once components-dropdown.json is fetched
 let listingDropdownData = null;
 
+// Cached approved listings from server
+let cachedApprovedListings = [];
+
 // Generate dummy data — uses components-dropdown.json when loaded, falls back to componentDefs
+// NOTE: Dummy generation is commented out. Only real server-approved listings are shown.
 function generateDummyListings() {
   const newListings = [];
+
+  /* --- DUMMY LISTING GENERATION (COMMENTED OUT) ---
   for (let i = 0; i < 15; i++) {
     const type = componentTypes[Math.floor(Math.random() * componentTypes.length)];
     const range = listingPriceRanges[type];
@@ -499,36 +530,382 @@ function generateDummyListings() {
       forumHash: forumHash
     });
   }
+  --- END DUMMY LISTING GENERATION --- */
 
-  // --- MERGE WITH LOCALSTORAGE "APPROVED" LISTINGS ---
-  const storedListings = JSON.parse(localStorage.getItem('listings') || '[]');
-  const approvedListings = storedListings.filter(l => l.status === 'approved');
-
-  approvedListings.forEach(l => {
+  // --- MERGE WITH SERVER-FETCHED APPROVED LISTINGS ---
+  cachedApprovedListings.forEach(l => {
+    const details = l.details || {};
+    const type = l.componentType || 'gpu';
+    const brand = details['Brand'] || details['Type'] || 'Generic';
     newListings.unshift({
-      id: l.id,
-      type: l.componentType,
-      brand: l.details['Brand'] || l.details['Type'] || 'Generic',
-      title: buildComponentTitle(l.componentType, l.details),
+      id: l._id,
+      type: type,
+      brand: brand,
+      title: buildComponentTitle(type, details),
       price: `₱${l.price}`,
       time: 'Just now',
-      image: getBrandLogoUrl(l.details['Brand'] || l.details['Type'] || 'Generic'),
-      fallbackImage: componentIconMap[l.componentType] || 'assets/images/component-images/graphic-card.png',
-      forumHash: buildForumHash(l.componentType, l.details)
+      image: (l.images && l.images.length > 0) ? l.images[0] : getBrandLogoUrl(brand),
+      fallbackImage: componentIconMap[type] || 'assets/images/component-images/graphic-card.png',
+      forumHash: buildForumHash(type, details)
     });
   });
 
   return newListings;
 }
 
+// Fetch approved listings from server
+async function fetchApprovedListings() {
+  try {
+    const res = await fetch('/api/listings/approved');
+    const data = await res.json();
+    cachedApprovedListings = data.listings || [];
+  } catch (err) {
+    console.error('Failed to fetch approved listings:', err);
+    cachedApprovedListings = [];
+  }
+}
+
 // Initial Load
-listings = generateDummyListings();
+fetchApprovedListings().then(() => {
+  listings = generateDummyListings();
+  if (document.getElementById('listings-feed')) {
+    renderListings(listings);
+  }
+  populateTicker();
+});
+
+// =========================================
+// Live Ticker — rAF scroll, post-paint measurement
+// =========================================
+
+// posX grows positive; transform is translateX(-posX).
+// singleWidth is measured inside the first rAF after DOM insertion (post-paint),
+// guaranteeing a non-zero value before the loop boundary is ever evaluated.
+// Reset fires at exactly posX >= singleWidth — seamless because set B is
+// pixel-identical to set A.
+let tickerPosX          = 0;      // px scrolled (always >= 0)
+let tickerLastTs        = null;   // previous rAF timestamp
+let tickerAnimFrame     = null;   // rAF handle (null = loop not started)
+let tickerCurrentSpeed  = 80;     // px / s  (Normal default)
+let tickerIsPaused      = false;
+let tickerSingleWidth   = 0;      // offsetLeft of pivot card (set B[0])
+let tickerTrackEl       = null;
+let tickerControlsReady = false;
+let tickerSetCopies     = 2;      // number of duplicated card sets in the track
+let tickerResizeBound   = false;
+let tickerResizeTimer   = null;
+
+function getTickerCategoryLabel(type, details) {
+  const d = details || {};
+  switch (type) {
+    case 'gpu':         return 'GPU';
+    case 'cpu':         return 'CPU';
+    case 'ram':         return 'RAM';
+    case 'motherboard': return 'MOBO';
+    case 'psu':         return 'PSU';
+    case 'case':        return 'CASE';
+    case 'storage': {
+      const t = (d['Type'] || '').toLowerCase();
+      if (t.includes('nvme') || t.includes('m.2')) return 'NVMe';
+      if (t.includes('hdd'))                        return 'HDD';
+      return 'SSD';
+    }
+    case 'cooling': {
+      const t = (d['Type'] || '').toLowerCase();
+      if (t.includes('aio') || t.includes('liquid')) return 'AIO';
+      return 'COOLER';
+    }
+    default: return type.toUpperCase();
+  }
+}
+
+function formatTickerDelta(pct, dir) {
+  const abs = Math.abs(pct).toFixed(1);
+  if (dir === 'up')   return `↑ ${abs}%`;
+  if (dir === 'down') return `↓ ${abs}%`;
+  return `— ${abs}%`;
+}
+
+// ---- DOM helpers ----
+
+/** Mutates an existing ticker-card element in-place. No DOM nodes created. */
+function updateTickerCardEl(el, c) {
+  el.className = `ticker-card ticker-${c.dir}`;
+  el.dataset.href = c.href;
+  el.querySelector('.ticker-card-category').textContent  = c.category;
+  el.querySelector('.ticker-card-name').textContent      = c.name;
+  el.querySelector('.ticker-current-price').textContent  = `₱${Math.round(c.currentPrice).toLocaleString()}`;
+  el.querySelector('.ticker-retail-price').textContent   = `₱${Math.round(c.refPrice).toLocaleString()}`;
+  const delta = el.querySelector('.ticker-card-delta');
+  delta.textContent = formatTickerDelta(c.pct, c.dir);
+  delta.className   = `ticker-card-delta delta-${c.dir}`;
+}
+
+/** Creates a new ticker-card element from card data. */
+function createTickerCardEl(c) {
+  const div = document.createElement('div');
+  div.innerHTML =
+    `<div class="ticker-card-category"></div>` +
+    `<div class="ticker-card-name"></div>` +
+    `<div class="ticker-card-prices">` +
+      `<span class="ticker-current-price"></span>` +
+      `<span class="ticker-retail-price"></span>` +
+    `</div>` +
+    `<div class="ticker-card-delta"></div>`;
+  updateTickerCardEl(div, c);
+  return div;
+}
+
+// ---- rAF helpers ----
+
+/**
+ * Reads the offsetLeft of the first card in set B (the pivot).
+ * This equals: sum(set-A card widths) + gap × n — the exact reset boundary.
+ * offsetLeft forces a synchronous style-recalc+layout, so it's always accurate
+ * when called after the DOM has been appended (including inside rAF callbacks).
+ */
+function remeasureSingleWidth(n) {
+  const pivot = tickerTrackEl?.children[n];
+  tickerSingleWidth = pivot ? pivot.offsetLeft : 0;
+}
+
+function getRequiredTickerSetCopies(singleWidth) {
+  const viewportWidth = tickerTrackEl?.parentElement?.clientWidth || 0;
+  if (singleWidth <= 0 || viewportWidth <= 0) return 2;
+  // Need enough total width so [pos, pos + viewport] never reaches the track end
+  // while pos is in one full-cycle range [0, singleWidth).
+  return Math.max(2, Math.ceil(viewportWidth / singleWidth) + 1);
+}
+
+function renderTickerTrackSets(track, cards, setCopies) {
+  const frag = document.createDocumentFragment();
+  for (let set = 0; set < setCopies; set++) {
+    cards.forEach(c => frag.appendChild(createTickerCardEl(c)));
+  }
+  track.appendChild(frag);
+}
+
+function updateTickerTrackSets(track, cards, setCopies) {
+  const n = cards.length;
+  for (let set = 0; set < setCopies; set++) {
+    const baseIdx = set * n;
+    for (let i = 0; i < n; i++) {
+      updateTickerCardEl(track.children[baseIdx + i], cards[i]);
+    }
+  }
+}
+
+function tickerAnimate(ts) {
+  if (!tickerIsPaused) {
+    if (tickerLastTs !== null) {
+      const dt = ts - tickerLastTs;
+      tickerPosX += (tickerCurrentSpeed * dt) / 1000;
+      // Exact reset — set B is pixel-identical to set A, so the boundary is seamless
+      if (tickerSingleWidth > 0 && tickerPosX >= tickerSingleWidth) {
+        tickerPosX -= tickerSingleWidth;
+      }
+      if (tickerTrackEl) tickerTrackEl.style.transform = `translateX(-${tickerPosX}px)`;
+    }
+    tickerLastTs = ts;
+  }
+  tickerAnimFrame = requestAnimationFrame(tickerAnimate);
+}
+
+function startTickerLoop() {
+  if (tickerAnimFrame) return; // already running
+  tickerAnimFrame = requestAnimationFrame(tickerAnimate);
+}
+
+// ---- Controls ----
+
+function initTickerControls() {
+  if (tickerControlsReady) return;
+  tickerControlsReady = true;
+
+  document.querySelectorAll('.ticker-speed-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      tickerCurrentSpeed = Number(btn.dataset.speed);
+      tickerLastTs = null; // prevent dt spike on next frame after speed change
+      document.querySelectorAll('.ticker-speed-btn').forEach(b => b.classList.remove('ticker-speed-active'));
+      btn.classList.add('ticker-speed-active');
+    });
+  });
+
+  const pauseBtn = document.getElementById('ticker-pause-btn');
+  if (pauseBtn) {
+    pauseBtn.addEventListener('click', () => {
+      tickerIsPaused = !tickerIsPaused;
+      tickerLastTs = null; // prevent dt spike on resume
+      pauseBtn.textContent = tickerIsPaused ? '▶ Resume' : '⏸ Pause';
+    });
+  }
+}
+
+function initTickerResizeHandler() {
+  if (tickerResizeBound) return;
+  tickerResizeBound = true;
+
+  window.addEventListener('resize', () => {
+    if (!tickerTrackEl) return;
+    clearTimeout(tickerResizeTimer);
+    tickerResizeTimer = setTimeout(() => {
+      tickerLastTs = null;
+      populateTicker();
+    }, 120);
+  });
+}
+
+// ---- Main populate function ----
+
+function populateTicker() {
+  const track = document.querySelector('.ticker-track');
+  if (!track) return;
+  const viewport = track.parentElement;
+  const emptyEl = viewport?.querySelector('.ticker-empty');
+
+  tickerTrackEl = track;
+
+  // Group approved listings by unique component (same forum hash = same model)
+  const groups = {};
+  cachedApprovedListings.forEach(l => {
+    const type = l.componentType || 'gpu';
+    const details = l.details || {};
+    const hash = buildForumHash(type, details);
+    if (!groups[hash]) groups[hash] = { listing: l, prices: [] };
+    groups[hash].prices.push({ price: Number(l.price), date: new Date(l.date) });
+  });
+
+  // Build one card data object per unique component
+  let realCards = Object.values(groups).map(({ listing, prices }) => {
+    const type = listing.componentType || 'gpu';
+    const details = listing.details || {};
+    prices.sort((a, b) => b.date - a.date);
+    const current = prices[0].price;
+    const avg = prices.reduce((sum, p) => sum + p.price, 0) / prices.length;
+    const pct = prices.length > 1 ? ((current - avg) / avg) * 100 : 0;
+    const dir = pct > 1 ? 'up' : pct < -1 ? 'down' : 'neutral';
+    return {
+      category:     getTickerCategoryLabel(type, details),
+      name:         buildComponentTitle(type, details),
+      currentPrice: current,
+      refPrice:     Math.round(avg),
+      pct,
+      dir,
+      href: 'pages/forum.html' + buildForumHash(type, details)
+    };
+  });
+
+  // Sort newest-listed first
+  realCards.sort((a, b) => {
+    const hashA = a.href.replace('pages/forum.html', '');
+    const hashB = b.href.replace('pages/forum.html', '');
+    const latestA = groups[hashA] ? Math.max(...groups[hashA].prices.map(p => +p.date)) : 0;
+    const latestB = groups[hashB] ? Math.max(...groups[hashB].prices.map(p => +p.date)) : 0;
+    return latestB - latestA;
+  });
+
+  // Wire up controls and resize listener (idempotent)
+  initTickerControls();
+  initTickerResizeHandler();
+
+  if (realCards.length === 0) {
+    viewport?.classList.add('ticker-no-data');
+    if (emptyEl) emptyEl.hidden = false;
+    track.innerHTML = '';
+    track.style.transform = '';
+    tickerPosX = 0;
+    tickerLastTs = null;
+    tickerSingleWidth = 0;
+    return;
+  }
+  viewport?.classList.remove('ticker-no-data');
+  if (emptyEl) emptyEl.hidden = true;
+
+  const cards = realCards;
+
+  const n = cards.length;
+
+  if (track.children.length === n * tickerSetCopies) {
+    // ---- Update path: mutate existing DOM nodes only ----
+    updateTickerTrackSets(track, cards, tickerSetCopies);
+    // offsetLeft forces synchronous layout — singleWidth reflects new text widths immediately
+    remeasureSingleWidth(n);
+
+    const requiredCopies = getRequiredTickerSetCopies(tickerSingleWidth);
+    if (requiredCopies !== tickerSetCopies) {
+      tickerSetCopies = requiredCopies;
+      track.innerHTML = '';
+      renderTickerTrackSets(track, cards, tickerSetCopies);
+      remeasureSingleWidth(n);
+    }
+
+    if (tickerSingleWidth > 0) {
+      tickerPosX %= tickerSingleWidth;
+      track.style.transform = `translateX(-${tickerPosX}px)`;
+    }
+  } else {
+    // ---- Build path: initial render or card count changed ----
+    track.style.opacity    = '0';
+    track.style.transition = 'none';
+    track.style.transform  = '';
+    track.innerHTML        = '';
+
+    tickerPosX   = 0;
+    tickerLastTs = null;
+
+    tickerSetCopies = 2;
+    renderTickerTrackSets(track, cards, tickerSetCopies);
+
+    // Measure singleWidth inside the first rAF — browser has painted by this point,
+    // so offsetLeft returns the true post-layout value (never 0).
+    requestAnimationFrame(() => {
+      remeasureSingleWidth(n);
+      const requiredCopies = getRequiredTickerSetCopies(tickerSingleWidth);
+      if (requiredCopies !== tickerSetCopies) {
+        tickerSetCopies = requiredCopies;
+        track.innerHTML = '';
+        renderTickerTrackSets(track, cards, tickerSetCopies);
+        remeasureSingleWidth(n);
+      }
+      startTickerLoop(); // start loop only after singleWidth is valid
+
+      requestAnimationFrame(() => {
+        track.style.transition = 'opacity 0.4s ease';
+        track.style.opacity    = '1';
+      });
+    });
+  }
+
+  // Update timestamp (12-hour AM/PM)
+  const tsEl = document.getElementById('ticker-ts');
+  if (tsEl) {
+    const now  = new Date();
+    const h24  = now.getHours();
+    const h12  = (h24 % 12 || 12).toString();
+    const mm   = now.getMinutes().toString().padStart(2, '0');
+    const ss   = now.getSeconds().toString().padStart(2, '0');
+    const ampm = h24 < 12 ? 'AM' : 'PM';
+    tsEl.textContent = `${h12}:${mm}:${ss} ${ampm}`;
+  }
+
+}
 
 function renderListings(items) {
   const feedContainer = document.getElementById('listings-feed');
   if (!feedContainer) return;
 
   feedContainer.innerHTML = '';
+
+  // Show empty state if no listings
+  if (!items || items.length === 0) {
+    feedContainer.innerHTML = `
+      <div style="text-align:center; padding:40px 20px; color:#888; grid-column: 1 / -1;">
+        <p style="font-size:1.1rem; margin-bottom:8px;">No listings available yet.</p>
+        <p style="font-size:0.9rem;">Be the first to add a listing!</p>
+      </div>
+    `;
+    return;
+  }
 
   items.forEach(item => {
     const fallback = item.fallbackImage || componentIconMap[item.type] || 'assets/images/component-images/graphic-card.png';
@@ -558,13 +935,6 @@ function renderListings(items) {
     feedContainer.appendChild(card);
   });
 }
-
-// Render on load
-document.addEventListener('DOMContentLoaded', () => {
-  if (document.getElementById('listings-feed')) {
-    renderListings(listings);
-  }
-});
 
 function sortListings() {
   const sortValue = document.getElementById('listing-sort').value;
@@ -604,23 +974,34 @@ function refreshListings() {
   const loader = document.querySelector('.loader');
   loader.classList.add('loading');
 
-  setTimeout(() => {
+  fetchApprovedListings().then(() => {
     listings = generateDummyListings();
     renderListings(listings);
+    populateTicker();
     loader.classList.remove('loading');
-  }, 800);
+  });
 }
 
 function loadMoreListings() {
   const btn = document.querySelector('.load-more-btn');
   btn.textContent = 'Loading...';
 
+  /* --- DUMMY "LOAD MORE" LOGIC (COMMENTED OUT) ---
   setTimeout(() => {
     const moreListings = generateDummyListings().slice(0, 5);
     listings = [...listings, ...moreListings];
     filterListings();
     btn.textContent = 'Load More Listings';
   }, 800);
+  --- END DUMMY LOAD MORE --- */
+
+  // Real behavior: re-fetch approved listings from server
+  fetchApprovedListings().then(() => {
+    listings = generateDummyListings(); // only returns real approved listings now
+    filterListings();
+    populateTicker();
+    btn.textContent = 'Load More Listings';
+  });
 }
 
 
@@ -652,8 +1033,13 @@ let modalUploadedFiles = [];
         listingDropdownData = xhr.response ?? JSON.parse(xhr.responseText);
         console.log('Listing modal: dropdown data loaded');
         // Re-generate the listings feed now that JSON data is available
-        listings = generateDummyListings();
-        if (document.getElementById('listings-feed')) renderListings(listings);
+        // NOTE: No longer needed since dummy listings are commented out,
+        //       but kept to refresh approved listings on data load.
+        fetchApprovedListings().then(() => {
+          listings = generateDummyListings();
+          if (document.getElementById('listings-feed')) renderListings(listings);
+          populateTicker();
+        });
       }
     };
     xhr.onerror = () => console.error('Listing modal: failed to load dropdown data');
@@ -708,8 +1094,7 @@ let modalUploadedFiles = [];
 
     // --- Open / Close ---
     function openListingModal() {
-      const currentUser = localStorage.getItem('currentUser');
-      if (!currentUser) {
+      if (!currentUserData) {
         openAuthModal();
         return;
       }
@@ -727,7 +1112,6 @@ let modalUploadedFiles = [];
       const overlay = document.getElementById('authModalOverlay');
       if (overlay) {
         overlay.classList.add('open');
-        // document.body.style.overflow = 'hidden'; // Optional: lock scroll
       }
     }
 
@@ -735,7 +1119,6 @@ let modalUploadedFiles = [];
       const overlay = document.getElementById('authModalOverlay');
       if (overlay) {
         overlay.classList.remove('open');
-        // document.body.style.overflow = '';
       }
     }
 
@@ -789,7 +1172,72 @@ let modalUploadedFiles = [];
       submitBtn.style.display = step === 3 ? 'inline-block' : 'none';
     }
 
+    function getMissingListingFields() {
+      const missing = [];
+      const dropdownContainer = document.getElementById('listing-dropdowns');
+
+      if (!modalSelectedType) {
+        missing.push('Component Type');
+      }
+
+      if (dropdownContainer) {
+        dropdownContainer.querySelectorAll('.listing-form-group').forEach(group => {
+          const sel = group.querySelector('select');
+          const label = group.querySelector('label')?.textContent?.trim() || 'Component detail';
+          const isOptional = /\(optional\)/i.test(label);
+          if (!sel || isOptional) return;
+
+          if (sel.disabled || !sel.value) {
+            missing.push(label);
+          }
+        });
+      }
+
+      const txnType = document.getElementById('listing-txn-type');
+      if (!txnType?.value) {
+        missing.push('Transaction Type');
+      }
+
+      const price = document.getElementById('listing-price');
+      const priceValue = Number(price?.value);
+      if (!price?.value || !Number.isFinite(priceValue) || priceValue <= 0) {
+        missing.push('Price');
+      }
+
+      return [...new Set(missing)];
+    }
+
+    function showMissingFieldsPopup(missingFields) {
+      if (!missingFields.length) return;
+      alert(`Please provide: ${missingFields.join(', ')}.`);
+    }
+
+    function getMissingStage3Fields() {
+      const missing = [];
+      const minCommentLength = 10;
+      const comments = document.getElementById('listing-comments');
+      const commentText = comments?.value?.trim() || '';
+
+      if (modalUploadedFiles.length === 0) {
+        missing.push('at least one image');
+      }
+
+      if (commentText.length < minCommentLength) {
+        missing.push(`brief details/comments (at least ${minCommentLength} characters)`);
+      }
+
+      return missing;
+    }
+
     function modalGoNext() {
+      if (modalCurrentStep === 2) {
+        const missing = getMissingListingFields();
+        if (missing.length) {
+          showMissingFieldsPopup(missing);
+          return;
+        }
+      }
+
       if (modalCurrentStep < 3) goToStep(modalCurrentStep + 1);
     }
 
@@ -841,26 +1289,17 @@ let modalUploadedFiles = [];
     // --- Per-component init functions (mirrors dropdown-manager.js) ---
 
     function initListingRAM(container, d) {
-      // Brand (independent)
       const brand = lCreateGroup('Brand', 'listing-ram-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
-      // Generation (independent)
       const gen = lCreateGroup('Generation', 'listing-ram-gen');
       lPopulate(gen.select, d.generation, 'Select Generation...');
       container.appendChild(gen.group);
-
-      // Speed (cascading: depends on Generation)
       const speed = lCreateGroup('Speed', 'listing-ram-speed', true);
       container.appendChild(speed.group);
-
-      // Capacity (independent)
       const cap = lCreateGroup('Capacity', 'listing-ram-cap');
       lPopulate(cap.select, d.capacity, 'Select Capacity...');
       container.appendChild(cap.group);
-
-      // Cascade: Generation → Speed
       gen.select.addEventListener('change', () => {
         const val = gen.select.value;
         if (val && d.speed[val]) {
@@ -875,14 +1314,10 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-gpu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const series = lCreateGroup('Series', 'listing-gpu-series', true);
       container.appendChild(series.group);
-
       const model = lCreateGroup('Model', 'listing-gpu-model', true);
       container.appendChild(model.group);
-
-      // Brand → Series
       brand.select.addEventListener('change', () => {
         lResetDropdown(model.select);
         const val = brand.select.value;
@@ -892,8 +1327,6 @@ let modalUploadedFiles = [];
           lResetDropdown(series.select);
         }
       });
-
-      // Series → Model
       series.select.addEventListener('change', () => {
         const val = series.select.value;
         if (val && d.models[val]) {
@@ -908,17 +1341,12 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-cpu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const tier = lCreateGroup('Performance Tier', 'listing-cpu-tier', true);
       container.appendChild(tier.group);
-
       const gen = lCreateGroup('Generation', 'listing-cpu-gen', true);
       container.appendChild(gen.group);
-
       const model = lCreateGroup('Specific Model', 'listing-cpu-model', true);
       container.appendChild(model.group);
-
-      // Brand → Tier
       brand.select.addEventListener('change', () => {
         lResetDropdown(gen.select);
         lResetDropdown(model.select);
@@ -929,20 +1357,16 @@ let modalUploadedFiles = [];
           lResetDropdown(tier.select);
         }
       });
-
-      // Tier → Generation  (key = base name before parenthetical, e.g. "Core i5")
       tier.select.addEventListener('change', () => {
         lResetDropdown(model.select);
         const tierVal = tier.select.value;
-        const base = tierVal.replace(/\s*\(.*\)/, '');  // "Core i5 (Mainstream)" → "Core i5"
+        const base = tierVal.replace(/\s*\(.*\)/, '');
         if (base && d.generation[base]) {
           lPopulate(gen.select, d.generation[base], 'Select Generation...');
         } else {
           lResetDropdown(gen.select);
         }
       });
-
-      // Generation → Model  (key = "baseTier-generation", e.g. "Core i5-12th Gen")
       gen.select.addEventListener('change', () => {
         const tierVal = tier.select.value;
         const base = tierVal.replace(/\s*\(.*\)/, '');
@@ -960,18 +1384,14 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-mobo-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const socket = lCreateGroup('Socket Type', 'listing-mobo-socket');
       lPopulate(socket.select, d.socket_type, 'Select Socket...');
       container.appendChild(socket.group);
-
       const chipset = lCreateGroup('Chipset', 'listing-mobo-chipset', true);
       container.appendChild(chipset.group);
-
       const ff = lCreateGroup('Form Factor', 'listing-mobo-ff');
       lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
       container.appendChild(ff.group);
-
       socket.select.addEventListener('change', () => {
         const val = socket.select.value;
         if (val && d.chipset[val]) {
@@ -986,18 +1406,14 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-stor-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const type = lCreateGroup('Type', 'listing-stor-type');
       lPopulate(type.select, d.type, 'Select Type...');
       container.appendChild(type.group);
-
       const iface = lCreateGroup('Interface', 'listing-stor-iface', true);
       container.appendChild(iface.group);
-
       const cap = lCreateGroup('Capacity', 'listing-stor-cap');
       lPopulate(cap.select, d.capacity, 'Select Capacity...');
       container.appendChild(cap.group);
-
       type.select.addEventListener('change', () => {
         const val = type.select.value;
         if (val && d.interface[val]) {
@@ -1012,15 +1428,12 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-psu-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const watt = lCreateGroup('Wattage', 'listing-psu-watt');
       lPopulate(watt.select, d.wattage, 'Select Wattage...');
       container.appendChild(watt.group);
-
       const eff = lCreateGroup('Efficiency Rating', 'listing-psu-eff');
       lPopulate(eff.select, d.efficiency_rating, 'Select Efficiency...');
       container.appendChild(eff.group);
-
       const mod = lCreateGroup('Modularity', 'listing-psu-mod');
       lPopulate(mod.select, d.modularity, 'Select Modularity...');
       container.appendChild(mod.group);
@@ -1030,11 +1443,9 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand (Optional)', 'listing-case-brand');
       lPopulate(brand.select, d.brand, 'All Brands (Optional)');
       container.appendChild(brand.group);
-
       const ff = lCreateGroup('Form Factor', 'listing-case-ff');
       lPopulate(ff.select, d.form_factor, 'Select Form Factor...');
       container.appendChild(ff.group);
-
       const panel = lCreateGroup('Side Panel', 'listing-case-panel');
       lPopulate(panel.select, d.side_panel, 'Select Side Panel...');
       container.appendChild(panel.group);
@@ -1044,11 +1455,9 @@ let modalUploadedFiles = [];
       const brand = lCreateGroup('Brand', 'listing-cool-brand');
       lPopulate(brand.select, d.brand, 'Select Brand...');
       container.appendChild(brand.group);
-
       const type = lCreateGroup('Type', 'listing-cool-type');
       lPopulate(type.select, d.type, 'Select Type...');
       container.appendChild(type.group);
-
       const compat = lCreateGroup('Socket Compatibility', 'listing-cool-socket');
       lPopulate(compat.select, d.socket_compatibility, 'Select Compatibility...');
       container.appendChild(compat.group);
@@ -1056,28 +1465,26 @@ let modalUploadedFiles = [];
 
     // --- Step 3: Image Upload ---
     (function initImageUpload() {
-      document.addEventListener('DOMContentLoaded', () => {
-        const zone = document.getElementById('imageUploadZone');
-        const input = document.getElementById('listing-images');
-        if (!zone || !input) return;
+      const zone = document.getElementById('imageUploadZone');
+      const input = document.getElementById('listing-images');
+      if (!zone || !input) return;
 
-        // Drag events
-        zone.addEventListener('dragover', (e) => {
-          e.preventDefault();
-          zone.classList.add('drag-over');
-        });
-        zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
-        zone.addEventListener('drop', (e) => {
-          e.preventDefault();
-          zone.classList.remove('drag-over');
-          handleImageFiles(e.dataTransfer.files);
-        });
+      // Drag events
+      zone.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        zone.classList.add('drag-over');
+      });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        handleImageFiles(e.dataTransfer.files);
+      });
 
-        // File input change
-        input.addEventListener('change', () => {
-          handleImageFiles(input.files);
-          input.value = ''; // Reset so same file can be re-selected
-        });
+      // File input change
+      input.addEventListener('change', () => {
+        handleImageFiles(input.files);
+        input.value = ''; // Reset so same file can be re-selected
       });
     })();
 
@@ -1122,14 +1529,38 @@ let modalUploadedFiles = [];
     }
 
     // --- Submit Listing ---
-    function submitListing() {
+    async function submitListing() {
+      // Ensure all required component and transaction details are filled.
+      const missing = getMissingListingFields();
+      if (missing.length) {
+        showMissingFieldsPopup(missing);
+        return;
+      }
+
+      // Stage 3 requirements: at least one image + brief details/comments.
+      const missingStage3 = getMissingStage3Fields();
+      if (missingStage3.length) {
+        showMissingFieldsPopup(missingStage3);
+        return;
+      }
+
+      // Convert all images to base64 Data URLs
+      const base64Images = await Promise.all(modalUploadedFiles.map(file => {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = e => resolve(e.target.result);
+          reader.onerror = e => reject(e);
+          reader.readAsDataURL(file);
+        });
+      }));
+
       // Gather all form data
       const formData = {
         componentType: modalSelectedType,
         details: {},
         transactionType: document.getElementById('listing-txn-type')?.value || '',
         price: document.getElementById('listing-price')?.value || '',
-        images: modalUploadedFiles.map(f => f.name),
+        images: base64Images,
         comments: document.getElementById('listing-comments')?.value || ''
       };
 
@@ -1142,31 +1573,36 @@ let modalUploadedFiles = [];
         });
       }
 
-      // Add metadata
-      const currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
-      const userName = currentUser.firstName ? `${currentUser.firstName} ${currentUser.lastName || ''}`.trim() : 'Guest';
+      // Add metadata from session
+      const userName = currentUserData ? `${currentUserData.firstName} ${currentUserData.lastName || ''}`.trim() : 'Guest';
 
-      formData.id = Date.now();
-      formData.status = 'pending';
       formData.user = userName;
-      formData.ownerEmail = currentUser.email || '';
-      formData.date = new Date().toISOString();
+      formData.ownerEmail = currentUserData ? currentUserData.email : '';
 
-      // Save to localStorage
-      const existingListings = JSON.parse(localStorage.getItem('listings') || '[]');
-      existingListings.push(formData);
-      localStorage.setItem('listings', JSON.stringify(existingListings));
+      try {
+        const res = await fetch('/api/listings', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData)
+        });
 
-      console.log('📋 New Listing Submitted (Pending Approval):', formData);
+        const data = await res.json();
 
-      // Close modal & show toast
-      closeListingModal();
-      showListingToast('✅ Listing submitted successfully!');
+        if (res.ok) {
+          console.log('📋 New Listing Submitted (Pending Approval):', data.listing);
+          closeListingModal();
+          showListingToast('✅ Listing submitted successfully!');
+        } else {
+          alert(data.error || 'Failed to submit listing.');
+        }
+      } catch (err) {
+        console.error('Submit listing error:', err);
+        alert('An error occurred while submitting the listing.');
+      }
     }
 
     // --- Toast ---
     function showListingToast(message) {
-      // Create toast if it doesn't exist
       let toast = document.querySelector('.listing-toast');
       if (!toast) {
         toast = document.createElement('div');
@@ -1175,7 +1611,6 @@ let modalUploadedFiles = [];
       }
 
       toast.textContent = message;
-      // Trigger reflow for animation restart
       toast.classList.remove('show');
       void toast.offsetWidth;
       toast.classList.add('show');
@@ -1189,14 +1624,11 @@ let modalUploadedFiles = [];
       modalSelectedType = null;
       modalUploadedFiles = [];
 
-      // Reset tile selection
       document.querySelectorAll('.type-tile').forEach(tile => tile.classList.remove('selected'));
 
-      // Clear dynamic dropdowns
       const ddContainer = document.getElementById('listing-dropdowns');
       if (ddContainer) ddContainer.innerHTML = '';
 
-      // Reset fixed form fields
       const txnType = document.getElementById('listing-txn-type');
       if (txnType) txnType.selectedIndex = 0;
 
@@ -1206,11 +1638,9 @@ let modalUploadedFiles = [];
       const comments = document.getElementById('listing-comments');
       if (comments) comments.value = '';
 
-      // Clear image previews
       const previewRow = document.getElementById('imagePreviewRow');
       if (previewRow) previewRow.innerHTML = '';
 
-      // Reset step UI
       goToStep(1);
     }
 
@@ -1241,26 +1671,15 @@ function setupComponentTabs() {
 
   navItems.forEach(item => {
     item.addEventListener('click', (e) => {
-      // Prevent any default link behavior if applicable
       e.preventDefault();
-
-      // 1. Remove active class from all nav items
       navItems.forEach(nav => nav.classList.remove('active'));
-
-      // 2. Add active class to clicked item
       item.classList.add('active');
-
-      // 3. Get target component
       const target = item.getAttribute('data-target');
       if (!target) {
         console.warn('Nav item has no data-target:', item);
         return;
       }
-
-      // 4. Hide all component cards
       componentCards.forEach(card => card.classList.remove('active'));
-
-      // 5. Show target component card
       const targetCard = document.querySelector(`.component-card[data-component="${target}"]`);
       if (targetCard) {
         targetCard.classList.add('active');
@@ -1284,6 +1703,10 @@ if (document.readyState === 'loading') {
 // Hero Carousel Logic (Seamless Loop)
 // =========================================
 document.addEventListener('DOMContentLoaded', () => {
+  // Ticker controls are wired up here as a safety net in case populateTicker
+  // hasn't run yet when the user interacts with the buttons.
+  initTickerControls();
+
   const track = document.querySelector('.carousel-track');
   if (!track) return;
 

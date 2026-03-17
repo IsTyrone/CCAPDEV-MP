@@ -1,7 +1,11 @@
 /**
- * DropdownManager — loads components-dropdown.json and wires up every
+ * DropdownManager — reads component data from the globally pre-loaded
+ * COMPONENTS_DATA variable (data/components-data.js) and wires up every
  * dropdown in the component-cards section, including cascading
  * parent→child relationships (GPU brand→series→model, CPU brand→tier→gen→model, etc.)
+ *
+ * Using a pre-loaded JS variable instead of fetch/XHR avoids CORS restrictions
+ * when the page is opened directly from the file system (file:// protocol).
  */
 class DropdownManager {
     constructor() {
@@ -66,59 +70,16 @@ class DropdownManager {
         });
     }
 
-    /* ─── data loading helpers ─────────────────────────────────── */
-
-    /**
-     * Resolve the JSON path relative to the HTML page.
-     * Works whether the page is at the root or in a subdirectory.
-     */
-    _jsonPath() {
-        // Determine base path from the current script tag location
-        const scripts = document.querySelectorAll('script[src*="dropdown-manager"]');
-        if (scripts.length) {
-            const src = scripts[0].getAttribute('src');          // e.g. "js/dropdown-manager.js" or "../js/dropdown-manager.js"
-            const base = src.substring(0, src.lastIndexOf('/'));  // "js" or "../js"
-            // Go one level up from the js/ folder to reach the project root
-            return base.replace(/\/?js\/?$/, '') + (base.includes('/') ? '/' : '') + 'data/components-dropdown.json';
-        }
-        return 'data/components-dropdown.json';
-    }
-
-    /**
-     * Load JSON using XMLHttpRequest (works with file:// protocol).
-     */
-    _loadViaXHR(url) {
-        return new Promise((resolve, reject) => {
-            const xhr = new XMLHttpRequest();
-            xhr.open('GET', url, true);
-            xhr.responseType = 'json';
-            xhr.onload = () => {
-                if (xhr.status === 200 || xhr.status === 0) {   // status 0 is normal for file://
-                    resolve(xhr.response ?? JSON.parse(xhr.responseText));
-                } else {
-                    reject(new Error(`XHR failed: HTTP ${xhr.status}`));
-                }
-            };
-            xhr.onerror = () => reject(new Error('XHR network error'));
-            xhr.send();
-        });
-    }
-
     /* ─── main entry ────────────────────────────────────────────── */
 
-    async initialize() {
-        const jsonUrl = this._jsonPath();
-
+    initialize() {
         try {
-            // Try fetch first (works on http:// / https://)
-            if (window.location.protocol !== 'file:' && typeof fetch === 'function') {
-                const res = await fetch(jsonUrl);
-                if (!res.ok) throw new Error(`HTTP ${res.status}`);
-                this.data = await res.json();
-            } else {
-                // Fallback for file:// protocol — use XMLHttpRequest
-                this.data = await this._loadViaXHR(jsonUrl);
+            // Data is pre-loaded via data/components-data.js as a global variable.
+            // This avoids fetch/XHR CORS restrictions when opening via file:// protocol.
+            if (typeof COMPONENTS_DATA === 'undefined') {
+                throw new Error('COMPONENTS_DATA is not defined. Make sure data/components-data.js is loaded before this script.');
             }
+            this.data = COMPONENTS_DATA;
 
             this.initRAM();
             this.initGPU();

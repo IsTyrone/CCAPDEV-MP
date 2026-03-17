@@ -34,8 +34,16 @@ function slugify(str) {
     return str.replace(/\s+/g, '-');
 }
 
+function safeDecodeURIComponent(value) {
+    try {
+        return decodeURIComponent(value);
+    } catch {
+        return value;
+    }
+}
+
 function deslugify(str) {
-    return str.replace(/-/g, ' ');
+    return safeDecodeURIComponent(str).replace(/-/g, ' ');
 }
 
 // --- Parse hash ---
@@ -55,82 +63,6 @@ let dropdownData = null;
 let submissions = [];
 let currentSort = 'recent';
 
-// --- Random data helpers for dummy submissions ---
-const dummyUsers = [
-    'techguy_ph', 'build_master', 'pcmart_deals', 'silicon_sam',
-    'overclocked99', 'budgetpc_mnl', 'rig_builder', 'component_hunter',
-    'upgrade_king', 'bargain_chip', 'gpu_flipper', 'ram_dealer'
-];
-
-const dummyComments = [
-    'Barely used, like new condition. No issues at all.',
-    'Upgraded to a newer model. This one still runs great.',
-    'Bought last year, selling because I switched platforms.',
-    'Brand new sealed in box, receipt available.',
-    'Used for about 6 months. Still under warranty until 2026.',
-    'Great condition, never overclocked. Comes with original box.',
-    'Price is firm. Meet-up in Makati or GH.',
-    'Selling to fund a new build. Works perfectly.',
-    'RFS: Upgraded. No defects. Can test before buying.',
-    'Price is slightly negotiable for serious buyers.'
-];
-
-function randomFrom(arr) {
-    return arr[Math.floor(Math.random() * arr.length)];
-}
-
-function randomPrice(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// Component price ranges (in PHP pesos)
-const priceRanges = {
-    ram: [1500, 8000],
-    gpu: [8000, 95000],
-    cpu: [3000, 40000],
-    motherboard: [3000, 25000],
-    storage: [1000, 12000],
-    psu: [2000, 12000],
-    case: [2000, 15000],
-    cooling: [500, 10000]
-};
-
-// --- Generate dummy submissions ---
-function generateDummySubmissions(componentType, modelName, count = 8) {
-    const range = priceRanges[componentType] || [1000, 20000];
-    const subs = [];
-
-    for (let i = 0; i < count; i++) {
-        const price = Math.round(randomPrice(range[0], range[1]) / 100) * 100;
-        const txnType = Math.random() > 0.5 ? 'sold' : 'bought';
-        const mins = randomPrice(5, 1440 * 7); // up to a week ago
-        let timeStr;
-        if (mins < 60) timeStr = `${mins} mins ago`;
-        else if (mins < 1440) timeStr = `${Math.floor(mins / 60)} hours ago`;
-        else timeStr = `${Math.floor(mins / 1440)} days ago`;
-
-        const imgCount = Math.floor(Math.random() * 4); // 0 to 3 images
-        const images = [];
-        for (let j = 0; j < imgCount; j++) {
-            images.push(`https://via.placeholder.com/240x180?text=${slugify(modelName)}+${j + 1}`);
-        }
-
-        subs.push({
-            id: i,
-            user: randomFrom(dummyUsers),
-            txnType,
-            price,
-            images,
-            comment: randomFrom(dummyComments),
-            timeStr,
-            minsAgo: mins
-        });
-    }
-
-    // Sort by most recent by default
-    subs.sort((a, b) => a.minsAgo - b.minsAgo);
-    return subs;
-}
 
 // --- Render submissions ---
 function renderSubmissions(subs) {
@@ -146,6 +78,7 @@ function renderSubmissions(subs) {
         <p>Be the first to submit a listing for this component!</p>
       </div>
     `;
+        renderPriceGraph(submissions);
         return;
     }
 
@@ -163,7 +96,7 @@ function renderSubmissions(subs) {
       <div class="submission-header">
         <div class="user-avatar">${initials}</div>
         <div class="user-info">
-          <div class="user-name">${sub.user}</div>
+          <div class="user-name"><a href="../pages/profile.html?email=${encodeURIComponent(sub.ownerEmail)}" class="forum-user-link" style="color: inherit; text-decoration: none;">${sub.user}</a></div>
           <div class="submission-time">${sub.timeStr}</div>
         </div>
         <span class="txn-badge ${sub.txnType}">${sub.txnType}</span>
@@ -174,6 +107,9 @@ function renderSubmissions(subs) {
     `;
         feed.appendChild(card);
     });
+
+    // Re-render price graph with full chronological dataset (ignores sort order)
+    renderPriceGraph(submissions);
 }
 
 // --- Sort ---
@@ -230,13 +166,11 @@ function renderRelatedModels(componentType, segments) {
     // Try to find sibling models based on the component type
     switch (componentType) {
         case 'gpu': {
-            // segments: [brand, series, model]
-            const series = segments[1]; // e.g. "RTX 4000"
+            const series = segments[1];
             relatedItems = d.models?.[series] || [];
             break;
         }
         case 'cpu': {
-            // segments: [brand, tier, gen, model]
             const base = segments[1]?.replace(/\s*\(.*\)/, '');
             const gen = segments[2];
             const key = `${base}-${gen}`;
@@ -244,9 +178,7 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'ram': {
-            // segments: [brand, generation, speed, capacity] — show other speeds
             if (segments[0] === 'all brands') {
-                // Show brand list when no specific brand selected
                 relatedItems = d.brand || [];
                 currentModel = '';
             } else {
@@ -257,7 +189,6 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'motherboard': {
-            // segments: [brand, socket, chipset, formfactor] — show other chipsets
             if (segments[0] === 'all brands') {
                 relatedItems = d.brand || [];
                 currentModel = '';
@@ -269,7 +200,6 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'storage': {
-            // segments: [brand, type, interface, capacity] — show other interfaces
             if (segments[0] === 'all brands') {
                 relatedItems = d.brand || [];
                 currentModel = '';
@@ -281,19 +211,16 @@ function renderRelatedModels(componentType, segments) {
             break;
         }
         case 'psu': {
-            // segments: [brand, wattage, efficiency, modularity] — show other brands
             relatedItems = d.brand || [];
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
         }
         case 'cooling': {
-            // segments: [brand, type, compatibility] — show other brands
             relatedItems = d.brand || [];
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
         }
         case 'case': {
-            // segments: [brand, form_factor, side_panel] — show other brands (optional)
             relatedItems = d.brand || [];
             currentModel = segments[0] === 'all brands' ? '' : segments[0];
             break;
@@ -312,24 +239,22 @@ function renderRelatedModels(componentType, segments) {
         a.className = 'related-link' + (item === currentModel ? ' current' : '');
         a.textContent = item;
 
-        // Build the hash link for the related model
         const newSegments = [...segments];
         const isAllBrands = segments[0] === 'all brands';
-        // Replace the segment that corresponds to this level
         if (componentType === 'gpu' && segments.length >= 3) {
             newSegments[2] = item;
         } else if (componentType === 'cpu' && segments.length >= 4) {
             newSegments[3] = item;
         } else if ((componentType === 'ram' || componentType === 'motherboard' || componentType === 'storage') && isAllBrands) {
-            newSegments[0] = item; // replace 'all brands' with specific brand
+            newSegments[0] = item;
         } else if (componentType === 'ram' && segments.length >= 3) {
-            newSegments[2] = item; // replace speed segment
+            newSegments[2] = item;
         } else if (componentType === 'motherboard' && segments.length >= 3) {
-            newSegments[2] = item; // replace chipset segment
+            newSegments[2] = item;
         } else if (componentType === 'storage' && segments.length >= 3) {
-            newSegments[2] = item; // replace interface segment
+            newSegments[2] = item;
         } else if (componentType === 'psu' || componentType === 'cooling' || componentType === 'case') {
-            newSegments[0] = item; // replace brand segment
+            newSegments[0] = item;
         } else if (segments.length >= 2) {
             newSegments[newSegments.length - 1] = item;
         } else {
@@ -350,7 +275,6 @@ function renderBreadcrumb(componentType, segments) {
 
     const label = componentLabels[componentType] || componentType;
 
-    // Component type breadcrumb
     const sep1 = document.createElement('span');
     sep1.className = 'breadcrumb-sep';
     sep1.textContent = '›';
@@ -361,7 +285,6 @@ function renderBreadcrumb(componentType, segments) {
     typeLink.textContent = label;
     bar.appendChild(typeLink);
 
-    // Each segment
     segments.forEach((seg, i) => {
         const sep = document.createElement('span');
         sep.className = 'breadcrumb-sep';
@@ -371,13 +294,11 @@ function renderBreadcrumb(componentType, segments) {
         const displaySeg = seg === 'all brands' ? 'All Brands' : seg;
 
         if (i === segments.length - 1) {
-            // Last segment — not a link
             const span = document.createElement('span');
             span.className = 'breadcrumb-current';
             span.textContent = displaySeg;
             bar.appendChild(span);
         } else {
-            // Intermediate segments — links to partial hash
             const partialHash = `#${componentType}/${segments.slice(0, i + 1).map(slugify).join('/')}`;
             const a = document.createElement('a');
             a.href = partialHash;
@@ -387,42 +308,49 @@ function renderBreadcrumb(componentType, segments) {
     });
 }
 
-// --- Load approved listings from localStorage matching current forum page ---
-function loadApprovedSubmissions(componentType, segments) {
+// --- Load approved listings from server matching current forum page ---
+async function loadApprovedSubmissions(componentType, segments) {
     const modelName = segments[segments.length - 1];
-    const allListings = JSON.parse(localStorage.getItem('listings') || '[]');
 
-    return allListings
-        .filter(l => {
-            if (l.status !== 'approved') return false;
-            if (l.componentType !== componentType) return false;
-            // Match the model name against any value in l.details (case-insensitive)
-            const detailValues = Object.values(l.details || {}).map(v => String(v).toLowerCase());
-            return detailValues.some(v => v.includes(modelName.toLowerCase()) || modelName.toLowerCase().includes(v));
-        })
-        .map(l => {
-            const date = new Date(l.date);
-            const minsAgo = Math.max(1, Math.round((Date.now() - date.getTime()) / 60000));
-            let timeStr;
-            if (minsAgo < 60) timeStr = `${minsAgo} mins ago`;
-            else if (minsAgo < 1440) timeStr = `${Math.floor(minsAgo / 60)} hours ago`;
-            else timeStr = `${Math.floor(minsAgo / 1440)} days ago`;
+    try {
+        const res = await fetch(`/api/listings/approved?componentType=${encodeURIComponent(componentType)}`);
+        const data = await res.json();
+        const allListings = data.listings || [];
 
-            return {
-                id: l.id,
-                user: l.user || 'Anonymous',
-                txnType: l.transactionType || 'sold',
-                price: parseInt(l.price, 10) || 0,
-                images: Array.isArray(l.images) ? l.images : [],
-                comment: l.comments || '',
-                timeStr,
-                minsAgo,
-                isReal: true
-            };
-        });
+        return allListings
+            .filter(l => {
+                const detailValues = Object.values(l.details || {}).map(v => String(v).toLowerCase());
+                return detailValues.some(v => v.includes(modelName.toLowerCase()) || modelName.toLowerCase().includes(v));
+            })
+            .map(l => {
+                const date = new Date(l.date);
+                const minsAgo = Math.max(1, Math.round((Date.now() - date.getTime()) / 60000));
+                let timeStr;
+                if (minsAgo < 60) timeStr = `${minsAgo} mins ago`;
+                else if (minsAgo < 1440) timeStr = `${Math.floor(minsAgo / 60)} hours ago`;
+                else timeStr = `${Math.floor(minsAgo / 1440)} days ago`;
+
+                return {
+                    id: l._id,
+                    user: l.user || 'Anonymous',
+                    ownerEmail: l.ownerEmail || '',
+                    txnType: l.transactionType || 'sold',
+                    price: parseInt(l.price, 10) || 0,
+                    images: Array.isArray(l.images) ? l.images : [],
+                    comment: l.comments || '',
+                    date: l.date,
+                    timeStr,
+                    minsAgo,
+                    isReal: true
+                };
+            });
+    } catch (err) {
+        console.error('Failed to load approved submissions:', err);
+        return [];
+    }
 }
 
-// --- Save current forum visit to localStorage.recentForums ---
+// --- Save current forum visit to localStorage.recentForums (browser-local preference) ---
 function trackForumVisit(componentType, segments) {
     const modelName = segments[segments.length - 1];
     const subtitleParts = [componentLabels[componentType] || componentType, ...segments.slice(0, -1)];
@@ -431,21 +359,20 @@ function trackForumVisit(componentType, segments) {
 
     const recentForums = JSON.parse(localStorage.getItem('recentForums') || '[]');
 
-    // Remove existing entry with same hash (move to top)
     const existingIndex = recentForums.findIndex(f => f.hash === hash);
     if (existingIndex > -1) recentForums.splice(existingIndex, 1);
 
-    const fullTitle = segments.join(' ');
+    const titleParts = segments.filter(seg => seg !== 'all brands');
+    const fullTitle = titleParts.join(' ') || modelName;
     recentForums.unshift({ title: fullTitle, hash, subtitle });
 
-    // Keep max 5
     if (recentForums.length > 5) recentForums.pop();
 
     localStorage.setItem('recentForums', JSON.stringify(recentForums));
 }
 
 // --- Main: Load the forum page ---
-function loadForumPage() {
+async function loadForumPage() {
     const parsed = parseForumHash();
     if (!parsed || !parsed.segments.length) {
         showErrorState();
@@ -453,7 +380,7 @@ function loadForumPage() {
     }
 
     const { componentType, segments } = parsed;
-    const modelName = segments[segments.length - 1]; // last segment is the model
+    const modelName = segments[segments.length - 1];
     const isAllBrands = segments[0] === 'all brands';
 
     // Set page title
@@ -471,15 +398,14 @@ function loadForumPage() {
     // Set forum title
     document.getElementById('forum-title').textContent = modelName;
 
-    // Build subtitle from the path — replace 'all brands' with 'All Brands' for display
+    // Build subtitle
     const subtitleParts = [componentLabels[componentType] || componentType, ...segments.slice(0, -1)];
     const displayParts = subtitleParts.map(p => p === 'all brands' ? 'All Brands' : p);
     document.getElementById('forum-subtitle').textContent = displayParts.join(' › ');
 
-    // Load approved real listings and merge with dummy submissions
-    const realSubmissions = loadApprovedSubmissions(componentType, segments);
-    const dummySubmissions = generateDummySubmissions(componentType, modelName);
-    submissions = [...realSubmissions, ...dummySubmissions];
+    // Load approved real listings from server
+    const realSubmissions = await loadApprovedSubmissions(componentType, segments);
+    submissions = realSubmissions;
     renderSubmissions(submissions);
     updateSidebarStats(submissions);
 
@@ -488,7 +414,7 @@ function loadForumPage() {
         renderRelatedModels(componentType, segments);
     }
 
-    // Track this forum visit for the main page "Previously Visited Forums"
+    // Track this forum visit (stays in localStorage — browser-local preference)
     trackForumVisit(componentType, segments);
 }
 
@@ -525,10 +451,210 @@ function loadDropdownJSON() {
     });
 }
 
+// ============================================================
+// --- Price History Graph ---
+// ============================================================
+let priceChart = null;
+
+function renderPriceGraph(subs) {
+    const canvas = document.getElementById('priceChart');
+    const area = document.getElementById('price-graph-area');
+    const emptyMsg = document.getElementById('price-graph-empty');
+    const legendEl = document.getElementById('price-graph-legend');
+    if (!canvas || !area || !emptyMsg || !legendEl) return;
+
+    // Sort sold and bought points chronologically (oldest first)
+    const soldPts = subs
+        .filter(s => s.txnType === 'sold' && s.date)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+    const boughtPts = subs
+        .filter(s => s.txnType === 'bought' && s.date)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    // Destroy any existing chart instance before re-rendering
+    if (priceChart) {
+        priceChart.destroy();
+        priceChart = null;
+    }
+
+    // Not enough sold data — show empty state
+    if (soldPts.length < 2) {
+        area.style.display = 'none';
+        legendEl.style.display = 'none';
+        emptyMsg.style.display = 'block';
+        return;
+    }
+
+    area.style.display = 'block';
+    emptyMsg.style.display = 'none';
+
+    // Build legend
+    let legendHTML = `<span><em class="price-graph-legend-dot" style="background:#4f46e5"></em>Sold</span>`;
+    if (boughtPts.length >= 1) {
+        legendHTML += `<span><em class="price-graph-legend-dot" style="background:#94a3b8"></em>Bought</span>`;
+    }
+    legendEl.innerHTML = legendHTML;
+    legendEl.style.display = 'flex';
+
+    // Format a Date for the X-axis label (short)
+    function fmtLabel(d) {
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+    }
+
+    // Format a Date for the tooltip (full)
+    function fmtTooltip(d) {
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+            + ' ' + d.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    const soldLabels = soldPts.map(s => fmtLabel(new Date(s.date)));
+    const soldValues = soldPts.map(s => s.price);
+    const soldDates  = soldPts.map(s => fmtTooltip(new Date(s.date)));
+
+    const boughtLabels = boughtPts.map(s => fmtLabel(new Date(s.date)));
+    const boughtValues = boughtPts.map(s => s.price);
+    const boughtDates  = boughtPts.map(s => fmtTooltip(new Date(s.date)));
+
+    // Crosshair + tooltip elements
+    const crosshair = document.getElementById('price-graph-crosshair');
+    const tooltip   = document.getElementById('price-graph-tooltip');
+
+    // Custom Chart.js plugin for crosshair + tooltip on hover
+    const crosshairTooltipPlugin = {
+        id: 'crosshairTooltip',
+        afterEvent(chart, args) {
+            const { event, inChartArea } = args;
+
+            if (!inChartArea || event.type === 'mouseleave' || event.type === 'mouseout') {
+                crosshair.style.display = 'none';
+                tooltip.style.display   = 'none';
+                return;
+            }
+
+            const elements = chart.getElementsAtEventForMode(
+                event.native, 'index', { intersect: false }, true
+            );
+            if (!elements.length) {
+                crosshair.style.display = 'none';
+                tooltip.style.display   = 'none';
+                return;
+            }
+
+            const { x, y: chartY } = elements[0].element;
+            const { top, bottom } = chart.chartArea;
+            const canvasRect = chart.canvas.getBoundingClientRect();
+
+            // Position crosshair (absolute within .price-graph-area)
+            crosshair.style.left    = (x - chart.canvas.offsetLeft) + 'px';
+            crosshair.style.top     = (top - chart.canvas.offsetTop) + 'px';
+            crosshair.style.height  = (bottom - top) + 'px';
+            crosshair.style.display = 'block';
+
+            // Build tooltip content — show all datasets at this index
+            const idx = elements[0].index;
+            let lines = '';
+            chart.data.datasets.forEach((ds, di) => {
+                const val = ds.data[idx];
+                if (val === undefined || val === null) return;
+                const date = di === 0 ? soldDates[idx] : boughtDates[idx];
+                const dot  = `<em style="display:inline-block;width:7px;height:7px;border-radius:50%;background:${ds.borderColor};margin-right:4px;vertical-align:middle"></em>`;
+                lines += `<div>${dot}<strong>₱${val.toLocaleString()}</strong></div>`;
+                if (date) lines += `<div style="color:#94a3b8;font-size:11px;margin-left:11px">${date}</div>`;
+            });
+            tooltip.innerHTML = lines;
+
+            // Position tooltip (fixed to viewport), flip if near right edge
+            const tipW = 148;
+            let tx = canvasRect.left + x + 12;
+            if (tx + tipW > window.innerWidth - 8) tx = canvasRect.left + x - tipW - 12;
+            tooltip.style.left    = tx + 'px';
+            tooltip.style.top     = (canvasRect.top + chartY - 16) + 'px';
+            tooltip.style.display = 'block';
+        }
+    };
+
+    // Build gradient fill for sold line
+    const ctx = canvas.getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.offsetHeight || 160);
+    gradient.addColorStop(0,   'rgba(79, 70, 229, 0.18)');
+    gradient.addColorStop(1,   'rgba(79, 70, 229, 0)');
+
+    const datasets = [
+        {
+            label: 'Sold',
+            data: soldValues,
+            borderColor: '#4f46e5',
+            backgroundColor: gradient,
+            fill: true,
+            tension: 0.35,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: '#4f46e5',
+            borderWidth: 2
+        }
+    ];
+
+    if (boughtPts.length >= 1) {
+        datasets.push({
+            label: 'Bought',
+            data: boughtValues,
+            borderColor: '#94a3b8',
+            backgroundColor: 'transparent',
+            fill: false,
+            tension: 0.35,
+            pointRadius: 0,
+            pointHoverRadius: 4,
+            pointHoverBackgroundColor: '#94a3b8',
+            borderWidth: 1.5,
+            borderDash: [4, 4]
+        });
+    }
+
+    priceChart = new Chart(canvas, {
+        type: 'line',
+        data: {
+            labels: soldLabels,
+            datasets
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            animation: { duration: 300 },
+            interaction: { mode: 'index', intersect: false },
+            plugins: {
+                legend: { display: false },
+                tooltip: { enabled: false }
+            },
+            scales: {
+                x: {
+                    ticks: {
+                        color: '#64748b',
+                        font: { size: 10, family: "'Google Sans', Arial, sans-serif" },
+                        maxTicksLimit: 5,
+                        maxRotation: 0
+                    },
+                    grid: { color: '#e2e8f0', drawBorder: false }
+                },
+                y: {
+                    ticks: {
+                        color: '#64748b',
+                        font: { size: 10, family: "'Google Sans', Arial, sans-serif" },
+                        maxTicksLimit: 4,
+                        callback: v => '₱' + v.toLocaleString()
+                    },
+                    grid: { color: '#e2e8f0', drawBorder: false }
+                }
+            }
+        },
+        plugins: [crosshairTooltipPlugin]
+    });
+}
+// ============================================================
+
 // --- Bootstrap ---
 document.addEventListener('DOMContentLoaded', async () => {
     await loadDropdownJSON();
-    loadForumPage();
+    await loadForumPage();
 });
 
 // Re-render on hash change (for related model clicks)
