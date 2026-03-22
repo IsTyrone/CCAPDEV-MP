@@ -9,8 +9,8 @@
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
         <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <link rel="stylesheet" href="../css/About.css" />
-  <link rel="stylesheet" href="../css/dashboard.css" />
+    <link rel="stylesheet" href="../css/blogs.css" />
+    <link rel="stylesheet" href="../css/dashboard.css" />
     </head>
     <body>
         <!-- Header-->
@@ -30,7 +30,19 @@
             </div>
         </header>
     <!-- Page elements go here-->
+        <main class="blogs-container">
+            <h1 class="page-title">Latest Updates & Guides</h1>
+    
+            <div id="blog-posts-wrapper">
+                <p class="loading-text">Loading latest articles...</p>
+            </div>
 
+            <nav class="pagination">
+                <button id="prevBtn" class="pg-btn" disabled>Previous</button>
+                <div id="pageIndicator" class="pg-info">Page 1</div>
+                <button id="nextBtn" class="pg-btn">Next</button>
+            </nav>
+        </main>
         <!-- Footer-->
         <div id="footer-placeholder"></div>
         <script src="../js/footer.js"></script>
