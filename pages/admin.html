@@ -17,7 +17,7 @@
 <body>
     <div class="page-wrapper">
         <header class="main-header">
-            <div class="logo-img-container"><img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img"></div>
+            <a href="../index.html" class="logo-img-container"><img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Tracker"></a>
             <div class="header-right">
                 <span class="account-label">Admin Dashboard</span>
                 <button onclick="handleLogout()" class="logout-btn" style="margin-left: 1rem;">Logout</button>
@@ -39,11 +39,53 @@
                 <button class="tab-btn active" onclick="switchTab('pending')">Pending</button>
                 <button class="tab-btn" onclick="switchTab('approved')">Approved</button>
                 <button class="tab-btn" onclick="switchTab('rejected')">Rejected</button>
+                <button class="tab-btn" onclick="switchTab('blogs')" style="margin-left: auto; background-color: #1a73e8; color: #fff;">Blog Posts</button>
             </div>
 
             <div id="listings-container" class="pending-list">
                 <!-- Listings will be populated here -->
                 <p>Loading...</p>
+            </div>
+
+            <!-- Blog Posts Management Section (hidden by default) -->
+            <div id="blogs-container" style="display: none;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3 style="margin: 0;">Manage Blog Posts</h3>
+                    <button class="btn-approve" onclick="openCreateBlogModal()">+ New Blog Post</button>
+                </div>
+                <div id="blog-list">
+                    <p>Loading blog posts...</p>
+                </div>
+            </div>
+
+            <!-- Create Blog Post Modal -->
+            <div id="blog-modal" class="modal">
+                <div class="modal-content">
+                    <span class="close-modal" onclick="closeBlogModal()">&times;</span>
+                    <h3>Create Blog Post</h3>
+                    <form id="blog-form" onsubmit="submitBlogPost(event)">
+                        <div class="form-group">
+                            <label for="blog-title">Title</label>
+                            <input type="text" id="blog-title" required class="form-control" placeholder="Enter blog title...">
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog-body">Body</label>
+                            <textarea id="blog-body" required class="form-control" rows="8" placeholder="Write your article content..."></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="blog-image">Header Image (optional)</label>
+                            <input type="file" id="blog-image" class="form-control" accept="image/*">
+                            <img id="blog-image-preview" style="display:none; max-width:100%; margin-top:10px; border-radius:8px;" alt="Preview">
+                        </div>
+
+                        <div class="modal-actions">
+                            <button type="button" class="btn-cancel" onclick="closeBlogModal()">Cancel</button>
+                            <button type="submit" class="btn-save">Publish Post</button>
+                        </div>
+                    </form>
+                </div>
             </div>
 
             <!-- Edit Modal -->

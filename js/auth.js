@@ -24,11 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (res.ok) {
                     alert('Login Successful!');
-                    if (data.user && data.user.role === 'admin') {
-                        window.location.href = 'admin.html';
-                    } else {
-                        window.location.href = '../index.html';
-                    }
+                    window.location.href = '../index.html';
                 } else {
                     alert(data.error || 'Invalid email or password. Please try again or register.');
                 }

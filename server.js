@@ -39,10 +39,12 @@ app.use(session({
 const authRoutes = require('./routes/auth');
 const listingsRoutes = require('./routes/listings');
 const usersRoutes = require('./routes/users');
+const blogsRoutes = require('./routes/blogs');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/listings', listingsRoutes);
 app.use('/api', usersRoutes);
+app.use('/api/blogs', blogsRoutes);
 
 // --- Fallback: serve index.html for root ---
 app.get('/', (req, res) => {
