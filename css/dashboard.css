@@ -451,11 +451,97 @@ a {
   align-items: center;
   text-align: center;
   border: 1px solid var(--border-color);
+  padding: 0 60px;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle floating shimmer overlay */
+.hero-content::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(ellipse at 30% 50%, rgba(255,255,255,0.08) 0%, transparent 60%);
+  animation: hero-shimmer 8s ease-in-out infinite alternate;
+  pointer-events: none;
+}
+
+@keyframes hero-shimmer {
+  0%   { transform: translate(0, 0); }
+  100% { transform: translate(10%, -5%); }
+}
+
+.hero-icon {
+  font-size: 36px;
+  margin-bottom: 8px;
+  line-height: 1;
+  display: block;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.15));
 }
 
 .hero-content h3 {
   font-size: 24px;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+}
+
+.hero-subtitle {
+  max-width: 520px;
+  font-size: 14px;
+  line-height: 1.6;
+  opacity: 0.85;
+}
+
+/* CTA Button on hero slides */
+.hero-cta-btn {
+  display: inline-block;
+  margin-top: 16px;
+  padding: 10px 28px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.6);
+  background: rgba(255,255,255,0.15);
+  color: white;
+  backdrop-filter: blur(4px);
+  transition: all 0.25s ease;
+  text-decoration: none;
+}
+
+.hero-cta-btn:hover {
+  background: rgba(255,255,255,0.3);
+  border-color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+/* --- Per-slide gradient themes --- */
+
+/* Slide 1: Market / Price Drops — Deep blue */
+.hero-slide-prices {
+  background: linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #0ea5e9 100%);
+  color: white;
+  border: none;
+}
+
+/* Slide 2: Community Forums — Indigo / Purple */
+.hero-slide-forums {
+  background: linear-gradient(135deg, #312e81 0%, #6366f1 50%, #a78bfa 100%);
+  color: white;
+  border: none;
+}
+
+/* Slide 3: Create a Listing — Teal / Emerald */
+.hero-slide-listing {
+  background: linear-gradient(135deg, #064e3b 0%, #059669 50%, #34d399 100%);
+  color: white;
+  border: none;
 }
 
 .carousel-btn {

@@ -50,6 +50,7 @@ function updateSidebarContent() {
   const settingsPath = isInPages ? 'settings.html' : 'pages/settings.html';
   const loginPath = isInPages ? 'login.html' : 'pages/login.html';
   const registerPath = isInPages ? 'register.html' : 'pages/register.html';
+  const adminPath = isInPages ? 'admin.html' : 'pages/admin.html';
 
   // Select the account label in the header
   const accountLabel = document.querySelector('.account-label');
@@ -68,6 +69,7 @@ function updateSidebarContent() {
             <h3 class="mb-10">${userObj.firstName} ${userObj.lastName || ''}</h3>
             <p class="verified-session">✓ Verified Session</p>
             <div class="user-menu">
+               ${userObj.role === 'admin' ? `<a href="${adminPath}" class="menu-btn" style="color: #007bff; font-weight: bold;">Admin Dashboard</a>` : ''}
                <button class="menu-btn">My Saved Builds</button>
                <button class="menu-btn">Price Alerts</button>
                <a href="${profilePath}" class="menu-btn">User Profile</a>
@@ -1775,6 +1777,23 @@ document.addEventListener('DOMContentLoaded', () => {
     const targetDotIndex = dots.findIndex(dot => dot === targetDot);
     if (targetDotIndex !== -1) moveToSlide(targetDotIndex + 1);
   });
+
+  // --- Auto-play: advance every 6 seconds, pause on hover ---
+  let autoPlayTimer = setInterval(() => {
+    if (currentIndex >= allSlides.length - 1) return;
+    moveToSlide(currentIndex + 1);
+  }, 6000);
+
+  const heroSection = document.querySelector('.hero-section');
+  if (heroSection) {
+    heroSection.addEventListener('mouseenter', () => clearInterval(autoPlayTimer));
+    heroSection.addEventListener('mouseleave', () => {
+      autoPlayTimer = setInterval(() => {
+        if (currentIndex >= allSlides.length - 1) return;
+        moveToSlide(currentIndex + 1);
+      }, 6000);
+    });
+  }
 });
 
 // --- Ticker card click: navigate to forum page ---
