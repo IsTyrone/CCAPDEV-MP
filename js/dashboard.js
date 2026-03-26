@@ -76,8 +76,6 @@ function updateSidebarContent() {
             <p class="verified-session">✓ Verified Session</p>
             <div class="user-menu">
                ${adminBtnHtml}
-               <button class="menu-btn">My Saved Builds</button>
-               <button class="menu-btn">Price Alerts</button>
                <a href="${profilePath}" class="menu-btn">User Profile</a>
                <a href="${settingsPath}" class="menu-btn">Account Settings</a>
                <button id="logoutBtn" class="logout-btn">Logout</button>
