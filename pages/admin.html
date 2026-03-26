@@ -133,6 +133,8 @@
             } catch (err) {
                 console.error('Logout error:', err);
             }
+            localStorage.clear();
+            sessionStorage.clear();
             window.location.href = 'login.html';
         }
     </script>

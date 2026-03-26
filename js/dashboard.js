@@ -24,7 +24,8 @@ const sidebarContent = document.getElementById('sidebarContent');
 
 /**
  * Handles the logout process.
- * Calls the server API to destroy the session, then reloads the page.
+ * Calls the server API to destroy the session, clears local/session storage for safety, 
+ * and immediately redirects to the login page.
  */
 async function handleLogout() {
   try {
@@ -32,8 +33,12 @@ async function handleLogout() {
   } catch (err) {
     console.error('Logout error:', err);
   }
-  alert('Logged out');
-  window.location.reload();
+  
+  localStorage.clear();
+  sessionStorage.clear();
+  
+  const isInPages = window.location.pathname.includes('/pages/') || window.location.pathname.includes('pages/');
+  window.location.href = isInPages ? 'login.html' : 'pages/login.html';
 }
 
 /**
