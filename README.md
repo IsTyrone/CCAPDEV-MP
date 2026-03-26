@@ -2,10 +2,10 @@
 
 <h3>Authors</h3>
 <ul>
-    <li>Campo, Benette Enzo - Lead Developer</li>
+    <li>Lee, Tyrone Julius - Project Lead & Backend</li>
+    <li>Campo, Benette Enzo - Full Stack Developer</li>
     <li>Abenes, Mark Gabriel - Frontend(UI/UX)</li>
     <li>Morgan, Jack Owen - Frontend(UI/UX)</li>
-    <li>Lee, Tyrone Julius - Backend</li>
     <li>Sanchez, Roland Benedict - Frontend(Element Designer)</li>
 </ul>
 
