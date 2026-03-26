@@ -65,11 +65,17 @@ function updateSidebarContent() {
     }
 
     // 2. Update Sidebar
+    let adminBtnHtml = '';
+    if (userObj.role === 'admin') {
+        const adminPath = isInPages ? 'admin.html' : 'pages/admin.html';
+        adminBtnHtml = `<a href="${adminPath}" class="menu-btn" style="color: #1a73e8; font-weight: 600;">Admin Dashboard</a>`;
+    }
+
     sidebarContent.innerHTML = `
             <h3 class="mb-10">${userObj.firstName} ${userObj.lastName || ''}</h3>
             <p class="verified-session">✓ Verified Session</p>
             <div class="user-menu">
-               ${userObj.role === 'admin' ? `<a href="${adminPath}" class="menu-btn" style="color: #007bff; font-weight: bold;">Admin Dashboard</a>` : ''}
+               ${adminBtnHtml}
                <button class="menu-btn">My Saved Builds</button>
                <button class="menu-btn">Price Alerts</button>
                <a href="${profilePath}" class="menu-btn">User Profile</a>

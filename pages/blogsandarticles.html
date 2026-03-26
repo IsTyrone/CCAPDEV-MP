@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Blogs and articles - PC Tracker</title>
+        <link rel="icon" type="image/png" href="../assets/images/favicon.png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../css/blogs.css" />
+    <link rel="stylesheet" href="../css/dashboard.css" />
+    </head>
+    <body>
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+
+        <div class="page-wrapper">
+            <!-- Header-->
+            <header class="main-header">
+                <a href="../index.html" class="logo-img-container">
+                    <img src="../assets/images/PC-PICKER-LOGO.png" class="logo-img" alt="PC Picker">
+                </a>
+                <nav class="header-nav-links">
+                    <a href="#" class="active-nav">Blogs and Articles</a>
+                    <a href="about.html">About Us</a>
+                </nav>
+                <div class="header-right">
+                    <button class="account-settings-btn" id="userIconBtn" title="Account">
+                        <span class="account-label">Account</span>
+                        <span class="logo-circle user-icon-btn">&#128100;</span>
+                    </button>
+                </div>
+            </header>
+        <!-- Page elements go here-->
+            <main class="blogs-container">
+                <h1 class="page-title">Latest Updates & Guides</h1>
+        
+                <div id="blog-posts-wrapper">
+                    <p class="loading-text">Loading latest articles...</p>
+                </div>
+
+                <nav class="pagination">
+                    <button id="prevBtn" class="pg-btn" disabled>Previous</button>
+                    <div id="pageIndicator" class="pg-info">Page 1</div>
+                    <button id="nextBtn" class="pg-btn">Next</button>
+                </nav>
+            </main>
+
+            <aside id="rightSidebar" class="right-sidebar">
+                <button id="closeSidebar" class="close-sidebar-btn">&times;</button>
+                <div class="logo-circle sidebar-logo">&#128100;</div>
+                <div id="sidebarContent" class="sidebar-content">
+                    <h3 class="mb-10">Welcome, Guest</h3>
+                    <p class="sidebar-subtitle">Log in to track prices and manage your builds.</p>
+                    <div class="sidebar-actions">
+                        <button onclick="window.location.href='login.html'" class="btn-sidebar btn-sidebar-primary">Login</button>
+                        <button onclick="window.location.href='register.html'" class="btn-sidebar btn-sidebar-outline">Register</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Footer-->
+        <div id="footer-placeholder"></div>
+        <script src="../js/footer.js"></script>
+        <script src="../js/blogs.js"></script>
+        <script src="../js/dashboard.js"></script>
+    </body>
+</html>
