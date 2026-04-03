@@ -80,3 +80,21 @@ The server automatically creates an admin account so you can manage listing appr
 - **Login URL**: [http://localhost:3000/pages/login.html](http://localhost:3000/pages/login.html)
 - **Email**: `admin@pctracker.com`
 - **Password**: `admin123`
+
+---
+
+## Admin Dashboard Guide
+
+### Step 1: Accessing the Admin Dashboard
+
+![Admin Dashboard Access](assets/images/instruction-admin-pics/accessing-actual-admin-dashboard.png)
+
+**Instructions:**
+After logging in with the admin account credentials, navigate to the admin dashboard from the main menu. The admin dashboard provides a centralized location to manage all user listings, approve or reject pending listings, and monitor platform activity. You will see an overview of all pending approvals, recent activities, and quick administrative actions.
+
+### Step 2: Managing Listings
+
+![Admin Dashboard Management](assets/images/instruction-admin-pics/accessing-actual-admin-dashboard-2.png)
+
+**Instructions:**
+In the listings management section, you can view all submitted listings with their current status (pending, approved, or rejected). Click on each listing to review details, including the user information, product specifications, and submission date. Use the action buttons to approve listings for public display or reject them if they don't meet platform guidelines. Approved listings will immediately appear on the main platform for all users to see.
